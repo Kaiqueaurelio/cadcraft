@@ -4,17 +4,32 @@ on:
   push:
     branches: [main]
     tags: ['v*']
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'crates/**'
+      - 'apps/**'
+      - 'xtask/**'
+      - 'assets/**'
+      - '.github/workflows/build.yml'
   pull_request:
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'crates/**'
+      - 'apps/**'
+      - 'xtask/**'
+      - 'assets/**'
+      - '.github/workflows/build.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# Do not cancel an active multi-platform build when another documentation or config
-# commit lands on the same ref; each commit should produce a traceable result.
+# Only code/build-input changes trigger this workflow. Prefer the newest build for a ref.
 concurrency:
   group: build-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
