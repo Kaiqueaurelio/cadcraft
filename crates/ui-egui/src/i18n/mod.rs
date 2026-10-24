@@ -10,9 +10,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Preference {
-    #[default]
     #[serde(rename = "auto")]
     Auto,
+    #[default]
     #[serde(rename = "en")]
     English,
     #[serde(rename = "el")]
