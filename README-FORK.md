@@ -4,9 +4,9 @@ Este repositório é uma versão derivada do projeto aberto [CADCraft original](
 
 ## Estado do projeto
 
-Este fork está em fase de preparação. O workflow em `.github/workflows/build.yml` tenta compilar o aplicativo desktop para Linux, Windows e macOS e disponibiliza os executáveis como artefatos temporários do GitHub Actions quando a compilação conclui com sucesso.
+**Primeiro build multiplataforma concluído com sucesso em 24/10/2026:** o GitHub Actions compilou executáveis para Linux x86-64, Windows x86-64 e macOS. Os arquivos estão disponíveis temporariamente na [execução de build bem-sucedida](https://github.com/Kaiqueaurelio/cadcraft/actions/runs/40096986796), na seção **Artifacts**. O workflow `.github/workflows/build.yml` disponibiliza esses artefatos por 14 dias.
 
-**Importante:** ainda não anuncie os artefatos como versões estáveis antes de conferir os resultados do workflow e testar os executáveis nos sistemas correspondentes. Os artefatos não são instaladores assinados (MSI, AppImage ou DEB).
+**Importante:** a compilação passou, mas isso não substitui testes manuais do aplicativo em cada sistema operacional. Os arquivos são executáveis compactados, não instaladores assinados (MSI, AppImage ou DEB); ainda não devem ser tratados como versão estável.
 
 ## Compilar localmente
 
