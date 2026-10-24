@@ -1,111 +1,94 @@
-# CADCraft roadmap detail
+# Detalhamento do roadmap do CADCraft
 
-> **Last reviewed:** 2026-10-24 · **Last updated:** 2026-10-24 · **Change:** minor (Block Editor for static blocks: "Use blocks" evidence updated) · **Target:** Autodesk AutoCAD 2027
+> **Última revisão:** 2026-10-24 · **Última atualização:** 2026-10-24 · **Alteração:** pequena (Editor de Blocos para blocos estáticos: evidência de "Use blocks" atualizada) · **Referência:** Autodesk AutoCAD 2027
 
-Forward-looking plan: milestones with status, the current focus, and what comes next with
-estimates. The summary is [ROADMAP.md](../ROADMAP.md); the work items behind every line are in
-[gaps.md](gaps.md); numbers come from [target-app-parity.md](target-app-parity.md). Hours are
-Opus 5.5 agent-hours.
+Plano futuro com marcos, status, foco atual e próximos passos estimados. O resumo está em [ROADMAP.md](../ROADMAP.md); os itens de trabalho que fundamentam cada linha estão em [gaps.md](gaps.md); os números vêm de [target-app-parity.md](target-app-parity.md). As horas são estimativas de trabalho de agente Opus 5.5.
 
-## Current focus
+## Foco atual
 
-1. **Gate and land.** (`cargo fmt` on main is fixed.) The fork now has a pull-request workflow
-   that invokes the shared `cargo xtask ci` gate via `storytold/craft-common-actions`.
-   Remaining work: review the open upstream PRs and keep confirming the gate works in this fork.
-   ≈ 15–25 h.
-2. **Stop losing data on save** (FF1, FF2, FF7) and save DWG/DXF at a chosen version (FF3).
-   ≈ 30–45 h.
-3. **A real-file corpus** and a check of our output in AutoCAD (FF5, needs the owner).
-4. **Precision input:** object snap tracking, extension/parallel snaps, FROM/M2P/TK, typed snap
-   overrides, editable dynamic input (U1–U4). ≈ 25–35 h.
-5. **Unstub the prompt options** of the most-used commands (F1). ≈ 15–25 h.
-6. **Autosave, recovery, AUDIT, RECOVER** (F4). ≈ 10–15 h.
-7. **The rest of the alpha gate:** block editor and REFEDIT, xref attach (F2, F3), and plot styles
-   with a plot dialog and preview (F14). ≈ 50–80 h.
+1. **Fazer a validação passar e integrar as alterações.** (`cargo fmt` na branch main já foi corrigido.) O fork agora tem um fluxo de pull request que executa a validação compartilhada `cargo xtask ci` por meio de `storytold/craft-common-actions`. Falta revisar os PRs upstream abertos e continuar confirmando que a validação funciona neste fork. ≈ 15–25 h.
+2. **Parar de perder dados ao salvar** (FF1, FF2, FF7) e permitir salvar DWG/DXF em uma versão escolhida (FF3). ≈ 30–45 h.
+3. **Criar um corpus de arquivos reais** e verificar a saída no AutoCAD (FF5; depende do responsável pelo projeto).
+4. **Entrada de precisão:** rastreamento de snaps, snaps de extensão/paralelo, FROM/M2P/TK, substituições de snap digitadas e entrada dinâmica editável (U1–U4). ≈ 25–35 h.
+5. **Implementar as opções de prompt ainda incompletas** nos comandos mais usados (F1). ≈ 15–25 h.
+6. **Salvamento automático, recuperação, AUDIT e RECOVER** (F4). ≈ 10–15 h.
+7. **Concluir o restante dos requisitos para alpha:** editor de blocos e REFEDIT, anexação de xrefs (F2, F3) e estilos de plotagem com diálogo e pré-visualização (F14). ≈ 50–80 h.
 
-Items 2–5 and 7 are the [alpha gate](#alpha-gate) rows.
+Os itens 2–5 e 7 fazem parte dos requisitos para [alpha](#requisitos-para-alpha).
 
-## Alpha gate
+## Requisitos para alpha
 
-The core workflows a typical AutoCAD professional does every day (craftrules progress-docs
-standard). CADCraft is **pre-alpha** because four of the five fail the gate; the failing rows are
-the alpha checklist. Main platform: macOS.
+Fluxos essenciais realizados diariamente por um profissional típico do AutoCAD (padrão craftrules progress-docs). O CADCraft está em **pré-alpha**, pois quatro dos cinco fluxos ainda não passam pelos requisitos; os itens pendentes formam a lista de verificação da alpha. Plataforma principal: macOS.
 
-| Core workflow | Works end to end? | Evidence | Hours to pass |
+| Fluxo de trabalho essencial | Funciona de ponta a ponta? | Evidências | Horas para aprovação |
 |---|---|---|---|
-| Draw and modify precisely with object snaps and tracking | **partial, blocking** | Running snaps, polar, ortho and coordinate entry work; object snap tracking, extension and parallel snaps are toggles with no behaviour; no FROM/M2P/TK or typed snap overrides; TRIM/EXTEND standard mode, OFFSET Erase/Layer/Multiple, ROTATE Reference print "not available yet"; ellipse/spline intersections approximate ([ui-parity.md](ui-parity.md), [gaps.md](gaps.md) U1, U3, U4, F1) | 35–50 |
-| Dimension and annotate | partial, not blocking | All core DIM types, associativity, DIMSTYLE variables (43 of ~80), TEXT/MTEXT, MLEADER, tables work; no DIMSTYLE dialog, MTEXT editor not in place, MLEADER thin (F7, F9, F10). A drafter can dimension a sheet end to end | 0 for the gate (beta work) |
-| Use blocks (insert library blocks, edit them, attributes, xrefs) | **partial, blocking** | Static BLOCK/INSERT/attributes, ATTSYNC, BATTMAN editing, xrefs (#525) and the Block Editor (BEDIT/BSAVE/BCLOSE: every reference updates) work; no REFEDIT, so a block can't be edited in place in the drawing; no XCLIP; dynamic blocks from other drawings lose their behaviour (F2, F3) | 35–55 |
-| Layers, layouts and plotting a sheet | **partial, blocking** | Layers, layouts, viewports, page setups, PDF output, plot styles (CTB/STB, #410), the Plot dialog (#160), Plot Preview and PUBLISH (#186) and plotter devices (#564) work; printers only via PDF/PNG/SVG files (F14, H3) | 15–25 |
-| Save DWG that AutoCAD opens without loss, and reopen others' DWGs | **no** | DXF keeps what we don't model (#528) and writes native MULTILEADERs (#459, not yet tested through DWG); through DWG, acadrust drops custom-class entities and objects and some foreign data; never checked in AutoCAD; no real-file tests; a 10 MB DWG failed after ~2 min (#57) (FF1–FF6) | 40–60 + owner (real-file corpus, AutoCAD check) |
-| **To alpha** | | | **≈ 125–190** |
+| Desenhar e modificar com precisão usando snaps e rastreamento | **parcial, bloqueador** | Snaps em execução, polar, ortho e entrada de coordenadas funcionam; rastreamento de snap, snaps de extensão e paralelo são opções sem comportamento implementado; não há FROM/M2P/TK nem substituições de snap digitadas; os modos padrão de TRIM/EXTEND, Erase/Layer/Multiple de OFFSET e Reference de ROTATE exibem "not available yet"; interseções de elipses e splines são aproximadas ([ui-parity.md](ui-parity.md), [gaps.md](gaps.md), U1, U3, U4, F1) | 35–50 |
+| Cotar e anotar | parcial, não bloqueador | Todos os tipos principais de DIM, associatividade, variáveis DIMSTYLE (43 de cerca de 80), TEXT/MTEXT, MLEADER e tabelas funcionam; faltam a caixa de diálogo DIMSTYLE, o editor MTEXT no local e recursos avançados de MLEADER (F7, F9, F10). É possível cotar uma folha de ponta a ponta | 0 para alpha (trabalho de beta) |
+| Usar blocos (inserir blocos da biblioteca, editá-los, atributos e xrefs) | **parcial, bloqueador** | BLOCK/INSERT estáticos, atributos, edição por ATTSYNC e BATTMAN, xrefs (#525) e o Editor de Blocos (BEDIT/BSAVE/BCLOSE: todas as referências são atualizadas) funcionam; falta REFEDIT, portanto não é possível editar um bloco diretamente no desenho; blocos dinâmicos vindos de outros desenhos perdem seu comportamento (F2, F3) | 35–55 |
+| Camadas, layouts e plotagem de uma folha | **parcial, bloqueador** | Camadas, layouts, viewports, configurações de página, saída PDF, estilos de plotagem (CTB/STB, #410), diálogo Plot (#160), Plot Preview, PUBLISH (#186) e dispositivos plotter (#564) funcionam; impressoras são atendidas somente por arquivos PDF/PNG/SVG (F14, H3) | 15–25 |
+| Salvar um DWG que o AutoCAD abra sem perdas e reabrir DWGs de terceiros | **não** | O DXF preserva dados que o CADCraft não modela (#528) e grava MULTILEADER nativo (#459, ainda não testado em fluxo DWG); pelo caminho DWG, acadrust descarta entidades e objetos de classes personalizadas e alguns dados externos; nunca houve verificação no AutoCAD nem testes com arquivos reais; um DWG de 10 MB falhou após cerca de 2 minutos (#57) (FF1–FF6) | 40–60 + responsável (corpus de arquivos reais e verificação no AutoCAD) |
+| **Total para alpha** | | | **≈ 125–190** |
 
-Ready for real work is ≈ 38%, also under the ~40% alpha bar; closing the gate rows lifts it past
-40%.
+A prontidão para uso real é de aproximadamente 38%, também abaixo do limite de cerca de 40% para alpha; concluir os itens bloqueadores eleva o resultado acima de 40%.
 
-## Beta checklist
+## Lista de verificação para beta
 
-Beta means: close to feature complete for mainstream 2D work, opens and saves DWG reliably,
-remaining gaps are known bugs and edge features (≈ 75% ready for real work).
+Beta significa estar perto da completude de recursos para trabalho 2D convencional, abrir e salvar DWG de forma confiável e manter apenas bugs conhecidos e recursos de borda pendentes (≈ 75% de prontidão para uso real).
 
-| Item | State | Est. |
+| Item | Estado | Estimativa |
 |---|---|---|
-| DWG/DXF: nothing lost on save; MULTILEADER native; version choice; code pages; real-file corpus green; verified in AutoCAD | not started | 50–75 |
-| 2D geometry exact for ellipses and splines; polyline offset correct; relative tolerances | not started | 50–80 |
-| Precision input at AutoCAD level (tracking, dynamic input, overrides, point modifiers, grips, selection keywords, context menus) | partial | 90–140 |
-| Every Draw/Modify prompt option works; associative arrays | partial | 40–60 |
-| Annotation depth: DIMSTYLE manager and variables, missing DIM commands, in-place MTEXT, fields, MLEADER editing, annotative scaling, tables | partial | 90–130 |
-| Xrefs, block editor, dynamic blocks, groups, attribute tools | not started | 90–135 |
-| Plot styles, plot preview, PUBLISH, non-rectangular viewports | partial | 30–45 |
-| Autosave, recovery, AUDIT/RECOVER, Options dialog, templates, SHX, user `.lin`/`.pat` | partial | 40–60 |
-| AutoLISP core subset and SCRIPT | done (AutoLISP #758, SCRIPT #693); Visual LISP, DCL and reactors to come | 30–50 |
-| Catalog plus AutoCAD for Mac's languages | not started | 30–45 |
-| Stability: CI gate, issue backlog, command smoke sweep, geometry fuzzing | partial | 30–50 |
-| Platforms: web open/save, Windows/Linux runtime checks; performance at 1M entities and large DWG | partial | 20–35 |
-| **Total to beta** | | **≈ 600–930** |
+| DWG/DXF: nenhuma perda ao salvar; MULTILEADER nativo; escolha de versão; páginas de código; corpus de arquivos reais aprovado; verificado no AutoCAD | não iniciado | 50–75 |
+| Geometria 2D exata para elipses e splines; offset de polilinha correto; tolerâncias relativas | não iniciado | 50–80 |
+| Entrada de precisão no nível do AutoCAD (rastreamento, entrada dinâmica, substituições, modificadores de ponto, grips, palavras-chave de seleção e menus de contexto) | parcial | 90–140 |
+| Todas as opções de prompt de Draw/Modify funcionam; matrizes associativas | parcial | 40–60 |
+| Profundidade de anotação: gerenciador e variáveis DIMSTYLE, comandos DIM ausentes, MTEXT no local, campos, edição de MLEADER, escala anotativa e tabelas | parcial | 90–130 |
+| Xrefs, editor de blocos, blocos dinâmicos, grupos e ferramentas de atributos | não iniciado | 90–135 |
+| Estilos de plotagem, pré-visualização, PUBLISH e viewports não retangulares | parcial | 30–45 |
+| Salvamento automático, recuperação, AUDIT/RECOVER, diálogo Options, modelos, SHX e arquivos `.lin`/`.pat` do usuário | parcial | 40–60 |
+| Subconjunto principal de AutoLISP e SCRIPT | concluído (AutoLISP #758, SCRIPT #693); Visual LISP, DCL e reactors ainda virão | 30–50 |
+| Catálogo de idiomas e idiomas do AutoCAD para Mac | não iniciado | 30–45 |
+| Estabilidade: validação de CI, backlog de problemas, verificação rápida de comandos e fuzzing geométrico | parcial | 30–50 |
+| Plataformas: abrir/salvar na web, verificações de execução em Windows/Linux; desempenho com 1 milhão de entidades e DWGs grandes | parcial | 20–35 |
+| **Total até beta** | | **≈ 600–930** |
 
-About 70% of this parallelises across 4–6 agents (one per row), so elapsed time is roughly
-150–250 hours.
+Cerca de 70% desse trabalho pode ser executado em paralelo por 4–6 agentes (um por linha), portanto o tempo decorrido estimado é de aproximadamente 150–250 horas.
 
-## Milestones
+## Marcos
 
-Status re-scored on 2026-10-10 by depth, not presence (the 2026-10-07 percentages, reported by the
-agents that built each milestone, are in the progress log of [ROADMAP.md](../ROADMAP.md)).
+Status reavaliado em 2026-10-10 com base na profundidade, e não apenas na presença do recurso (os percentuais de 2026-10-07, informados pelos agentes que implementaram cada marco, estão no registro de progresso de [ROADMAP.md](../ROADMAP.md)).
 
-| # | Milestone | Status | Remaining (h) |
+| # | Marco | Status | Restante (h) |
 |---|---|---|---|
-| M0 | Skeleton and vertical slice: workspace, AutoCAD-style UI, command line, draw/modify basics, DXF, CLI, MCP, web | done | — |
-| M1 | Drafting core: every 2D Draw command and option, dynamic input, object snap tracking, snap overrides | ≈ 55% (Draw breadth strong; tracking, dynamic input, overrides missing) | 35–55 |
-| M2 | Modify: grips, PEDIT, SPLINEDIT, LENGTHEN, BLEND, ALIGN, associative arrays, trim/extend for all curves, MATCHPROP UI | ≈ 50% | 45–70 |
-| M3 | Layers and properties | ≈ 70% (open layer bugs #71–#75, #87) | 10–15 |
-| M4 | Annotation: DIM*, DIMSTYLE manager, MLEADER, in-place MTEXT, fields, tables, annotative scaling, SHX | ≈ 40% | 90–130 |
-| M5 | Hatch and blocks: hatch depth, block editor, dynamic blocks, xrefs, groups, attributes | ≈ 30% | 105–160 |
-| M6 | Layouts and plotting: viewports, page setups, plot styles, preview, PUBLISH | ≈ 35% | 35–50 |
-| M7 | Files: DWG/DXF fidelity and versions, RECOVER/AUDIT, templates, autosave, ETRANSMIT, underlays | ≈ 30% | 170–280 (incl. other formats) |
-| M8 | Inquiry and utilities, OPTIONS, customisation | ≈ 25% | 45–70 |
-| M9 | Parametric | ≈ 50% | 20–30 |
-| M10 | Performance: 1M entities at 60 fps, large DWG loads | ≈ 60% (internal numbers only) | 20–40 |
-| M11 | 3D: UCS, orbit, visual styles, solids, surfaces, meshes, sections, rendering | ≈ 2% | 300–450 |
-| M12 | Automation: AutoLISP, SCRIPT, action recorder, sheet sets, Express Tools | ≈ 15% (MCP, CLI, control channel done) | 130–220 |
-| M13 | 1.0 polish: preferences, workspaces, localisation, accessibility, signed packages, docs | ≈ 15% (signed packages for every platform exist; themes done; string catalog with Ukrainian and German, live language switching, #36) | 110–170 |
-| — | Geometry precision (cross-cutting, see [geometry-parity.md](geometry-parity.md)) | ≈ 40% | 70–110 |
-| — | AI features | ≈ 0% in-app | 40–80 |
-| | **Remaining to full parity** | | **≈ 1,300–2,100** |
+| M0 | Estrutura básica e fatia vertical: workspace, interface no estilo AutoCAD, linha de comando, desenho/edição básicos, DXF, CLI, MCP e web | concluído | — |
+| M1 | Núcleo de desenho: todos os comandos e opções 2D de Draw, entrada dinâmica, rastreamento de snap e substituições de snap | ≈ 55% (boa cobertura dos comandos Draw; faltam rastreamento, entrada dinâmica e substituições) | 35–55 |
+| M2 | Modificação: grips, PEDIT, SPLINEDIT, LENGTHEN, BLEND, ALIGN, matrizes associativas, trim/extend para todas as curvas e interface MATCHPROP | ≈ 50% | 45–70 |
+| M3 | Camadas e propriedades | ≈ 70% (bugs de camadas em aberto #71–#75, #87) | 10–15 |
+| M4 | Anotações: DIM*, gerenciador DIMSTYLE, MLEADER, MTEXT no local, campos, tabelas, escala anotativa e SHX | ≈ 40% | 90–130 |
+| M5 | Hachuras e blocos: recursos avançados de hachura, editor de blocos, blocos dinâmicos, xrefs, grupos e atributos | ≈ 30% | 105–160 |
+| M6 | Layouts e plotagem: viewports, configurações de página, estilos de plotagem, pré-visualização e PUBLISH | ≈ 35% | 35–50 |
+| M7 | Arquivos: fidelidade e versões DWG/DXF, RECOVER/AUDIT, modelos, salvamento automático, ETRANSMIT e referências externas | ≈ 30% | 170–280 (inclui outros formatos) |
+| M8 | Consultas e utilitários, OPTIONS e personalização | ≈ 25% | 45–70 |
+| M9 | Paramétrico | ≈ 50% | 20–30 |
+| M10 | Desempenho: 1 milhão de entidades a 60 fps e carregamento de DWGs grandes | ≈ 60% (somente números internos) | 20–40 |
+| M11 | 3D: UCS, órbita, estilos visuais, sólidos, superfícies, malhas, seções e renderização | ≈ 2% | 300–450 |
+| M12 | Automação: AutoLISP, SCRIPT, gravador de ações, conjuntos de folhas e Express Tools | ≈ 15% (MCP, CLI e canal de controle concluídos) | 130–220 |
+| M13 | Acabamento da versão 1.0: preferências, espaços de trabalho, localização, acessibilidade, pacotes assinados e documentação | ≈ 15% (pacotes assinados para todas as plataformas existem; temas concluídos; catálogo de strings com ucraniano e alemão e troca de idioma em tempo real, #36) | 110–170 |
+| — | Precisão geométrica (transversal; ver [geometry-parity.md](geometry-parity.md)) | ≈ 40% | 70–110 |
+| — | Recursos de IA | ≈ 0% no aplicativo | 40–80 |
+| | **Restante para paridade completa** | | **≈ 1.300–2.100** |
 
-Milestone rows overlap a little with the cross-cutting rows; the total is the dimension sum in
-[target-app-parity.md](target-app-parity.md), not the column sum.
+Os marcos se sobrepõem um pouco às linhas transversais; o total corresponde à soma das dimensões em [target-app-parity.md](target-app-parity.md), e não à soma da coluna.
 
-## After beta
+## Depois da beta
 
-3D foundations (UCS, 3D views, orbit, then solids per `plan/adr/0001`), sheet sets, the full
-AutoLISP surface, AI features with openly licensed local models, and every remaining language.
+Fundamentos 3D (UCS, vistas 3D e órbita, depois sólidos conforme `plan/adr/0001`), conjuntos de folhas, suporte completo a AutoLISP, recursos de IA com modelos locais de licença aberta e todos os idiomas restantes.
 
-## Revision history
+## Histórico de revisões
 
-| Date | Change | Summary |
+| Data | Alteração | Resumo |
 |---|---|---|
-| 2026-10-12 | minor | Block Editor for static blocks landed: "Use blocks" evidence updated; status and hours unchanged (REFEDIT and dynamic blocks remain) |
-| 2026-10-11 | minor | Alpha-gate evidence refreshed for merged work (#459, #525, #528, #160, #186, #564); statuses and hours unchanged |
-| 2026-10-10 | minor | Merged main: fmt fixed, Ukrainian catalog noted in M13, ready for real work 38% |
-| 2026-10-10 | minor | Alpha gate added (5 core workflows, 4 failing); stage pre-alpha |
-| 2026-10-10 | major | Created from the old ROADMAP's milestone table and current focus; milestones re-scored by depth; beta checklist added |
+| 2026-10-12 | pequena | Editor de Blocos para blocos estáticos integrado: evidência de "Use blocks" atualizada; status e estimativas inalterados (REFEDIT e blocos dinâmicos continuam pendentes) |
+| 2026-10-11 | pequena | Evidências dos requisitos para alpha atualizadas após integração de trabalho (#459, #525, #528, #160, #186, #564); status e estimativas inalterados |
+| 2026-10-10 | pequena | Main integrada: formatação corrigida, catálogo ucraniano registrado em M13, prontidão para uso real em 38% |
+| 2026-10-10 | pequena | Requisitos para alpha adicionados (5 fluxos essenciais, 4 pendentes); estágio definido como pré-alpha |
+| 2026-10-10 | grande | Criado a partir da tabela de marcos do ROADMAP antigo e do foco atual; marcos reavaliados pela profundidade; lista de verificação da beta adicionada |
