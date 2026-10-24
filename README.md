@@ -242,21 +242,6 @@ Para RISC-V (riscv64), há também `cadcraft-<ver>-linux-riscv64.tar.gz`, compil
 
 O Decode CAD é uma edição comunitária baseada no projeto aberto [CADCraft original](https://github.com/storytold/cadcraft). O código e os componentes herdados mantêm seus créditos e licenças originais.
 
-| Aplicativo | Finalidade | Código-fonte | Saiba mais |
-|---|---|---|---|
-| **PhotoCraft** | Edição de imagens: camadas, máscaras, texto e arquivos PSD | [GitHub](https://github.com/storytold/photocraft) | [Site](https://getartcraft.com/apps/photocraft) |
-| **VectorCraft** | Ilustração vetorial | [GitHub](https://github.com/storytold/vectorcraft) | [Site](https://getartcraft.com/apps/vectorcraft) |
-| **FilmCraft** | Edição de vídeo, cor e áudio | [GitHub](https://github.com/storytold/filmcraft) | [Site](https://getartcraft.com/apps/filmcraft) |
-| **LightCraft** | Biblioteca de fotos e revelação de arquivos RAW | [GitHub](https://github.com/storytold/lightcraft) | [Site](https://getartcraft.com/apps/lightcraft) |
-| **PdfCraft** | Leitura, organização e proteção de PDFs | [GitHub](https://github.com/storytold/pdfcraft) | [Site](https://getartcraft.com/apps/pdfcraft) |
-| **EffectCraft** | Animação gráfica e efeitos visuais | [GitHub](https://github.com/storytold/effectcraft) | [Site](https://getartcraft.com/apps/effectcraft) |
-| **DesignCraft** | Diagramação e publicação | [GitHub](https://github.com/storytold/designcraft) | [Site](https://getartcraft.com/apps/designcraft) |
-| **CADCraft** | Desenho técnico e projeto auxiliados por computador | [GitHub](https://github.com/storytold/cadcraft) | [Site](https://getartcraft.com/apps/cadcraft) |
-
-
-
-
-
 ## Licença e créditos
 
 O CADCraft é disponibilizado sob a licença [MIT](LICENSE-MIT) ou [Apache-2.0](LICENSE-APACHE), à sua escolha. Direitos autorais © 2026 ArtCraft Team e colaboradores do CADCraft. Os avisos obrigatórios estão em [NOTICE](NOTICE).
