@@ -185,8 +185,8 @@ fn locale_and_saved_preference_resolution() {
     assert_eq!(Preference::English.resolve(&locales), "en");
     assert_eq!(Preference::Auto.resolve(&["en-US".into(), "uk-UA".into()]), "en");
     assert_eq!(Preference::Auto.resolve(&[]), "en");
-    assert_eq!(Preference::restore(None), Preference::Auto);
-    assert_eq!(Preference::restore(Some("obsolete")), Preference::Auto);
+    assert_eq!(Preference::restore(None), Preference::English);
+    assert_eq!(Preference::restore(Some("obsolete")), Preference::English);
     for preference in Preference::ALL {
         assert_eq!(Preference::restore(Some(preference.code())), preference);
         let saved = serde_json::to_string(&preference).unwrap();
@@ -211,7 +211,7 @@ fn locale_and_saved_preference_resolution() {
         assert_eq!(b.ui.interface_language, preference);
     }
     assert!(serde_json::from_str::<Preference>("\"unsupported\"").is_err());
-    assert_eq!(serde_json::from_value::<crate::UiState>(json!({})).unwrap().interface_language, Preference::Auto);
+    assert_eq!(serde_json::from_value::<crate::UiState>(json!({})).unwrap().interface_language, Preference::English);
 }
 
 #[test]
