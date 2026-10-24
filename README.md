@@ -212,13 +212,11 @@ O Decode CAD é uma edição mantida pela **Decode Analytics**. A identidade vis
 
 ## Licença e créditos
 
-O Decode CAD é distribuído sob a licença [MIT](LICENSE-MIT) ou [Apache-2.0](LICENSE-APACHE), conforme os termos aplicáveis. **Copyright © 2026 Decode Analytics e colaboradores desta edição**, além dos titulares identificados nos arquivos e componentes derivados. Os avisos legais aplicáveis estão em [NOTICE](NOTICE).
+**Decode CAD é desenvolvido, personalizado e mantido pela Decode Analytics.** Esta edição possui identidade visual e apresentação próprias, sobre uma base de código aberto. Copyright © 2026 Decode Analytics e colaboradores pelas modificações e contribuições desta edição.
 
-Fontes, ícones, imagens e outros recursos incluídos podem manter licenças próprias. Consulte [ATTRIBUTION.md](ATTRIBUTION.md) e os avisos das respectivas dependências antes de redistribuir.
+O projeto é disponibilizado sob os termos da licença [MIT](LICENSE-MIT) ou [Apache-2.0](LICENSE-APACHE), conforme aplicável. Os avisos legais e de distribuição necessários estão em [NOTICE](NOTICE) e [ATTRIBUTION.md](ATTRIBUTION.md); eles são mantidos para respeitar as licenças do código e dos recursos incluídos.
 
-Os ícones da interface, a fonte vetorial de desenho técnico, os padrões de hachura e os tipos de linha incluídos podem conter material herdado do projeto-base; a proveniência é descrita em [ATTRIBUTION.md](ATTRIBUTION.md).
-
-A identidade pública desta edição é Decode CAD, desenvolvida pela Decode Analytics. Recursos visuais de terceiros que não sejam necessários à execução ou à atribuição legal não são usados como marca promocional do produto.
+A marca e os materiais promocionais desta edição são apresentados como **Decode CAD / Decode Analytics**. Os avisos de licença e proveniência permanecem nos arquivos legais do repositório, sem transformar nomes ou marcas de origem em parte da identidade visual do Decode CAD.
 
 ### Organização dos painéis
 
