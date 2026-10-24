@@ -2,7 +2,7 @@
 Type=Application
 Name=Decode CAD
 GenericName=Computer-Aided Design
-Comment=Draft, dimension and plot 2D drawings; open DXF and DWG files
+Comment=Decode CAD by Decode Analytics — 2D drafting, dimensioning and plotting
 Exec=cadcraft %F
 TryExec=cadcraft
 Icon=ai.storyteller.cadcraft
