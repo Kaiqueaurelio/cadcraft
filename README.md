@@ -1,3 +1,5 @@
+> **Edição comunitária de Kaique Aurélio:** este repositório é um fork do [CADCraft original](https://github.com/storytold/cadcraft). Consulte [README-FORK.md](README-FORK.md) para o estado desta edição e as informações de compilação. Créditos e licenças do projeto original devem ser preservados.
+
 <p align="center">
   <a href="https://getartcraft.com/">
     <picture>
