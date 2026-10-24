@@ -141,7 +141,7 @@ coordinates to 1e-9 relative.
 
 1. Exact ellipse and spline intersection and closest point (subdivision + Newton with a
    relative tolerance); use them in snaps, TRIM, EXTEND, BREAK. 15–25 h.
-2. Polyline offset with bulge recomputation, self-intersection cleanup and OFFSETGAPTYPE;
+2. Polyline offset self-intersection cleanup and OFFSETGAPTYPE (bulge recomputation is implemented and regression-tested);
    spline/ellipse offset as fitted splines within a tolerance. 15–25 h.
 3. A tolerance context relative to the drawing's extents, and a known-answer test suite at
    origin and at 1e6–1e7 coordinates. 8–12 h.
