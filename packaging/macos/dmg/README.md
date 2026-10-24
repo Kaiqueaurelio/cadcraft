@@ -1,44 +1,36 @@
-# macOS DMG window
+# Janela do DMG no macOS
 
-What Finder shows when the DMG opens: a 660 × 400 pt background with the app icon and the
-`Applications` link side by side. `package.sh` copies these files into the image; nothing here is
-generated at build time, so the DMG still builds with `hdiutil makehybrid` (no mounted device, no
-Finder scripting on CI, nothing extra installed in the signing job).
+Esta é a aparência exibida pelo Finder quando o DMG é aberto: um fundo de 660 × 400 pt, com o ícone do aplicativo e o atalho para `Applications` lado a lado. O script `package.sh` copia esses arquivos para a imagem. Nada é gerado durante a compilação, portanto o DMG continua sendo criado com `hdiutil makehybrid` sem dispositivo montado, automação do Finder no CI ou instalação extra durante a tarefa de assinatura.
 
-| File | What |
+| Arquivo | Descrição |
 |---|---|
-| `background.svg` | Source of the background: the app icon (`assets/app-icon/cadcraft-1024.png`, linked, not copied) cropped as a cover on the CADCraft colour field (`#14a3c7`), Ink and Paper. Its text (Inter, JetBrains Mono) is outlined, so rendering it needs no fonts. No paper grain: noise doesn't compress, and this keeps `background.tiff` small. |
-| `background.tiff` | The background at 1x (660 × 400 px, 72 dpi) and 2x (1320 × 800 px, 144 dpi) in one HiDPI TIFF (16-colour palette, Deflate, sRGB). Goes to `.background/background.tiff`. |
-| `dmg-layout.DS_Store` | Finder's view settings for the volume: window size, icon size 128, CADCraft.app at (326, 205), `Applications` at (574, 205), and the background. Goes to `.DS_Store` in the image; named so it isn't mistaken for (or ignored like) a Finder-generated `.DS_Store`. |
-| `generate.py` | Writes `background.tiff` and `dmg-layout.DS_Store` from the SVG and the layout above. |
+| `background.svg` | Arquivo-fonte do fundo: o ícone do aplicativo (`assets/app-icon/cadcraft-1024.png`, vinculado, não copiado) recortado para preencher o campo de cores do CADCraft (`#14a3c7`), Ink e Paper. O texto (Inter e JetBrains Mono) é convertido em contornos, então a renderização não depende de fontes instaladas. Não há textura de papel: ruído não comprime bem e aumentaria o tamanho de `background.tiff`. |
+| `background.tiff` | Fundo em 1x (660 × 400 px, 72 dpi) e 2x (1320 × 800 px, 144 dpi) em um TIFF HiDPI (paleta de 16 cores, Deflate, sRGB). Vai para `.background/background.tiff`. |
+| `dmg-layout.DS_Store` | Configurações de visualização do volume no Finder: tamanho da janela, ícones de 128 px, `CADCraft.app` em (326, 205), `Applications` em (574, 205) e o fundo. Vai para `.DS_Store` na imagem; o nome evita confusão com um `.DS_Store` gerado pelo Finder. |
+| `generate.py` | Gera `background.tiff` e `dmg-layout.DS_Store` a partir do SVG e do layout descrito acima. |
 
-## The volume name has no version
+## O nome do volume não inclui a versão
 
-The mounted volume is called `CADCraft`, not `CADCraft <version>`. The layout points at the background
-through an alias that includes the volume name, and Finder resolves it by that name: with a
-versioned name the window keeps its size and icon positions but shows no background (tested).
-The DMG file name (`cadcraft-<version>-macos-<arch>.dmg`) still carries the version.
+O volume montado chama-se `CADCraft`, não `CADCraft <versão>`. O layout aponta para o fundo por meio de um alias que inclui o nome do volume, e o Finder resolve esse alias usando esse nome. Se o volume tiver um nome com versão, a janela mantém o tamanho e as posições dos ícones, mas o fundo não aparece (comportamento testado).
 
-## Rules
+O nome do arquivo DMG (`cadcraft-<version>-macos-<arch>.dmg`) continua incluindo a versão.
 
-- **Finder draws the icon labels in black in light and dark mode** when a window has a background,
-  so the area under both icons stays light (Paper).
-- **Nothing goes inside the icon boxes:** artwork keeps 10 pt clear of each 128 pt icon box and of
-  the label strip under it.
+## Regras de layout
 
-## Regenerate
+- **O Finder desenha os rótulos dos ícones em preto nos modos claro e escuro** quando a janela tem fundo. Por isso, a área sob os dois ícones permanece clara (Paper).
+- **Não coloque arte dentro das caixas dos ícones:** mantenha 10 pt de espaço em relação a cada caixa de ícone de 128 pt e à faixa do rótulo abaixo dela.
 
-Edit `background.svg` (or the layout constants in `generate.py`), then run, on any OS:
+## Regenerar os arquivos
+
+Edite `background.svg` (ou as constantes de layout em `generate.py`) e execute, em qualquer sistema operacional:
 
 ```sh
 pip install 'pillow>=12' ds_store==1.3.3 mac_alias==2.2.3
-python3 packaging/macos/dmg/generate.py   # needs resvg on PATH
+python3 packaging/macos/dmg/generate.py   # requer resvg no PATH
 ```
 
-Both outputs are byte-for-byte reproducible and carry nothing from the machine that ran it: the
-SVG renders without any fonts, and `dmg-layout.DS_Store` is written from scratch, its background
-alias holding only the volume name and `/.background/background.tiff`. If you add text to the SVG,
-outline it (`usvg` from resvg converts text to paths). The window is 660 × 432 with Finder's 32 pt
-title bar; the content area is 660 × 400.
+As duas saídas são reproduzíveis byte a byte e não incluem dados da máquina que as gerou: o SVG é renderizado sem fontes instaladas e `dmg-layout.DS_Store` é criado do zero, com um alias de fundo que contém apenas o nome do volume e `/.background/background.tiff`. Se adicionar texto ao SVG, converta-o em contornos (`usvg`, do resvg, converte texto em caminhos).
 
-This follows VectorCraft's `packaging/macos/dmg/` (storytold/vectorcraft#493).
+A janela mede 660 × 432 pt, incluindo a barra de título de 32 pt do Finder; a área de conteúdo mede 660 × 400 pt.
+
+Este procedimento segue o diretório `packaging/macos/dmg/` do VectorCraft (storytold/vectorcraft#493).
