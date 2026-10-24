@@ -5,7 +5,7 @@ Choose **Edit → Interface Language** and select **Auto (system language)**, **
 The interface updates without restarting, including the native macOS menus.
 The choice is saved with the other interface preferences (`cadcraft.prefs`, beside the theme):
 eframe storage on the desktop, browser local storage on the web. Installations without a saved
-choice use Auto.
+choice use English. Auto remains available as an explicit choice in the language picker.
 
 Auto uses the first supported language in the operating system's preferred locales, or the
 browser's `navigator.languages` on the web. BCP 47 and POSIX tags select their primary language:
