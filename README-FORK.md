@@ -1,6 +1,6 @@
-# CADCraft — fork comunitário de Kaique Aurélio
+# Decode CAD — fork comunitário de Kaique Aurélio
 
-Este repositório é uma versão derivada do projeto aberto [CADCraft original](https://github.com/storytold/cadcraft), mantida por Kaique Aurélio.
+Este repositório contém o Decode CAD, uma versão derivada do projeto aberto [CADCraft original](https://github.com/storytold/cadcraft), mantida por Kaique Aurélio.
 
 ## Estado do projeto
 
@@ -24,4 +24,4 @@ Este projeto deriva de [storytold/cadcraft](https://github.com/storytold/cadcraf
 
 ## Segurança dos arquivos
 
-O CADCraft está em desenvolvimento inicial e pode ter limitações de compatibilidade de arquivos. Mantenha cópias de segurança dos desenhos importantes e valide os arquivos exportados antes de usá-los em produção.
+O Decode CAD está em desenvolvimento inicial e pode ter limitações de compatibilidade de arquivos. Mantenha cópias de segurança dos desenhos importantes e valide os arquivos exportados antes de usá-los em produção.
