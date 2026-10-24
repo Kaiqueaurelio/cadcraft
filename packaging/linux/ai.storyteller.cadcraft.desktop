@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=CADCraft
+Name=Decode CAD
 GenericName=Computer-Aided Design
 Comment=Draft, dimension and plot 2D drawings; open DXF and DWG files
 Exec=cadcraft %F
