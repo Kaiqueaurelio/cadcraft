@@ -105,14 +105,14 @@ Other languages shipped: Ukrainian and German (989 catalog rows each; Ukrainian 
 
 Ranked; detail and the full beta checklist in [docs/roadmap.md](docs/roadmap.md).
 
-1. Gate and land: fix fmt on main, run `cargo xtask ci` on every PR, land the 47 open PRs (15–25 h).
+1. Gate and land: the fork now runs `cargo xtask ci` on pull requests through the shared `craft-common-actions` workflow; keep verifying the gate and review the open upstream PR backlog (15–25 h).
 2. Stop losing data on save; native MULTILEADER; save DWG/DXF at a chosen version (30–45 h).
 3. Real-file DWG/DXF corpus and a black-box check in AutoCAD (10–15 h + owner).
 4. Precision input: object snap tracking, extension/parallel snaps, FROM/M2P/TK, snap overrides,
    editable dynamic input (25–35 h).
 5. Unstub prompt options in TRIM/EXTEND, OFFSET, ROTATE, PLINE, SPLINE, MTEXT, MLEADER (15–25 h).
 6. Autosave, recovery, AUDIT, RECOVER (10–15 h).
-7. Exact ellipse/spline geometry and correct polyline offsets (30–50 h).
+7. Exact ellipse/spline geometry; finish polyline offset loop cleanup and collapsed-segment handling (30–50 h).
 8. Xrefs, block editor, groups, then dynamic blocks (80–120 h).
 
 ## Progress log
