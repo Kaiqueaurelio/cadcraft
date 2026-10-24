@@ -1,94 +1,65 @@
-# CADCraft architecture
+# Arquitetura do CADCraft
 
-> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-10 · **Change:** major (first committed architecture doc, written from the code on main at bd2412f) · **Target:** Autodesk AutoCAD 2027
+> **Última revisão:** 2026-10-10 · **Última atualização:** 2026-10-10 · **Alteração:** grande (primeira versão do documento de arquitetura, escrita a partir do código na main em bd2412f) · **Referência:** Autodesk AutoCAD 2027
 
-How CADCraft is built today. This describes the code on `main`, not plans; plans live in
-[roadmap.md](roadmap.md). Agents: the rules that keep this shape (layering, never-crash,
-everything-is-a-command, clean-room) are in [AGENTS.md](../AGENTS.md).
+Como o CADCraft é construído atualmente. Este documento descreve o código em `main`, não planos futuros; os planos estão em [roadmap.md](roadmap.md). Agentes: as regras que preservam essa estrutura (camadas, nunca travar, tudo é um comando e clean-room) estão em [AGENTS.md](../AGENTS.md).
 
 ## Workspace
 
-About 57,000 lines of Rust in 12 library crates, 3 apps and `xtask` (counted 2026-10-10).
+Cerca de 57.000 linhas de Rust em 12 crates de biblioteca, 3 aplicativos e `xtask` (contagem de 2026-10-10).
 
-| Layer | Crate | Lines | What it does |
+| Camada | Crate | Linhas | Função |
 |---|---|---:|---|
-| L0 | `geom` | 2,067 | f64 2D/3D vectors, `Mat3`/`Mat4`, bounds, lines, arcs and bulges, circles, ellipses, (rational) B-splines with fit-point interpolation, line/arc intersections, tessellation, planar region tracing for HATCH/BOUNDARY (`region.rs`) |
-| L0 | `dxf` | 571 | Standalone DXF tag reader/writer: ASCII and binary, tag-count limits for hostile input |
-| L1 | `color` | 265 | AutoCAD Color Index table, true colour, ByLayer/ByBlock |
-| L1 | `doc` | 3,054 | The drawing database: header, symbol tables (layers, linetypes, text/dimension/table/multileader styles), blocks, model space, layouts, constraints; copy-on-write `EntityStore`; our own hatch pattern and linetype library (`library.rs`) |
-| L2 | `fonts` | 2,062 | Our single-stroke drafting font, TrueType/OpenType/`.ttc` outlines through `skrifa`, TEXT and MTEXT layout and formatting codes, per-character fallback and FONTALT |
-| L2 | `render` | 3,300 | Display lists (polylines, triangles, points tagged with entity handles): linetypes, hatches, gradients, text, block expansion, dimension geometry, paper-space clipping; CPU rasteriser (`tiny-skia`) for PNG, plot preview and tests |
-| L2 | `constraints` | 2,504 | Own parametric solver: damped Gauss–Newton / Levenberg–Marquardt (`lm.rs`), 12 geometric and the dimensional constraints, expressions and parameters, AutoConstrain inference |
-| L3 | `io` | 5,124 | DXF ⇄ document mapping (`dxf_read.rs`, `dxf_write.rs`, CADCraft xdata in `dxf_ext.rs`), PDF plotting, SVG and PNG export |
-| L3 | `dwg` | 149 | DWG through a DXF bridge: the `acadrust` crate (MPL-2.0, unmodified) converts DWG ⇄ DXF bytes; nothing else sees its types. Native only |
-| L4 | `engine` | 25,090 | `Session`, the command registry (`cmd/*`), command-line parser and prompt machines, object snaps and polar/ortho (`snap.rs`), selection (`select.rs`), grips (`grips.rs`), associativity (`assoc.rs`), system variables, units, undo, R-tree spatial index (`spatial.rs`) |
-| L5 | `ui-egui` | 9,849 | The swappable egui front end: GPU canvas (`gpu.rs`, wgpu), menus and shortcuts (`menus.rs`), command line, palettes, Layer Properties Manager and other dialogs, ViewCube, icons drawn in code, themes, the interface string catalog (`i18n/`, English, Ukrainian and German), JSON control channel (`control.rs`) |
-| L5 | `mcp` | 559 | MCP server (JSON-RPC 2.0 over stdio) on a headless session or bridged to a running app |
-| app | `cadcraft` | 1,102 | Desktop app (eframe/wgpu; DirectX 12 by default on Windows) |
+| L0 | `geom` | 2.067 | Vetores 2D/3D em f64, `Mat3`/`Mat4`, limites, linhas, arcos e bulges, círculos, elipses, B-splines (racionais) com interpolação por pontos de ajuste, interseções de linhas/arcos, tesselação e rastreamento de regiões planas para HATCH/BOUNDARY (`region.rs`) |
+| L0 | `dxf` | 571 | Leitor/gravador independente de tags DXF: ASCII e binário, com limites de quantidade de tags para entradas maliciosas |
+| L1 | `color` | 265 | Tabela AutoCAD Color Index, cores verdadeiras, ByLayer/ByBlock |
+| L1 | `doc` | 3.054 | Banco de dados do desenho: cabeçalho, tabelas de símbolos (camadas, tipos de linha, estilos de texto/cota/tabela/multileader), blocos, espaço do modelo, layouts e restrições; `EntityStore` com copy-on-write; biblioteca própria de padrões de hachura e tipos de linha (`library.rs`) |
+| L2 | `fonts` | 2.062 | Fonte de desenho de traço único, contornos TrueType/OpenType/`.ttc` via `skrifa`, layout e códigos de formatação de TEXT e MTEXT, fallback por caractere e FONTALT |
+| L2 | `render` | 3.300 | Listas de exibição (polilinhas, triângulos e pontos identificados por handles de entidade): tipos de linha, hachuras, gradientes, texto, expansão de blocos, geometria de cotas e recorte de paper space; rasterizador de CPU (`tiny-skia`) para PNG, pré-visualização de plotagem e testes |
+| L2 | `constraints` | 2.504 | Solver paramétrico próprio: Gauss–Newton amortecido / Levenberg–Marquardt (`lm.rs`), 12 restrições geométricas e as restrições dimensionais, expressões e parâmetros, inferência AutoConstrain |
+| L3 | `io` | 5.124 | Mapeamento DXF ⇄ documento (`dxf_read.rs`, `dxf_write.rs`, xdata do CADCraft em `dxf_ext.rs`), plotagem PDF e exportação SVG/PNG |
+| L3 | `dwg` | 149 | DWG por meio de uma ponte DXF: o crate `acadrust` (MPL-2.0, sem modificações) converte bytes DWG ⇄ DXF; nenhum outro componente usa seus tipos. Somente nativo |
+| L4 | `engine` | 25.090 | `Session`, registro de comandos (`cmd/*`), analisador da linha de comando e máquinas de prompt, object snaps e polar/ortho (`snap.rs`), seleção (`select.rs`), grips (`grips.rs`), associatividade (`assoc.rs`), variáveis do sistema, unidades, desfazer e índice espacial R-tree (`spatial.rs`) |
+| L5 | `ui-egui` | 9.849 | Front-end intercambiável egui: canvas GPU (`gpu.rs`, wgpu), menus e atalhos (`menus.rs`), linha de comando, paletas, gerenciador de propriedades de camadas e outros diálogos, ViewCube, ícones desenhados em código, temas e catálogo de strings da interface (`i18n/`, inglês, ucraniano e alemão), canal de controle JSON (`control.rs`) |
+| L5 | `mcp` | 559 | Servidor MCP (JSON-RPC 2.0 por stdio) em uma sessão headless ou conectado a um aplicativo em execução |
+| app | `cadcraft` | 1.102 | Aplicativo desktop (eframe/wgpu; DirectX 12 por padrão no Windows) |
 | app | `cadcraft-cli` | 823 | `info`, `convert`, `run` (scripts), `commands`, `sample`, `mcp` |
-| app | `cadcraft-web` | 88 | WASM build of the same UI (no DWG) |
-| tool | `xtask` | 1,064 | `ci`, `layers`, `assets`, `wasm`, `parity`, `version`, `stats`, icon generation |
+| app | `cadcraft-web` | 88 | Versão WASM da mesma interface (sem DWG) |
+| ferramenta | `xtask` | 1.064 | `ci`, `layers`, `assets`, `wasm`, `parity`, `version`, `stats`, geração de ícones |
 
-`cargo xtask layers` enforces the layering: nothing below L5 depends on egui, eframe, winit,
-wgpu or rfd.
+`cargo xtask layers` verifica a arquitetura em camadas: nenhum componente abaixo de L5 depende de egui, eframe, winit, wgpu ou rfd.
 
-## Data model
+## Modelo de dados
 
-- A `Drawing` is header variables, symbol tables, block definitions, model space and paper-space
-  layouts. Entities carry a handle, layer, colour, linetype, lineweight, transparency and an
-  `EntityKind`: Line, Point, Circle, Arc, Ellipse, LwPolyline, Polyline3d, Spline, Ray, XLine,
-  Text, MText, AttDef, Insert (with attributes), Dimension (linear, aligned, angular, diameter,
-  radius, ordinate, arc length), Leader, MLeader, Hatch (pattern, solid, gradient), Solid,
-  Trace, Face3d, Viewport, Image, Wipeout, Table and Unknown (raw DXF tags).
-- There are no 3D solids, surfaces, meshes, regions (ACIS), multilines, tolerance frames or
-  underlays in the model yet ([gaps.md](gaps.md)).
-- Entity collections are copy-on-write, so undo is a whole-drawing snapshot that costs little.
-- Coordinates are f64 world units. 2D work happens in the WCS; there is no UCS yet.
+- Um `Drawing` contém variáveis de cabeçalho, tabelas de símbolos, definições de blocos, espaço do modelo e layouts do espaço do papel. As entidades têm handle, camada, cor, tipo de linha, espessura de linha, transparência e um `EntityKind`: Line, Point, Circle, Arc, Ellipse, LwPolyline, Polyline3d, Spline, Ray, XLine, Text, MText, AttDef, Insert (com atributos), Dimension (linear, alinhada, angular, diâmetro, raio, ordenada e comprimento de arco), Leader, MLeader, Hatch (padrão, sólido e gradiente), Solid, Trace, Face3d, Viewport, Image, Wipeout, Table e Unknown (tags DXF brutas).
+- Ainda não há sólidos 3D, superfícies, malhas, regiões (ACIS), multilinhas, quadros de tolerância ou referências externas no modelo ([gaps.md](gaps.md)).
+- As coleções de entidades usam copy-on-write, então desfazer corresponde a um snapshot do desenho inteiro com baixo custo.
+- As coordenadas são unidades do mundo em f64. O trabalho 2D usa WCS; UCS ainda não está disponível.
 
-## Commands
+## Comandos
 
-Every user-visible action is a `CommandSpec` (`crates/engine/src/cmd/mod.rs`): id = AutoCAD's
-command name in lower case, label, menu path, shortcut, aliases, a JSON `run`, an `enabled`
-check and an optional interactive prompt machine. 295 engine commands are registered (128 with
-interactive prompts, counted from source 2026-10-10), plus about 30 UI-only commands in
-`crates/ui-egui/src/menus.rs`. The command line, menus, toolbar, Tool Sets, scripts, CLI, control
-channel and MCP all reach the same commands. JSON calls never open dialogs.
+Toda ação visível ao usuário é um `CommandSpec` (`crates/engine/src/cmd/mod.rs`): id = nome do comando do AutoCAD em letras minúsculas, label, caminho de menu, atalho, aliases, função `run` em JSON, verificação `enabled` e uma máquina de prompt interativo opcional. Há 295 comandos do engine registrados (128 com prompts interativos, contados no código em 2026-10-10), além de cerca de 30 comandos exclusivos da interface em `crates/ui-egui/src/menus.rs`. A linha de comando, os menus, a barra de ferramentas, Tool Sets, scripts, CLI, canal de controle e MCP usam os mesmos comandos. Chamadas JSON nunca abrem diálogos.
 
-## Rendering
+## Renderização
 
-`render::build` turns a space into a display list once per change; the UI uploads it to wgpu in
-batches (`gpu.rs`). Tessellation tolerance follows the view. The R-tree (`spatial.rs`) is patched
-per changed store chunk after an edit, so picking stays near 0.001 ms at 200k entities. PNG, PDF,
-SVG and plot preview reuse the same display list through the CPU rasteriser or vector writers.
+`render::build` converte um espaço em uma lista de exibição a cada alteração; a interface envia essa lista à wgpu em lotes (`gpu.rs`). A tolerância de tesselação acompanha a vista. A R-tree (`spatial.rs`) é atualizada por bloco alterado do armazenamento após uma edição, mantendo a seleção perto de 0,001 ms em desenhos com 200 mil entidades. PNG, PDF, SVG e a pré-visualização de plotagem reutilizam a mesma lista de exibição por meio do rasterizador de CPU ou dos gravadores vetoriais.
 
-## Files
+## Arquivos
 
-DXF is the native path: `dxf` parses tags, `io::dxf_read` maps them to the document, and
-`io::dxf_write` writes an R2000 (AC1015) DXF. DWG is converted to DXF in memory by `acadrust` and
-read through the same path; saving DWG writes our DXF and converts it back. CADCraft-only data
-(constraints, associativity details, table flags) travels in xdata under our own application
-name. Detail and gaps: [file-format-parity.md](file-format-parity.md).
+DXF é o caminho nativo: `dxf` analisa as tags, `io::dxf_read` as mapeia para o documento e `io::dxf_write` grava um DXF R2000 (AC1015). O DWG é convertido em memória para DXF por `acadrust` e lido pelo mesmo caminho; ao salvar em DWG, o CADCraft grava seu DXF e o converte de volta. Dados exclusivos do CADCraft (restrições, detalhes de associatividade e flags de tabelas) são armazenados em xdata sob o nome da aplicação. Detalhes e lacunas: [file-format-parity.md](file-format-parity.md).
 
-## Agent control
+## Controle por agentes
 
-- **Control channel:** `cadcraft --control PORT` accepts JSON lines (`cmdline.input`,
-  `engine.execute`, `ui.screenshot`, `ui.render` …); see [control-protocol.md](control-protocol.md).
-- **MCP:** `cadcraft-cli mcp` (headless) or `--connect HOST:PORT` (drive the running app); see
-  [mcp.md](mcp.md).
-- **CLI:** `cadcraft-cli run --script … --export out.png` for headless batch work. A reader that
-  closes stdout early (`… | head`) drops the rest of the output but keeps the work — later
-  commands, `--save`, `--export` — and the exit status still reports failures; another stdout
-  write error is reported and makes it 1.
+- **Canal de controle:** `cadcraft --control PORT` aceita linhas JSON (`cmdline.input`, `engine.execute`, `ui.screenshot`, `ui.render` etc.); consulte [control-protocol.md](control-protocol.md).
+- **MCP:** `cadcraft-cli mcp` (headless) ou `--connect HOST:PORT` (controla o aplicativo em execução); consulte [mcp.md](mcp.md).
+- **CLI:** `cadcraft-cli run --script … --export out.png` para processamento em lote headless. Um leitor que fecha stdout antes do fim (`… | head`) descarta o restante da saída, mas o trabalho continua — inclusive comandos posteriores, `--save` e `--export` — e o código de saída ainda indica falhas; outro erro ao gravar em stdout é informado e faz o código de saída ser 1.
 
-## Safety
+## Segurança
 
-Production crates deny `unwrap`/`expect`/`panic!` and forbid `unsafe`. `Session::execute` and
-interactive input run under `catch_unwind`, restoring the drawing if a panic escapes. Input-sized
-allocations are capped (DXF tag counts, DWG size limits, hatch segment and island limits,
-`MAX_BLOCK_DEPTH`).
+Os crates de produção proíbem `unwrap`/`expect`/`panic!` e vetam `unsafe`. `Session::execute` e a entrada interativa são executadas sob `catch_unwind`, restaurando o desenho se um panic escapar. Alocações dimensionadas pela entrada têm limites (quantidade de tags DXF, tamanho DWG, segmentos e ilhas de hachura, `MAX_BLOCK_DEPTH`).
 
-## Revision history
+## Histórico de revisões
 
-| Date | Change | Summary |
+| Data | Alteração | Resumo |
 |---|---|---|
-| 2026-10-10 | major | First committed architecture doc, measured from the code (crate sizes, entity kinds, command counts) |
+| 2026-10-10 | grande | Primeiro documento de arquitetura integrado, medido a partir do código (tamanho dos crates, tipos de entidade e contagem de comandos) |
