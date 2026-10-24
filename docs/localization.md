@@ -1,80 +1,156 @@
-# Idiomas da interface
+# Interface languages
 
-A interface do CADCraft usa **inglês como idioma padrão**, para manter a terminologia e o fluxo de trabalho próximos aos do AutoCAD. O usuário pode selecionar outro idioma em **Edit → Interface Language**. As opções disponíveis são Automático (idioma do sistema), English, Українська, Português (Brasil), Deutsch, Español, Čeština, Русский, Français, 简体中文, Italiano, 한국어, Svenska, العربية, Magyar, Türkçe e Ελληνικά.
+Choose **Edit → Interface Language** and select **Auto (system language)**, **English**,
+**Українська**, **Português (Brasil)**, **Deutsch**, **Español**, **Čeština** (Czech), **Русский**, **Français**, **简体中文**, **Italiano**, **한국어** (Korean), **Svenska** (Swedish), **العربية** (Arabic), **Magyar** (Hungarian), **Türkçe** (Turkish), or **Ελληνικά** (Greek).
+The interface updates without restarting, including the native macOS menus.
+The choice is saved with the other interface preferences (`cadcraft.prefs`, beside the theme):
+eframe storage on the desktop, browser local storage on the web. Installations without a saved
+choice use Auto.
 
-A troca de idioma ocorre sem reiniciar o aplicativo, inclusive nos menus nativos do macOS. A preferência é salva junto às demais configurações da interface (`cadcraft.prefs`, ao lado do tema): no armazenamento do eframe em aplicativos desktop e no armazenamento local do navegador na versão web. Se não houver uma preferência válida salva, o aplicativo usa o inglês.
+Auto uses the first supported language in the operating system's preferred locales, or the
+browser's `navigator.languages` on the web. BCP 47 and POSIX tags select their primary language:
+`uk-UA` → `uk`, `de_AT.UTF-8` → `de`, `es-MX` → `es`, `pt_BR.UTF-8` → `pt-BR`,
+`cs-CZ` and `cs_CZ.UTF-8` → `cs`, `it-IT` and `it_CH.UTF-8` → `it`, `ko-KR` and `ko_KR.UTF-8` → `ko`,
+`sv-SE`, `sv-FI` and `sv_SE.UTF-8` → `sv`, `hu-HU` and `hu_HU.UTF-8` → `hu`, `tr-TR` and `tr_TR.UTF-8` → `tr`. Unsupported languages fall back to English.
+Set `CADCRAFT_LOCALE=cs-CZ` to override the desktop's locale for a launch.
+An explicit saved language choice takes precedence over that override.
 
-## Seleção automática e configuração
-
-A opção Automático escolhe o primeiro idioma compatível entre os idiomas preferidos do sistema operacional ou, na versão web, entre os valores de `navigator.languages`. Tags BCP 47 e POSIX são reduzidas ao idioma principal: por exemplo, `uk-UA` → `uk`, `de_AT.UTF-8` → `de`, `es-MX` → `es` e `pt_BR.UTF-8` → `pt-BR`. Idiomas sem suporte voltam para o inglês.
-
-No desktop, a variável `CADCRAFT_LOCALE=cs-CZ` pode substituir o idioma do sistema para uma execução. Uma escolha explícita salva nas preferências tem prioridade sobre essa variável.
-
-A automação pode alterar o idioma pelo canal de controle existente:
+Automation can select the language through the existing control channel:
 
 ```json
 {"id":1,"method":"engine.execute","params":{"command":"ui.language","params":{"lang":"cs"}}}
 ```
 
-O método `ui.set` também aceita `{"interfaceLanguage":"cs"}`. Os códigos aceitos são `auto`, `en`, `uk`, `pt-BR`, `de`, `es`, `cs`, `ru`, `fr`, `zh`, `it`, `ko`, `sv`, `ar`, `hu`, `tr` e `el`. Valores inválidos são rejeitados sem alterar a seleção atual. Restaurar as paletas não redefine o idioma.
+The `ui.set` method also accepts `{"interfaceLanguage":"cs"}`. Supported values are `auto`,
+`en`, `uk`, `pt-BR`, `de`, `es`, `cs`, `ru`, `fr`, `zh`, `it`, `ko`, `sv`, `ar`, `hu`, `tr`, and `el`; invalid values are rejected without changing the current
+selection. Resetting palettes keeps the language choice.
 
-## Cobertura das traduções
+## Translation coverage
 
-Os catálogos abrangem nomes de comandos e menus, grupos de ferramentas e dicas, página inicial, abas de arquivos e espaço do modelo, controles da barra de status, modos de snap a objetos, instruções de desenho, rótulos de propriedades, diálogos e controles da janela Sobre. A referência de comandos pode ser pesquisada pelo identificador em inglês, pelo rótulo em inglês ou pela tradução.
+The catalogs cover command and menu labels, tool groups and tooltips, the Start page,
+file and model-space tabs, status controls, object snaps, drafting prompts, property labels,
+dialogs, and the About window's controls. The command reference can be searched by English
+command ID, English label, or translated label. A missing entry falls back to English and
+never fails a build; `cargo xtask i18n` (a step of `cargo xtask ci`) lists each language's.
 
-O inglês continua sendo a fonte original dos rótulos e o idioma de fallback. Isso é intencional para evitar que uma tradução ausente impeça a compilação ou deixe a interface sem texto. A saída do mecanismo, respostas da CLI/MCP/canal de controle, diagnósticos do mecanismo e histórico da linha de comando permanecem em inglês.
+Czech has 1,202 catalog rows, covering the reference catalog and every marked UI
+literal, including Options. Four `menu` entries distinguish menu headings from object/command
+labels: **Zobrazení / Pohled**, **Kreslení / Kreslit**, **Kótování / Kóta**, and **Modifikace / Upravit**.
+The translation is AI-assisted work by @Losminek, reviewed against Czech desktop and CAD UI
+conventions and an independent review pass; it has not yet been proofread by a native speaker.
 
-Os catálogos são arquivos TSV em UTF-8, com três colunas separadas por tabulação: contexto, texto-fonte em inglês e tradução. A maioria das entradas tem contexto vazio. O contexto opcional `menu` permite distinguir um título de menu do rótulo de um comando ou objeto. As linhas `@plural` definem formas de plural para contagens inteiras.
+Korean has **1,235 rows**: 1,229 ordinary labels, four contextual menu headings, and
+two single-form count templates. It covers the union of the existing catalogs, including
+the Ukrainian reference, the current Czech catalog, Options, prompts, dialogs, and tooltips.
+The translations are original, AI-assisted Korean CAD terminology (for example, 도면층,
+치수, 모깎기, 모따기, 간격띄우기 and 객체 스냅). Independent native proofreading and
+platform-specific layout/IME validation remain follow-up work.
 
-### Português brasileiro
+Brazilian Portuguese has 1,231 catalog rows and also covers the reference catalog and every marked UI
+literal: commands, menus, tool groups and tooltips, object snaps, drafting prompts, dialogs and
+Preferences; its gaps are now zero. Its plural rule is `one|other` (0 and 1 are `one`), as CLDR defines
+for `pt`, and the catalog's accented letters (`Á Â Í Ó Ú à á â ã ç é ê í ó ô õ ú`) render in the
+bundled fonts. The original catalog was contributed by @WladmirJunior; the remaining rows were completed
+by @RicSchonfelder with AI assistance. A native-speaker terminology pass by @ffishman (2026-10-19) fixed
+mistranslations (Thaw Layer, Snap type, Revolve) and made the CAD vocabulary consistent with Brazilian
+usage: *snap* for every snap mode, *viewport*, *grip* and *offset* kept as loanwords (Brazilian university
+AutoCAD handouts keep these names in English), *Ligar/Desligar camada*, *Explodir*, *Multilinha*.
 
-O catálogo `crates/ui-egui/src/i18n/pt_br.tsv` contém 1.231 linhas e cobre o catálogo de referência e os textos de interface marcados: comandos, menus, grupos e dicas de ferramentas, modos de snap a objetos, instruções de desenho, diálogos e Preferências. A verificação do catálogo não aponta lacunas nessas entradas. A regra de plural é `one|other`, seguindo CLDR para português: zero e um usam a forma `one`.
+Hungarian has **1,326 rows**: 1,320 ordinary labels, four contextual menu headings, and two
+single-form count templates. It covers the reference catalog and every marked UI literal,
+including Options, prompts, dialogs, and tooltips; only **Méretezés / Méret** (Dimension) differs
+between the menu heading and the object label. The interface addresses the user informally, and
+a count takes one form because a Hungarian numeral is followed by the singular. The translation
+was written from the meaning of CADCraft's English strings; no other product's localization was
+used as a source. It has not yet been proofread by an independent native speaker.
 
-O catálogo original foi contribuído por @WladmirJunior; linhas adicionais foram concluídas por @RicSchonfelder com auxílio de IA. Uma revisão terminológica por falante nativo (@ffishman, 19/10/2026) corrigiu traduções e alinhou o vocabulário ao uso brasileiro de CAD. Alguns termos técnicos usados no Brasil permanecem como empréstimos, por exemplo *snap*, *viewport*, *grip* e *offset*. Ainda é útil realizar uma revisão final linha a linha e validar a disposição dos textos em cada plataforma.
+Turkish has **1,330 rows**: the union of the existing catalogs, four contextual menu headings
+(**Ölçülendirme** for the Dimension menu, **Ölçü** for the object) and two single-form count
+templates, since a Turkish noun stays singular after a number ("3 commit"). No marked UI literal
+falls back to English. Prompts read "… girin" for Enter and "… belirtin" for Specify, and clickable
+keywords (`Top`, `Zero`, `Bottom`, `_tan to`, `nX`/`nXP`) keep the spelling the engine accepts.
+The translation is original, AI-assisted work by @ogzhnklvz, written from the English strings with
+Turkish desktop-CAD vocabulary (Katman, Tarama, Yuvarlatma, Pah, Öteleme, Nesne Kenetleme,
+Görünüm Penceresi); the running app was reviewed by a native speaker, and line-by-line
+proofreading is still to do. The bundled
+egui fonts cover `Ç Ğ İ Ö Ş Ü ç ğ ı ö ş ü`.
 
-### Outros catálogos
+Drawing titles, layer/layout/block/style names, parameter names and expressions, text in a
+drawing, and command-line input are user data and retain their original spelling. Clickable
+command keywords retain their English spelling so the text shown matches the input accepted
+by the engine. CLI/MCP/control responses, engine diagnostics and command history remain
+English. Uncatalogued text also falls back to English. Number formatting and the operating
+system's own file-picker controls follow the existing behavior.
 
-- **Tcheco:** 1.202 linhas; cobre as entradas de referência e os textos marcados. A tradução teve revisão de convenções de CAD, mas ainda não foi revisada por falante nativo independente.
-- **Coreano:** 1.235 linhas, incluindo rótulos comuns, títulos de menu e modelos de contagem. A revisão nativa e a validação de layout/IME continuam pendentes.
-- **Húngaro:** 1.326 linhas; cobre as entradas de referência e os textos marcados. Revisão independente pendente.
-- **Turco:** 1.330 linhas; cobre as entradas de referência e os textos marcados. A interface em execução foi revisada por falante nativo, mas ainda falta revisão linha a linha.
-- **Grego:** 1.330 chaves de origem reunidas dos catálogos; revisão nativa independente e validação visual ainda são necessárias.
-- **Sueco:** catálogo concluído, com revisão terminológica por falante nativo.
-- **Alemão:** catálogo parcial.
-- **Ucraniano, espanhol, russo, francês, chinês simplificado e italiano:** catálogos disponíveis, com cobertura e revisão variáveis.
+The bundled egui fonts cover Ukrainian (`Ґґ Єє Іі Її`), German (`ÄÖÜ äöü ß`), Czech
+(`ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ áčďéěíňóřšťúůýž`, including typographic quotes `„…“`), and Hungarian
+(`ÁÉÍÓÖŐÚÜŰ áéíóöőúüű`, including `„…”`).
+The translations add no font assets and work on the web without system fonts.
 
-As traduções são trabalho original produzido a partir do significado dos textos em inglês. Não se devem copiar arquivos de localização proprietários de outros produtos.
+Korean needs a font that covers **every Hangul character in its catalog** and the language
+picker label. The CJK font loaded in every language (Noto Sans CJK, Microsoft YaHei, PingFang)
+usually covers Hangul already, and then nothing more is loaded. Otherwise, only when Korean is
+chosen, desktop builds look for a `Hang`/`Kore` face from the optional `CRAFT_FONTS_DIR` input,
+then installed fonts: Malgun Gothic/Gulim on Windows, Apple SD Gothic Neo/AppleGothic on macOS,
+and Nanum Gothic or Noto CJK on Linux/FreeBSD. Collection faces are checked individually, and
+file reads/face scans are bounded. No system fonts or new font assets are redistributed.
 
-## Texto de desenho e palavras-chave
+Web builds cannot read installed fonts and embed no Korean face (to stay within hosting size
+limits), so the web interface stays English when Korean is chosen. Without a font covering the
+catalog, the saved `ko` preference is kept but the interface falls back to English; the language
+command reports that a font is needed, and the picker uses the readable label **Korean** wherever
+Hangul can't be shown. This change does not fix platform IME issues or localize engine output.
 
-Títulos de desenhos, nomes de camadas, layouts, blocos e estilos, nomes de parâmetros e expressões, texto contido no desenho e entrada da linha de comando são dados do usuário e mantêm a grafia original. Palavras-chave clicáveis nos prompts mantêm a forma em inglês que o mecanismo aceita. Isso evita divergências entre o texto exibido e o comando que precisa ser digitado.
+## Greek (`el`) interface
 
-As fontes incluídas cobrem os caracteres necessários aos catálogos ucraniano, alemão, tcheco e húngaro. As traduções não adicionam arquivos de fonte e funcionam na web sem depender das fontes do sistema. Para coreano, é necessária uma fonte que cubra todos os caracteres Hangul do catálogo. No desktop, o aplicativo verifica fontes instaladas e, opcionalmente, o diretório indicado por `CRAFT_FONTS_DIR`. Fontes CJK comuns podem já cobrir Hangul.
+The Greek translation covers all **1,330** distinct source keys collected from the existing
+language catalogs: **1,324** ordinary interface labels, **4** contextual menu headings and
+**2** integer-count templates. The interface can be selected as **Ελληνικά** under
+Edit → Interface Language, or automatically when the system language is `el-GR` or `el-CY`.
+Greek integer plurals distinguish 1 from all other counts.
 
-A versão web não consegue consultar fontes instaladas e não incorpora uma fonte coreana, para respeitar os limites de tamanho da hospedagem. Se não houver uma fonte adequada, a preferência `ko` é mantida, mas a interface usa inglês. Essa limitação não corrige problemas de IME específicos de plataforma nem traduz as mensagens do mecanismo.
+The terminology follows native Greek CAD vocabulary; specialist terms retain the English
+name in parentheses when it helps professionals match a known CAD command (for example,
+**Επίπεδο (Layer)**, **Πολυγραμμή (Polyline)** and **Διαγράμμιση (Hatch)**).
+Common actions such as Open and Save appear simply in Greek. Existing command identifiers,
+drawing content, names of user objects and file formats remain unchanged. The translation is
+original AI-assisted work contributed by @Camthalion77 with language review; it is not sourced
+from Autodesk localization files. Independent native proofreading and visual checks remain
+follow-up work.
 
-## Como adicionar um idioma
+## Adding translations
 
-A implementação usa um padrão de catálogo aplicado no momento de exibir o texto, seguindo a convenção TSV de outros projetos Craft, mas o código é específico do CADCraft.
+The implementation follows the display-time catalog pattern used by
+[VectorCraft #205](https://github.com/storytold/vectorcraft/pull/205),
+[PdfCraft #106](https://github.com/storytold/pdfcraft/pull/106), and
+[FilmCraft #238](https://github.com/storytold/filmcraft/pull/238). Its code is local to CADCraft.
 
-1. Adicione um arquivo `crates/ui-egui/src/i18n/<código>.tsv` em UTF-8 com as colunas `context`, `English source` e `translation`.
-2. Registre o catálogo em `i18n::LANGUAGES), adicione a variante de preferência e o código/nome do idioma e configure as regras e formas de plural.
-3. Use `crate::tl!("English label")` para texto literal, `i18n::t(label)` para um rótulo dinâmico conhecido e `crate::tf!("Version {version}", version = value)` para texto com marcadores nomeados.
-4. Traduza apenas no ponto em que o texto é exibido. Não traduza nomes arbitrários de usuários, identificadores ou dados de desenho.
-5. Mantenha os identificadores de janelas e as chaves dos grupos de ferramentas baseados no inglês para preservar o estado quando o usuário troca de idioma.
-6. Registre a atribuição da tradução em `ATTRIBUTION.md`, atualize a lista de idiomas e inclua testes de localidade, plural, glifos de fonte e troca de idioma.
+- `crates/ui-egui/src/i18n/*.tsv` are UTF-8 with three tab-separated columns:
+  `context`, `English source`, and `translation`. Ordinary labels have an empty context.
+  Optional `menu` entries translate menu headings via `i18n::menu` / `i18n::tr_menu`;
+  without one, the ordinary translation is used.
+- `@plural` entries hold the language's forms for integer counts: Ukrainian `one|few|many`,
+  German and Spanish `one|other`, Brazilian Portuguese `one|other` (0 and 1 are `one`),
+  Czech `one|few|other` (1; 2–4; everything else, including 0, 11, 21 and 22).
+  Korean and Hungarian have one form (`other`) for all integer counts.
+  The API takes `u64`, so fractional counts are not accepted.
+- Register a new catalog in `i18n::LANGUAGES`, add its preference variant and code/name,
+  and set its integer plural rule and form count on the `Language` row.
+- Use `crate::tl!("English label")` for a literal, `i18n::t(label)` for a known dynamic UI
+  label, and `crate::tf!("Version {version}", version = value)` for named placeholders.
+  Translate only at the display boundary; never look up arbitrary user names or identifiers.
+- Windows retain explicit IDs based on their English source, and tool groups retain their
+  source names as keys, so switching languages preserves their state.
+- Add a translation attribution row in `ATTRIBUTION.md`, update the language lists, and add
+  the language's locale tags and plural rule. The rendering, font-glyph and live-switch tests
+  run for every catalog; no test checks one language's wording, and adding a command needs
+  only its English label.
+- Catalogs are embedded and parsed once. Missing or malformed rows cannot crash the app;
+  tests reject invalid rows, duplicate keys, changed placeholders, and mismatched ellipses.
+- `cargo test -p cadcraft-ui-egui i18n` checks the catalogs, locale resolution, preferences,
+  integer plurals, bundled glyphs and actual egui renders with language switching.
+  `cargo xtask i18n` prints the strings each language shows in English. `cargo xtask assets` checks asset attribution;
+  `cargo xtask ci` runs the workspace quality gates.
 
-Os catálogos são incorporados ao aplicativo e analisados uma vez. Entradas ausentes ou malformadas não devem encerrar o programa. Os testes rejeitam linhas inválidas, chaves duplicadas, marcadores alterados e reticências inconsistentes.
-
-Comandos de validação:
-
-```bash
-cargo test -p cadcraft-ui-egui i18n
-cargo xtask i18n
-cargo xtask assets
-cargo xtask ci
-```
-
-O primeiro comando verifica catálogos, resolução de localidade, preferências, plurais inteiros, glifos incorporados e renderização real do egui durante a troca de idioma. `cargo xtask i18n` lista textos que ainda aparecem em inglês em cada idioma; `cargo xtask assets` verifica a atribuição dos recursos; `cargo xtask ci` executa as verificações de qualidade do workspace.
-
-As traduções são trabalho original sob a licença `MIT OR Apache-2.0`, elaborado a partir do significado dos textos em inglês do CADCraft. Não copie recursos de localização proprietários.
+Translations are original work under `MIT OR Apache-2.0`, written from the meaning of
+CADCraft's English strings. Do not copy proprietary localization resources.
