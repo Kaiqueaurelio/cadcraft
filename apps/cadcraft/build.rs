@@ -14,7 +14,7 @@ fn main() {
     }
     res.set("ProductName", "Decode CAD")
         .set("FileDescription", "Decode CAD — computer-aided design")
-        .set("CompanyName", "Learning Machines LLC")
+        .set("CompanyName", "Decode CAD Community")
         .set("LegalCopyright", "Copyright (c) 2026 ArtCraft Team and the CADCraft contributors. MIT OR Apache-2.0.")
         .set("OriginalFilename", "cadcraft.exe")
         .set("InternalName", "cadcraft");
