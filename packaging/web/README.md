@@ -1,70 +1,89 @@
-# Hospedando o CADCraft na web
+# Hosting CADCraft for the web
 
-O arquivo `cadcraft-web-<versão>.zip` (obtido na página de versões do GitHub ou gerado por `packaging/web/package.sh`) contém um site estático na pasta `cadcraft-web-<versão>/`:
+`cadcraft-web-<version>.zip` (from the GitHub release, or `packaging/web/package.sh`) holds a
+static site in `cadcraft-web-<version>/`:
 
-| Arquivo | Descrição |
+| File | What it is |
 |---|---|
-| `index.html` | Página que carrega todos os recursos por URLs relativas. |
-| `cadcraft-web-<hash>.js` | Código de integração gerado pelo wasm-bindgen (módulo ES). |
-| `cadcraft-web-<hash>_bg.wasm` | Aplicativo: cerca de 13 MB, ou 5 MB com compactação. |
-| `_headers`, `.htaccess` | Exemplos de regras de cabeçalho para Netlify/Cloudflare Pages e Apache. |
+| `index.html` | The page. It loads everything through relative URLs. |
+| `cadcraft-web-<hash>.js` | wasm-bindgen glue (generated, ES module) |
+| `cadcraft-web-<hash>_bg.wasm` | The app, about 13 MB, or 5 MB with compression |
+| `_headers`, `.htaccess` | Sample header rules for Netlify/Cloudflare Pages and Apache |
 
-Não há código executado no servidor. Envie o conteúdo da pasta para qualquer serviço que hospede arquivos estáticos.
+There is no server-side code. Upload the folder's contents anywhere that serves static files.
 
-## Funciona em qualquer caminho
+## Any path works
 
-Todas as URLs em `index.html` são relativas (`public_url = "./"` em `apps/cadcraft-web/Trunk.toml`). Assim, o site funciona na raiz de um domínio (`https://example.com/`), em um caminho com prefixo (`https://example.com/tools/cadcraft/`) ou em um bucket de CDN. Os nomes dos recursos incluem um hash do conteúdo e podem ser armazenados em cache indefinidamente. Somente o `index.html` precisa ser revalidado.
+All URLs in `index.html` are relative (`public_url = "./"` in `apps/cadcraft-web/Trunk.toml`),
+so the site works at a domain root (`https://example.com/`), under a prefix
+(`https://example.com/tools/cadcraft/`) and from a CDN bucket. The asset names carry a content
+hash, so they can be cached forever. Only `index.html` needs revalidation.
 
-## Configurações necessárias no servidor
+## Required server settings
 
-- **Tipo MIME:** sirva arquivos `.wasm` como `application/wasm`. Os navegadores não conseguem compilá-los em fluxo com outro tipo, e o aplicativo pode carregar lentamente ou nem carregar. Sirva arquivos `.js` como `text/javascript`. A maioria dos provedores já faz isso. No nginx, confira se `mime.types` contém `application/wasm wasm;`.
-- **Compactação:** habilite gzip ou Brotli para `.wasm`, `.js` e `.html`. Isso reduz o download de cerca de 13 MB para aproximadamente 5 MB. Também é possível pré-compactar os arquivos (por exemplo, `brotli -k *.wasm`) e configurar o servidor para enviar `Content-Encoding: br`.
-- **Cache:** use `Cache-Control: public, max-age=31536000, immutable` nos arquivos `.wasm` e `.js` com hash, e `no-cache` no `index.html`.
-- **HTTPS:** WebGPU e a área de transferência só funcionam em um contexto seguro: `https://` ou `http://localhost`. Em HTTP simples, fora do localhost, o aplicativo usa WebGL2 como alternativa.
-- **Sem cabeçalhos especiais de isolamento:** o CADCraft não usa `SharedArrayBuffer`, portanto não precisa de `Cross-Origin-Opener-Policy` nem de `Cross-Origin-Embedder-Policy`. Se o site já enviar COEP `require-corp`, envie também `Cross-Origin-Resource-Policy: same-origin` (ou `cross-origin` quando os arquivos estiverem em uma CDN) nos arquivos do aplicativo.
+- **MIME type:** serve `.wasm` as `application/wasm`. Browsers refuse to stream-compile it under
+  any other type, and the app then loads slowly or not at all. Serve `.js` as `text/javascript`.
+  Most hosts already do both. For nginx, check that `mime.types` has `application/wasm wasm;`.
+- **Compression:** turn on gzip or Brotli for `.wasm`, `.js` and `.html`. That takes the
+  download from about 13 MB to about 5 MB. You can also precompress (`brotli -k *.wasm`) and let
+  the server send `Content-Encoding: br`.
+- **Caching:** `Cache-Control: public, max-age=31536000, immutable` on the hashed `.wasm` and
+  `.js` files, and `no-cache` on `index.html`.
+- **HTTPS:** WebGPU (and the clipboard) only work in a secure context, which means `https://`
+  or `http://localhost`. Over plain HTTP elsewhere, the app falls back to WebGL2.
+- **No special isolation headers:** CADCraft doesn't use `SharedArrayBuffer`, so it doesn't
+  need `Cross-Origin-Opener-Policy` or `Cross-Origin-Embedder-Policy`. If your site already sends
+  COEP `require-corp`, also send `Cross-Origin-Resource-Policy: same-origin` (or `cross-origin`
+  when the files live on a CDN) on the app's files.
 
-Exemplo para nginx:
+nginx example:
 
 ```nginx
 location /cadcraft/ {
     types { application/wasm wasm; text/javascript js; text/html html; }
     gzip on;
     gzip_types application/wasm text/javascript text/html;
-    location ~* \\.(wasm|js)$ { add_header Cache-Control "public, max-age=31536000, immutable"; }
-    location ~* index\\.html$ { add_header Cache-Control "no-cache"; }
+    location ~* \.(wasm|js)$ { add_header Cache-Control "public, max-age=31536000, immutable"; }
+    location ~* index\.html$ { add_header Cache-Control "no-cache"; }
 }
 ```
 
-Para testar localmente, execute `python3 -m http.server 8765` dentro da pasta e abra http://localhost:8765/.
+Local test: `python3 -m http.server 8765` inside the folder, then open http://localhost:8765/.
 
-## Incorporando o aplicativo em uma página (iframe)
+## Embedding in a page (iframe)
 
 ```html
 <iframe
   src="https://example.com/cadcraft/"
-  title="Editor de imagens CADCraft"
+  title="CADCraft image editor"
   style="width: 100%; height: 720px; border: 0;"
   allow="fullscreen; clipboard-read; clipboard-write"
   allowfullscreen>
 </iframe>
 ```
 
-- O aplicativo preenche o iframe e acompanha seu tamanho; portanto, ajuste o tamanho do iframe, não o do aplicativo.
-- Os atalhos de teclado são enviados ao iframe depois que o usuário clica nele, como acontece com qualquer aplicativo incorporado.
-- **Incorporação entre origens diferentes:** funciona. As preferências ficam no `localStorage` do iframe. Navegadores que particionam ou bloqueiam armazenamento de terceiros podem esquecê-las entre visitas; nesse caso, o aplicativo inicia com as configurações padrão.
-- **Iframes em sandbox:** precisam, no mínimo, de `sandbox="allow-scripts allow-same-origin allow-downloads allow-popups"`. Sem `allow-same-origin`, não há armazenamento. Sem `allow-downloads`, as ações Salvar e Exportar (downloads do navegador) são bloqueadas.
-- Não envie `X-Frame-Options: DENY` nem uma política CSP `frame-ancestors` que exclua a página que incorpora o aplicativo.
+- The app fills the iframe and follows its size, so size the iframe and not the app.
+- Keyboard shortcuts go to the iframe after the user clicks into it, as with any embedded app.
+- **Cross-origin embeds** work. Preferences are kept in the iframe's `localStorage`. Browsers
+  that partition or block third-party storage may forget them between visits, and the app
+  then starts with defaults.
+- **Sandboxed iframes** need at least
+  `sandbox="allow-scripts allow-same-origin allow-downloads allow-popups"`. Without
+  `allow-same-origin` there's no storage. Without `allow-downloads`, Save and Export (browser
+  downloads) are blocked.
+- Don't send `X-Frame-Options: DENY` or a `frame-ancestors` CSP that excludes the embedding page.
 
-## Seleção do renderizador e opções alternativas
+## Renderer selection and fallback flags
 
-O CADCraft renderiza usando wgpu. Quando disponível no navegador, usa **WebGPU**; caso contrário, alterna automaticamente para **WebGL2**. Parâmetros na URL podem substituir essa escolha e também funcionam no atributo `src` do iframe:
+CADCraft renders with wgpu. It uses **WebGPU** when the browser has it and falls back to
+**WebGL2** on its own. URL query flags override this, and they work on the iframe `src` too:
 
-| Parâmetro | Efeito |
+| Flag | Effect |
 |---|---|
-| *(nenhum)* | Usa WebGPU, se disponível; caso contrário, WebGL2. |
-| `?webgl` | Força o mecanismo WebGL2 (útil quando um driver WebGPU apresenta problemas). |
-| `?cpu` | Força o caminho de renderização em canvas pela CPU (mais lento, porém mais compatível). |
+| *(none)* | WebGPU if available, otherwise WebGL2 |
+| `?webgl` | Force the WebGL2 backend (useful when a WebGPU driver misbehaves) |
+| `?cpu` | Force the CPU canvas path (slowest, most compatible) |
 
-Exemplo: `<iframe src="https://example.com/cadcraft/?webgl" ...>`.
+For example: `<iframe src="https://example.com/cadcraft/?webgl" ...>`.
 
-Se o navegador não oferecer WebGPU nem WebGL2, será exibida uma mensagem no lugar do aplicativo.
+A browser with neither WebGPU nor WebGL2 gets a message in place of the app.
