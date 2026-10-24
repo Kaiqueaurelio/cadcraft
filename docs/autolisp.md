@@ -1,53 +1,103 @@
 # AutoLISP
 
-O CADCraft executa rotinas AutoLISP (arquivos `.lsp`). O que já está disponível e o que ainda falta:
+CADCraft runs AutoLISP routines (`.lsp` files). What is here and what is not yet:
 [gaps.md](gaps.md) (E1).
 
-## Carregar e executar
+## Loading and running
 
-- **APPLOAD** (Tools > Load Application…, alias `AP`) abre um seletor de arquivos filtrado para arquivos `.lsp`, começando na pasta usada da última vez (armazenada nas preferências), e executa o arquivo escolhido. Cancelar o seletor não faz nada. Um arquivo selecionado é carregado como se seu nome tivesse sido digitado; assim, se a rotina pedir um ponto, ela aguardará a entrada. Em uma versão desktop sem seletor de arquivos, o nome é solicitado na linha de comando. A versão web não tem sistema de arquivos, então pede para arrastar o arquivo `.lsp` para a janela e o carrega a partir do conteúdo. Somente arquivos `.lsp` são aceitos.
-- **`(load "name")`** carrega um arquivo pelo caminho, acrescentando `.lsp` quando a extensão não estiver presente. Um arquivo carregado por APPLOAD também pode ser localizado novamente pelo nome, inclusive na versão web, que não tem sistema de arquivos.
-- **`(defun c:NAME …)`** define um comando: digite `NAME` na linha de comando. Os comandos integrados mantêm seus nomes.
-- **Na linha de comando**, `(expression)` avalia a expressão e mostra o valor, enquanto `!variable` mostra o valor de uma variável. Quando digitada no prompt de um comando (e não em um campo de texto livre), o valor de uma expressão pode servir como resposta: `CIRCLE 0,0 (* 2 r)`.
-- **Por programação** (scripts, canal de controle, MCP e CLI): `lisp {code, inputs?}` e `appload {path} | {name, text | data}` executam até o fim e retornam `{value, output, error?}`. `appload` também retorna `commands`, os comandos `c:` definidos pelo arquivo; uma chamada JSON nunca abre uma caixa de diálogo de arquivos. `inputs` responde às chamadas `get…` na ordem (números, strings, pontos `[x, y]`); quando não há mais entradas, a chamada recebe nil.
+- **APPLOAD** (Tools > Load Application…, alias `AP`) opens a file browser filtered to `.lsp`
+  files, starting in the folder the last one came from (kept in the preferences), and runs the
+  chosen file. Cancelling the browser does nothing. A picked file loads as a typed name does, so a
+  routine it starts that asks for a point waits for it. A desktop without a file browser asks for
+  the name on the command line; the web has no file system, so it says to drop the `.lsp` file on
+  the window and loads it from its contents. Only `.lsp` files are loaded; anything else is
+  refused.
+- **`(load "name")`** loads a file by path, with `.lsp` added when the name has none. A file
+  APPLOAD loaded is found again by its name, also on the web where there is no file system.
+- **`(defun c:NAME …)`** defines a command: type `NAME` at the command line. Built-in commands
+  keep their names.
+- **At the command line**, `(expression)` evaluates and shows the value, and `!variable` shows a
+  variable. Typed at a command's prompt (not a free-text one), an expression's value answers it:
+  `CIRCLE 0,0 (* 2 r)`.
+- **Programmatically** (scripts, the control channel, MCP, the CLI): `lisp {code, inputs?}` and
+  `appload {path} | {name, text | data}` run to the end and return `{value, output, error?}`.
+  `appload` also returns `commands`, the `c:` commands the file defined, and a JSON call never
+  opens a file dialog. `inputs` answer `get…` calls in order (numbers, strings, `[x, y]` points);
+  a call with none left gets nil.
 
-### Na inicialização
+### At startup
 
-O CADCraft carrega arquivos LISP da **pasta de suporte**, `support`, dentro da pasta de configurações (no Windows, `%APPDATA%\CADCraft\support`; no macOS, `~/Library/Application Support/CADCraft/support`; no Linux, `~/.config/cadcraft/support`; criada na primeira inicialização):
+CADCraft loads LISP from its **support folder**, `support` in the settings folder (on Windows
+`%APPDATA%\CADCraft\support`, on macOS `~/Library/Application Support/CADCraft/support`, on
+Linux `~/.config/cadcraft/support`; created at first start):
 
-- `acad.lsp` uma vez por sessão, no primeiro desenho; com `ACADLSPASDOC` definido como 1, em todos os desenhos;
-- `acaddoc.lsp` em cada desenho aberto ou criado;
-- depois, `S::STARTUP`, caso esteja definida.
+- `acad.lsp` once per session, into the first drawing; with `ACADLSPASDOC` set to 1, into every
+  drawing;
+- `acaddoc.lsp` into every drawing opened or created;
+- then `S::STARTUP`, when they define it.
 
-`(autoload "file" '("CMD1" "CMD2"))` em um arquivo de inicialização transforma `CMD1` e `CMD2` em comandos que carregam `file` (também a partir da pasta de suporte) na primeira vez em que são digitados. Os arquivos de inicialização são executados até o fim sem solicitar entradas. A pasta do próprio desenho nunca é pesquisada: um arquivo `acaddoc.lsp` que venha junto de um desenho baixado não é executado.
+`(autoload "file" '("CMD1" "CMD2"))` in a startup file makes `CMD1` and `CMD2` commands that load
+`file` (from the support folder too) the first time they are typed. Startup files run to the end
+without asking for input. A drawing's own folder is never searched: an `acaddoc.lsp` that came
+with a downloaded drawing does not run.
 
-Cada desenho tem suas próprias variáveis e funções. Uma rotina corresponde a uma única etapa de desfazer, independentemente dos comandos que executar. Uma rotina que aguarda entrada (`getpoint`, `pause`) permite que a janela continue funcionando enquanto espera; Esc a interrompe com a mensagem "Function cancelled", recebida por `*error*`. Loops longos executam uma parte por quadro, mantendo a janela responsiva; Esc também os interrompe.
+Each drawing has its own variables and functions. A routine is one undo step, whatever commands
+it runs. A routine that waits for input (`getpoint`, `pause`) lets the window work meanwhile;
+Esc stops it with "Function cancelled", which `*error*` receives. A long loop runs a slice per
+frame, so the window stays live and Esc stops it too.
 
-## A linguagem
+## The language
 
-Inteiros têm 32 bits e sofrem overflow circular como no AutoLISP; a presença de qualquer número real faz a aritmética usar valores reais. As variáveis têm escopo dinâmico: os argumentos e as variáveis locais de uma função (declaradas após `/`) ficam vinculados durante sua execução. Símbolos não diferenciam maiúsculas de minúsculas. Números reais são exibidos com seis algarismos significativos.
+Integers are 32-bit and wrap as AutoLISP's do; any real makes arithmetic real. Variables are
+dynamically scoped: a function's arguments and its locals (after `/`) are bound while it runs.
+Symbols are case-insensitive. Reals print with six significant digits.
 
-Nenhuma rotina pode fazer o programa travar: recursão profunda gera o erro "internal stack limit reached", código-fonte malformado gera um erro de leitura e todas as funções integradas validam seus argumentos.
+Nothing a routine does can crash the program: deep recursion is the error "internal stack limit
+reached", malformed source is a reader error, and every built-in checks its arguments.
 
-## Funções integradas
+## Built-in functions
 
-- **Formas:** `quote` `'` `function` `setq` `set` `if` `cond` `while` `repeat` `foreach` `progn` `and` `or` `defun` `defun-q` `lambda` `eval` `apply` `mapcar` `load` `autoload` `exit` `quit`
-- **Números:** `+ - * / rem 1+ 1- abs min max sqrt exp log sin cos atan expt fix float gcd logand logior lsh ~ = /= < > <= >= zerop minusp numberp`
-- **Listas:** `car cdr` e combinações de `c…r` de até quatro níveis, `cons list append reverse length nth last member assoc subst acad_strlsort`, `vl-position vl-remove vl-sort vl-remove-if vl-remove-if-not vl-member-if vl-every vl-some vl-list-length vl-consp`
-- **Predicados:** `atom listp null not type eq equal boundp vl-symbolp`
-- **Strings:** `strcat strlen substr strcase itoa atoi atof chr ascii read wcmatch`, `vl-string-search vl-string-subst vl-string-trim vl-string-left-trim vl-string-right-trim vl-string-translate vl-string->list vl-list->string vl-prin1-to-string vl-princ-to-string vl-symbol-name vl-symbol-value vl-filename-base vl-filename-extension vl-filename-directory`
-- **Geometria:** `polar distance angle inters trans` (`trans` retorna o ponto; UCS ainda não é compatível)
-- **Saída e arquivos:** `princ prin1 print prompt terpri alert open close read-line write-line findfile`
-- **Erros:** `*error*`, `vl-catch-all-apply vl-catch-all-error-p vl-catch-all-error-message`
-- **Desenho:** `command` (também `command-s`, `vl-cmdf`) com `pause`, um comando que permanece aberto para a próxima chamada e `(command)` para cancelá-lo; `getvar setvar`; `entget entmake entmod entdel entlast entnext entupd handent`; `ssget` (modos X, L, P, I, W, C, F, WP, CP, um ponto ou seleção pelo usuário; filtros com curingas e operadores `-4`) `ssadd ssdel sslength ssname ssmemb sssetfirst ssgetfirst`; `tblsearch tblnext` (LAYER, LTYPE, STYLE, BLOCK, DIMSTYLE, APPID)
-- **Entrada:** `initget getpoint getcorner getdist getangle getorient getreal getint getstring getkword entsel nentsel`
-- **Unidades:** `rtos angtos distof angtof`
-- **Sem operação:** `vl-load-com gc redraw`; `ver`
+- **Forms:** `quote` `'` `function` `setq` `set` `if` `cond` `while` `repeat` `foreach` `progn`
+  `and` `or` `defun` `defun-q` `lambda` `eval` `apply` `mapcar` `load` `autoload` `exit` `quit`
+- **Numbers:** `+ - * / rem 1+ 1- abs min max sqrt exp log sin cos atan expt fix float gcd
+  logand logior lsh ~ = /= < > <= >= zerop minusp numberp`
+- **Lists:** `car cdr` and the `c…r` combinations up to four levels, `cons list append reverse
+  length nth last member assoc subst acad_strlsort`, `vl-position vl-remove vl-sort
+  vl-remove-if vl-remove-if-not vl-member-if vl-every vl-some vl-list-length vl-consp`
+- **Predicates:** `atom listp null not type eq equal boundp vl-symbolp`
+- **Strings:** `strcat strlen substr strcase itoa atoi atof chr ascii read wcmatch`,
+  `vl-string-search vl-string-subst vl-string-trim vl-string-left-trim vl-string-right-trim
+  vl-string-translate vl-string->list vl-list->string vl-prin1-to-string vl-princ-to-string
+  vl-symbol-name vl-symbol-value vl-filename-base vl-filename-extension vl-filename-directory`
+- **Geometry:** `polar distance angle inters trans` (`trans` returns the point: no UCS yet)
+- **Output and files:** `princ prin1 print prompt terpri alert open close read-line write-line
+  findfile`
+- **Errors:** `*error*`, `vl-catch-all-apply vl-catch-all-error-p vl-catch-all-error-message`
+- **Drawing:** `command` (also `command-s`, `vl-cmdf`) with `pause`, a command left open for the
+  next call, and `(command)` to cancel; `getvar setvar`; `entget entmake entmod entdel entlast
+  entnext entupd handent`; `ssget` (modes X, L, P, I, W, C, F, WP, CP, a point, or the user
+  selecting; filters with wildcards and `-4` operators) `ssadd ssdel sslength ssname ssmemb
+  sssetfirst ssgetfirst`; `tblsearch tblnext` (LAYER, LTYPE, STYLE, BLOCK, DIMSTYLE, APPID)
+- **Input:** `initget getpoint getcorner getdist getangle getorient getreal getint getstring
+  getkword entsel nentsel`
+- **Units:** `rtos angtos distof angtof`
+- **No-ops:** `vl-load-com gc redraw`; `ver`
 
-As listas de entidades usam os códigos de grupo DXF dos arquivos DXF do CADCraft: o que `entget` retorna corresponde ao conteúdo do objeto no arquivo DXF, acrescido de `-1` (seu nome) e `410` (seu layout). Os ângulos (grupos 50–58) são expressos em radianos, como no AutoCAD, embora o arquivo armazene graus; `entmake`, `entmod` e os filtros de `ssget` também usam radianos.
+Entity lists use the DXF group codes of CADCraft's DXF files: what `entget` returns is what a
+DXF file holds for the object, plus `-1` (its name) and `410` (its layout). Angles (groups 50–58)
+are in radians, as in AutoCAD, where the file holds degrees; `entmake`, `entmod` and `ssget`
+filters take radians too.
 
-`entmake` define blocos: uma lista BLOCK (2 = nome, 70 = flags, 10 = ponto-base, 4 = descrição) inicia uma definição; as entidades criadas depois dela são inseridas no bloco, em vez de no desenho. Uma lista ENDBLK finaliza e adiciona o bloco (redefinindo um bloco de mesmo nome, se houver) e retorna seu nome. A flag 1 com um nome `*U` cria um bloco anônimo, que recebe um nome ao ser finalizado. Uma lista BLOCK quando já existe uma definição aberta, uma xref (flag 4), um nome inválido, um bloco que insere a si próprio e um bloco editado no local (REFEDIT) retornam nil. A definição permanece aberta entre rotinas até ENDBLK, mas uma rotina que falha descarta a definição que iniciou.
+`entmake` defines blocks: a BLOCK list (2 name, 70 flags, 10 base point, 4 description) begins a
+definition, the entities made after it go into the block instead of the drawing, and an ENDBLK
+list adds the block (redefining one of the same name) and returns its name. Flag 1 with a `*U`
+name makes an anonymous block, named when it ends. A BLOCK while a definition is open, an
+xref (flag 4), an invalid name, a block that inserts itself and a block being edited in place
+(REFEDIT) return nil. A definition stays open across routines until ENDBLK, but a routine that
+fails drops the one it began.
 
-## Testes com o corpus
+## Testing against the corpus
 
-O corpus de conformidade do AutoLISP (#648) fica em seu próprio repositório. Defina `CADCRAFT_LISP_CORPUS` apontando para ele e execute `cargo test -p cadcraft-engine --test it lisp_corpus::`; sem essa variável, o teste informa que foi ignorado.
+The AutoLISP conformance corpus (#648) lives in its own repository. Point `CADCRAFT_LISP_CORPUS`
+at it and run `cargo test -p cadcraft-engine --test it lisp_corpus::`; without the variable the test
+says it was skipped.
