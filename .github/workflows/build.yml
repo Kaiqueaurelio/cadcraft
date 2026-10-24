@@ -26,10 +26,11 @@ on:
 permissions:
   contents: read
 
-# Only code/build-input changes trigger this workflow. Prefer the newest build for a ref.
+# Keep builds traceable per commit. A later documentation-only commit must not cancel
+# an active multi-platform build for an earlier code commit.
 concurrency:
-  group: build-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: build-${{ github.workflow }}-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   build:
