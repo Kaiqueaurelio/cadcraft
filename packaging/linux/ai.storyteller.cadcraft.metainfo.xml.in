@@ -5,7 +5,7 @@
   <id>ai.storyteller.cadcraft</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT OR Apache-2.0</project_license>
-  <name>CADCraft</name>
+  <name>Decode CAD</name>
   <summary>Draft, dimension and plot 2D drawings</summary>
   <developer id="ai.storyteller">
     <name>Learning Machines LLC</name>
@@ -20,10 +20,9 @@
   <launchable type="desktop-id">ai.storyteller.cadcraft.desktop</launchable>
   <icon type="stock">ai.storyteller.cadcraft</icon>
   <!-- Only url types known to appstream 0.15 (Ubuntu 22.04, where CI validates): no vcs-browser. -->
-  <url type="homepage">https://getartcraft.com/apps/cadcraft</url>
-  <url type="bugtracker">https://github.com/storytold/cadcraft/issues</url>
-  <url type="help">https://github.com/storytold/cadcraft</url>
-  <url type="contact">https://discord.gg/artcraft</url>
+  <url type="homepage">https://github.com/Kaiqueaurelio/cadcraft</url>
+  <url type="bugtracker">https://github.com/Kaiqueaurelio/cadcraft/issues</url>
+  <url type="help">https://github.com/Kaiqueaurelio/cadcraft</url>
   <categories>
     <category>Graphics</category>
     <category>Engineering</category>

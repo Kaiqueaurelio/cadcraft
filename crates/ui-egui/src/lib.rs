@@ -832,7 +832,7 @@ mod tests {
         frame(&mut a, &ctx, None);
         assert_eq!(Tokens::get(), Tokens::of(theme::SYSTEM_FALLBACK), "no OS appearance: the documented fallback");
         assert_eq!(a.ui.theme, ThemePref::System);
-        assert_eq!(a.prefs_json(), r#"{"animations":"system","interfaceLanguage":"auto","saveFormat":"dxf","saveVersion":"2018","theme":"system"}"#);
+        assert_eq!(a.prefs_json(), r#"{"animations":"system","interfaceLanguage":"en","saveFormat":"dxf","saveVersion":"2018","theme":"system"}"#);
     }
 
     #[test]

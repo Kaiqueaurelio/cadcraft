@@ -1,19 +1,10 @@
-> **Edição comunitária de Kaique Aurélio:** este repositório é uma derivação do [CADCraft original](https://github.com/storytold/cadcraft). Consulte [README-FORK.md](README-FORK.md) para conhecer o estado desta edição e as instruções de compilação. Preserve os créditos e as licenças do projeto original.
+> **Decode CAD — edição comunitária de Kaique Aurélio:** este projeto deriva do [CADCraft original](https://github.com/storytold/cadcraft). O ícone gráfico original do aplicativo foi mantido sem alterações; o nome exibido foi atualizado. Consulte [README-FORK.md](README-FORK.md) e preserve os créditos e as licenças do projeto original.
 
 <p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
+  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="Ícone original do aplicativo: esquadro de desenho e arco de compasso sobre uma grade azul">
 </p>
 
-<p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="Ícone do CADCraft: esquadro de desenho e arco de compasso sobre uma grade azul">
-</p>
-
-<h1 align="center">CADCraft</h1>
+<h1 align="center">Decode CAD</h1>
 
 <p align="center">
   <b>Desenho e projeto auxiliados por computador: um aplicativo CAD 2D e 3D moderno, de código aberto e desenvolvido inteiramente em Rust.</b>
@@ -21,7 +12,6 @@
 
 <p align="center">
   Um fluxo de trabalho CAD rápido e de código aberto: linha de comando, captura de objetos, camadas, cotas, hachuras, blocos e desenhos DXF. Funciona nativamente no macOS, Windows, Linux e FreeBSD, além de funcionar no navegador por meio de WebAssembly.<br>
-  <i>Desenvolvido pela equipe ArtCraft.</i>
 </p>
 
 <p align="center">
@@ -35,25 +25,12 @@
   <a href="https://coderabbit.ai"><img alt="Revisado pelo CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/cadcraft?style=flat-square&label=Revisado%20por%20CodeRabbit&logo=coderabbit"></a>
 </p>
 
-<p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Participe da comunidade ArtCraft no Discord" src="https://img.shields.io/badge/Participe%20no%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
-</p>
-
-<p align="center">
-  <a href="https://getartcraft.com/apps/cadcraft"><b>CADCraft no site getartcraft.com</b></a> ·
-  <a href="https://getartcraft.com/">ArtCraft</a> ·
-  <a href="https://getartcraft.com/apps">Todos os aplicativos criativos</a>
-</p>
-
 <br>
 
 <p align="center">
   <img src="docs/images/ui-apartment.png" alt="CADCraft com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
   <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — tudo criado com comandos do CADCraft.</sub>
 </p>
-
-> [!NOTE]
-> **A ArtCraft é uma comunidade de pessoas criativas de todos os tipos.** Pintores, fotógrafos, cineastas, ilustradores, designers, animadores, entusiastas e pessoas que pegaram um lápis pela primeira vez na semana passada. Se você cria alguma coisa, faz parte da comunidade. [Venha conversar no Discord](https://discord.gg/artcraft).
 
 <p align="center">
   <a href="#capturas-de-tela">Capturas de tela</a> ·
@@ -261,39 +238,9 @@ Para RISC-V (riscv64), há também `cadcraft-<ver>-linux-riscv64.tar.gz`, compil
 |---|---|---|
 | Site estático | `cadcraft-web-<ver>.zip` | Funciona em navegadores modernos e pode ser hospedado em qualquer servidor de arquivos estáticos |
 
-## Aplicativos criativos da ArtCraft
+## Projeto e créditos
 
-O CADCraft faz parte dos **Aplicativos criativos** da equipe [ArtCraft](https://getartcraft.com/): ferramentas criativas gratuitas e de código aberto, desenvolvidas em Rust e capazes de funcionar de forma independente.
-
-| Aplicativo | Finalidade | Código-fonte | Saiba mais |
-|---|---|---|---|
-| **PhotoCraft** | Edição de imagens: camadas, máscaras, texto e arquivos PSD | [GitHub](https://github.com/storytold/photocraft) | [Site](https://getartcraft.com/apps/photocraft) |
-| **VectorCraft** | Ilustração vetorial | [GitHub](https://github.com/storytold/vectorcraft) | [Site](https://getartcraft.com/apps/vectorcraft) |
-| **FilmCraft** | Edição de vídeo, cor e áudio | [GitHub](https://github.com/storytold/filmcraft) | [Site](https://getartcraft.com/apps/filmcraft) |
-| **LightCraft** | Biblioteca de fotos e revelação de arquivos RAW | [GitHub](https://github.com/storytold/lightcraft) | [Site](https://getartcraft.com/apps/lightcraft) |
-| **PdfCraft** | Leitura, organização e proteção de PDFs | [GitHub](https://github.com/storytold/pdfcraft) | [Site](https://getartcraft.com/apps/pdfcraft) |
-| **EffectCraft** | Animação gráfica e efeitos visuais | [GitHub](https://github.com/storytold/effectcraft) | [Site](https://getartcraft.com/apps/effectcraft) |
-| **DesignCraft** | Diagramação e publicação | [GitHub](https://github.com/storytold/designcraft) | [Site](https://getartcraft.com/apps/designcraft) |
-| **CADCraft** | Desenho técnico e projeto auxiliados por computador | [GitHub](https://github.com/storytold/cadcraft) | [Site](https://getartcraft.com/apps/cadcraft) |
-
-A [ArtCraft](https://getartcraft.com/) também oferece um estúdio de criação de imagens e vídeos com inteligência artificial.
-
-<p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Participe da comunidade ArtCraft no Discord" src="https://img.shields.io/badge/Participe%20no%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
-</p>
-
-<h3 align="center">Venha criar com a gente</h3>
-
-<p align="center">
-  O Discord é o espaço da comunidade para compartilhar projetos, pedir ajuda, relatar problemas e sugerir melhorias. Pessoas de todas as áreas e níveis de experiência são bem-vindas.
-</p>
-
-<p align="center">
-  <a href="https://discord.gg/artcraft"><b>discord.gg/artcraft</b></a> ·
-  <a href="https://getartcraft.com/">getartcraft.com</a> ·
-  <a href="https://getartcraft.com/apps">Aplicativos criativos</a> ·
-  <a href="https://getartcraft.com/apps/cadcraft">CADCraft</a>
-</p>
+O Decode CAD é uma edição comunitária baseada no projeto aberto [CADCraft original](https://github.com/storytold/cadcraft). O código e os componentes herdados mantêm seus créditos e licenças originais.
 
 ## Licença e créditos
 
@@ -303,12 +250,9 @@ Fontes, ícones, imagens e outros recursos incluídos mantêm suas próprias lic
 
 Os ícones do CADCraft, sua fonte vetorial de desenho técnico, os padrões de hachura e os tipos de linha são criações originais. Os desenhos de exemplo também são gerados por código.
 
-O nome ArtCraft, sua marca nominativa e seus logotipos em `docs/brand/` são marcas registradas da equipe ArtCraft e não estão cobertos pela licença do código. Só podem ser usados sem alterações e como parte deste repositório e do CADCraft, conforme `docs/brand/LICENSE-brand.txt`. Derivações e versões modificadas devem removê-los.
+A identidade visual do Decode CAD não utiliza os logotipos ou marcas gráficas do projeto de origem. O ícone original do aplicativo foi mantido sem alterações, conforme solicitado.
 
-<p align="center">
-  <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
-  <sub>Feito pela equipe e pela comunidade <a href="https://getartcraft.com/">ArtCraft</a>.</sub>
-</p>
+
 
 ### Organização dos painéis
 

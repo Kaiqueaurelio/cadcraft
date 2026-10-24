@@ -7,9 +7,9 @@
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleDisplayName</key>
-  <string>CADCraft</string>
+  <string>Decode CAD</string>
   <key>CFBundleName</key>
-  <string>CADCraft</string>
+  <string>Decode CAD</string>
   <key>CFBundleExecutable</key>
   <string>CADCraft</string>
   <key>CFBundleIdentifier</key>

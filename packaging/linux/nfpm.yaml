@@ -14,7 +14,7 @@ section: graphics
 priority: optional
 maintainer: ${CADCRAFT_MAINTAINER}
 vendor: Learning Machines LLC
-homepage: https://getartcraft.com/apps/cadcraft
+homepage: https://github.com/Kaiqueaurelio/cadcraft
 license: MIT OR Apache-2.0
 description: |-
   Open-source computer-aided design and drafting: draft, dimension and plot 2D
