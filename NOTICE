@@ -1,20 +1,14 @@
-CADCraft
-Copyright (c) 2026 ArtCraft Team and the CADCraft contributors.
-Licensed under the MIT License or the Apache License, Version 2.0, at your option
-(LICENSE-MIT, LICENSE-APACHE).
+Decode CAD — edição mantida pela Decode Analytics
+Copyright (c) 2026 Decode Analytics e colaboradores desta edição.
 
-Third-party material
+Este repositório é um fork de CADCraft e contém código e componentes cuja autoria, proveniência e licenças originais permanecem aplicáveis. A identificação Decode CAD descreve esta edição e sua distribuição; não substitui avisos de titulares de direitos sobre material derivado.
 
-Software dependencies are listed in Cargo.lock. One is under a weak-copyleft licence: the acadrust
-crate (DWG reading and writing, https://github.com/hakanaktt/acadrust) is licensed under the
-Mozilla Public License 2.0 and is used unmodified as a separate library (crates/dwg). Its source
-is available from crates.io and the repository above.
+Licenças gerais do projeto: MIT (LICENSE-MIT) e Apache License, Version 2.0 (LICENSE-APACHE), conforme os termos aplicáveis a cada componente. Leia os arquivos de licença antes de redistribuir.
 
+Material de terceiros e dependências
 
-None: every bundled asset is original to CADCraft (icons, drafting font, hatch patterns and
-linetypes are drawn or defined in code). The per-file list is in ATTRIBUTION.md. Builds made with
-the optional craft-fonts input (CRAFT_FONTS_DIR) embed the fonts listed in its ATTRIBUTION.md,
-each under the SIL Open Font License 1.1.
+As dependências e suas licenças estão registradas em Cargo.lock e nos avisos próprios de cada pacote. A biblioteca acadrust (leitura/gravação DWG, https://github.com/hakanaktt/acadrust) é licenciada sob Mozilla Public License 2.0 e é utilizada como biblioteca separada e sem modificações; sua origem e licença permanecem aplicáveis.
 
-CADCraft is an independent project and is not affiliated with, sponsored by or endorsed by
-Autodesk, Inc. AutoCAD and DWG are trademarks of Autodesk, Inc.
+Os recursos do repositório e suas atribuições são listados em ATTRIBUTION.md. Compilações que incorporem recursos opcionais de fontes devem preservar os avisos e licenças dessas fontes.
+
+Decode CAD é uma edição independente mantida pela Decode Analytics. Nomes de produtos, marcas, dependências e componentes de terceiros são identificados apenas para descrever compatibilidade ou proveniência necessária, sem declarar afiliação, patrocínio ou endosso.
