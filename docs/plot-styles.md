@@ -1,94 +1,72 @@
-# Plot styles
+# Estilos de plotagem
 
-A plot style table decides how objects print. CADCraft applies it to PDF plots (PLOT,
-EXPORTPDF and anything that plots through them). It also applies it to a layout shown with
-**Display plot styles** on: on screen and in the layout's PNG and SVG exports.
+Uma tabela de estilos de plotagem define como os objetos serão impressos. O CADCraft aplica os estilos às plotagens em PDF (PLOT, EXPORTPDF e qualquer recurso de plotagem que passe por eles). Também os aplica ao layout exibido quando **Display plot styles** está ativado, tanto na tela quanto nas exportações PNG e SVG do layout.
 
-## Tables
+## Tabelas de estilos
 
-| Kind | Picks the style by | Styles |
+| Tipo | Como escolhe o estilo | Estilos |
 |---|---|---|
-| Colour-dependent (`.ctb`) | the object's index colour (a true colour uses its nearest index colour) | exactly 255, `Color_1` … `Color_255` |
-| Named (`.stb`) | the object's **PlotStyle** property | `Normal` first, then any names |
+| Dependente de cor (`.ctb`) | Pela cor de índice do objeto (uma cor verdadeira usa a cor de índice mais próxima) | Exatamente 255: `Color_1` a `Color_255` |
+| Nomeado (`.stb`) | Pela propriedade **PlotStyle** do objeto | `Normal` primeiro, seguido dos demais nomes |
 
-A style can set these:
+Um estilo pode definir os seguintes campos:
 
-| Field | Meaning | "Use object" value |
+| Campo | Significado | Valor para “usar o objeto” |
 |---|---|---|
-| `color` | output colour, `"#rrggbb"` | absent / `null` |
-| `grayscale` | print the colour as the grey of its luminance (Rec. 709 weights) | `false` |
-| `screening` | ink intensity 0–100 %, mixing toward the white paper | `100` |
-| `linetype` | linetype name (loaded, or from the built-in library; `Continuous` draws solid) | absent / `null` |
-| `lineweight` | hundredths of a millimetre, 0–211; used when lineweights are plotted | absent / `null` |
-| `end`, `join`, `fill` | line end, line join and area fill style | `object` |
+| `color` | Cor de saída, no formato `"#rrggbb"` | Ausente ou `null` |
+| `grayscale` | Imprime a cor como cinza com base na luminância (pesos Rec. 709) | `false` |
+| `screening` | Intensidade da tinta entre 0 e 100%, misturada com o papel branco | `100` |
+| `linetype` | Nome do tipo de linha, carregado ou da biblioteca interna; `Continuous` desenha linha contínua | Ausente ou `null` |
+| `lineweight` | Centésimos de milímetro, de 0 a 211; usado quando a espessura de linha é plotada | Ausente ou `null` |
+| `end`, `join`, `fill` | Extremidade da linha, junção e padrão de preenchimento | `object` |
 
-Colour 7 prints black.
+A cor 7 é impressa em preto.
 
-### Line ends, joins and fill patterns
+### Extremidades, junções e padrões de preenchimento
 
-- **`end` and `join`** shape lines wider than 0.25 mm on paper (from lineweights). The line
-  is drawn as its filled outline: `butt` ends at the end point, `square` reaches half the
-  width past it, `round` adds a half circle and `diamond` a point. `miter` joins meet in a
-  point (bevelled past 10 half widths), `bevel` cuts the corner, `round` rounds it and
-  `diamond` points out one half width. `object` is round, as lines are drawn anyway.
-- **`fill`** replaces the solid fill of filled areas: 2D solids, traces, wide polylines,
-  solid hatches and filled text. `solid` and `object` keep it solid. The patterns are
-  CADCraft's own definitions, measured on paper and anchored to the sheet's origin. They
-  repeat every 1 mm:
+- **`end` e `join`:** definem a aparência de linhas com espessura superior a 0,25 mm no papel. A linha é desenhada como um contorno preenchido: `butt` termina no ponto final; `square` se estende por metade da espessura; `round` adiciona um semicírculo; `diamond` forma uma ponta. A junção `miter` cria um vértice (que vira chanfro quando passa de 10 meias-espessuras), `bevel` corta o canto, `round` arredonda e `diamond` cria uma ponta com meia-espessura. `object` equivale a `round`, pois as linhas já são desenhadas dessa forma.
+- **`fill`:** substitui o preenchimento sólido de áreas preenchidas: sólidos 2D, traces, polilinhas largas, hachuras sólidas e textos preenchidos. `solid` e `object` mantêm o preenchimento sólido. Os padrões são definições próprias do CADCraft, dimensionadas no papel e ancoradas à origem da folha. Repetem-se a cada 1 mm.
 
-| Fill | Pattern |
+| Preenchimento | Padrão |
 |---|---|
-| `checkerboard` | 0.5 mm squares, every other one filled |
-| `crosshatch` | horizontal and vertical bars, 0.2 mm wide |
-| `diamonds` | 0.35 mm squares turned 45°, every 0.7 mm |
-| `horizontalBars`, `verticalBars` | bars a third of the repeat wide |
-| `slantLeft`, `slantRight` | `\` and `/` bars a third of the repeat wide |
-| `squareDots` | 0.2 mm squares every 0.5 mm |
+| `checkerboard` | Quadrados de 0,5 mm, alternando os preenchidos |
+| `crosshatch` | Barras horizontais e verticais de 0,2 mm |
+| `diamonds` | Quadrados de 0,35 mm girados em 45°, a cada 0,7 mm |
+| `horizontalBars`, `verticalBars` | Barras com largura equivalente a um terço do período |
+| `slantLeft`, `slantRight` | Barras inclinadas `\\` e `/`, com largura de um terço do período |
+| `squareDots` | Quadrados de 0,2 mm a cada 0,5 mm |
 
-Wipeouts are never patterned. A plot that would need more than two million pattern cells keeps
-the remaining areas solid. Layouts draw these while the display list is built. A model-space
-plot draws them at its plot scale.
+Wipeouts nunca recebem padrões. Se a plotagem exigir mais de dois milhões de células de padrão, as áreas restantes ficam sólidas. Nos layouts, os padrões são desenhados durante a criação da lista de exibição; em plotagens do espaço do modelo, são desenhados na escala da plotagem.
 
-### Built-in tables
+### Tabelas internas
 
-These are CADCraft's own definitions, not copies of any vendor's files.
+Estas tabelas são definições próprias do CADCraft, não cópias de arquivos de fornecedores.
 
-| Table | What it does |
+| Tabela | Comportamento |
 |---|---|
-| `default.ctb` | keeps every object property |
-| `monochrome.ctb` | prints every colour black |
-| `grayscale.ctb` | prints every colour as the grey of its luminance |
-| `default.stb` | `Normal` (object properties), `Black`, `Screened 50%`, `Thick` (0.50 mm) |
-| `monochrome.stb` | `Normal` prints black; `Screened 50%` prints black at 50 % |
+| `default.ctb` | Mantém as propriedades de cada objeto |
+| `monochrome.ctb` | Imprime todas as cores em preto |
+| `grayscale.ctb` | Imprime todas as cores como tons de cinza baseados na luminância |
+| `default.stb` | `Normal` (propriedades do objeto), `Black`, `Screened 50%` e `Thick` (0,50 mm) |
+| `monochrome.stb` | `Normal` imprime em preto; `Screened 50%` imprime em preto com 50% de intensidade |
 
-A table kept in the drawing shadows a built-in table of the same name.
+Uma tabela armazenada no desenho tem prioridade sobre uma tabela interna de mesmo nome.
 
-## Named plot styles
+## Estilos nomeados de plotagem
 
-Layers have a plot style name (default `Normal`). Objects have `ByLayer` (the default), `ByBlock`
-or a style name. `ByLayer` takes the layer's style. On layer 0 inside a block, that is the block
-reference's layer. `ByBlock` takes the block reference's style. A name the table doesn't have
-prints as `Normal`. A colour-dependent table ignores the property.
+As camadas têm um nome de estilo de plotagem (padrão `Normal`). Os objetos podem usar `ByLayer` (padrão), `ByBlock` ou o nome de um estilo. `ByLayer` usa o estilo da camada. Na camada 0 dentro de um bloco, é usado o estilo da camada da referência do bloco. `ByBlock` usa o estilo da referência do bloco. Se a tabela não contiver o nome escolhido, o objeto é plotado como `Normal`. Uma tabela dependente de cor ignora essa propriedade.
 
-## Commands
+## Comandos
 
-- `pagesetup {layout, plotStyleTable, displayPlotStyles}` sets the layout's table and the
-  Display plot styles flag. Without a layout, it reports the built-in tables in `plotStyleTables`.
-- `plot` / `exportpdf {plotStyleTable}` replaces the page setup's table for one plot. `"None"`
-  plots object colours.
-- `plotstyle {name, handles?}` sets the objects' plot style. With nothing selected, it sets the
-  current plot style for new objects (`CPLOTSTYLE`). Without `name`, it reports the current
-  style and the named styles.
-- `layer.set {name, plotStyle}` sets a layer's plot style.
-- `stylesmanager {action, …}` manages the tables: `list`, `get`, `new` (`kind`, `from`), `set`
-  (`style: {name, …fields}`, `removeStyle`, `description`), `delete`, `load` (`path` or `text`)
-  and `save` (`path`, or returns `text`). Typed or chosen from **File ▸ Plot Styles...**, it
-  opens the Plot Style Manager dialog.
+- `pagesetup {layout, plotStyleTable, displayPlotStyles}` define a tabela do layout e a opção **Display plot styles**. Sem um layout, informa as tabelas internas em `plotStyleTables`.
+- `plot` / `exportpdf {plotStyleTable}` substitui a tabela definida na configuração da página para uma única plotagem. `"None"` usa as cores dos objetos.
+- `plotstyle {name, handles?}` define o estilo de plotagem dos objetos. Sem seleção, define o estilo atual para novos objetos (`CPLOTSTYLE`). Sem `name`, informa o estilo atual e os estilos nomeados.
+- `layer.set {name, plotStyle}` define o estilo de plotagem de uma camada.
+- `stylesmanager {action, …}` gerencia tabelas: `list`, `get`, `new` (`kind`, `from`), `set` (`style: {name, …fields}`, `removeStyle`, `description`), `delete`, `load` (`path` ou `text`) e `save` (`path` ou retorno de `text`). Digitado ou escolhido em **File ▸ Plot Styles...**, abre o gerenciador de estilos de plotagem.
 
-## Table files
+## Arquivos de tabela
 
-Tables are saved in our own format: UTF-8 JSON with a format marker. Fields left at "use the
-object's" are omitted.
+As tabelas são salvas no formato próprio do CADCraft: JSON UTF-8 com um marcador de formato. Campos definidos como “usar as propriedades do objeto” são omitidos.
 
 ```json
 {
@@ -103,29 +81,23 @@ object's" are omitted.
 }
 ```
 
-- `kind` is `colorDependent` or `named`.
-- `end` is one of `object`, `butt`, `square`, `round` or `diamond`.
-- `join` is one of `object`, `miter`, `bevel`, `round` or `diamond`.
-- `fill` is one of `object`, `solid`, `checkerboard`, `crosshatch`, `diamonds`, `horizontalBars`,
-  `slantLeft`, `slantRight`, `squareDots` or `verticalBars`.
-- `color` may also be written `[r, g, b]`.
+- `kind` aceita `colorDependent` ou `named`.
+- `end` aceita `object`, `butt`, `square`, `round` ou `diamond`.
+- `join` aceita `object`, `miter`, `bevel`, `round` ou `diamond`.
+- `fill` aceita `object`, `solid`, `checkerboard`, `crosshatch`, `diamonds`, `horizontalBars`, `slantLeft`, `slantRight`, `squareDots` ou `verticalBars`.
+- `color` também pode ser informado como `[r, g, b]`.
 
-Reading fixes hostile values:
+A leitura limita valores potencialmente problemáticos:
 
-- Screening is capped at 100 and lineweights at 211.
-- A colour-dependent table always gets 255 styles named `Color_n`.
-- A named table gets unique style names (at most 1024), with `Normal` first.
-- Files over 4 MB are refused.
+- Screening é limitado a 100 e a espessura de linha a 211.
+- Uma tabela dependente de cor sempre recebe 255 estilos chamados `Color_n`.
+- Uma tabela nomeada recebe nomes únicos (até 1.024), com `Normal` primeiro.
+- Arquivos maiores que 4 MB são rejeitados.
 
-Binary `.ctb`/`.stb` files are not read. We haven't found a public specification of that format.
+Arquivos binários `.ctb` e `.stb` ainda não são lidos. Não foi encontrada uma especificação pública desse formato.
 
-## In DXF files
+## Nos arquivos DXF
 
-- The page setup's table is PLOTSETTINGS group 7, and Display plot styles is plot layout flag 2
-  (group 70).
-- Plot style names follow the DXF Reference. The named object dictionary entry
-  `ACAD_PLOTSTYLENAME` is an `ACDBDICTIONARYWDFLT` whose entries name `ACDBPLACEHOLDER` objects
-  (default `Normal`). Layers and objects point at them with group 390. An object without a 390
-  is `ByLayer`. `ByBlock` isn't written, so it reads back as `ByLayer`.
-- Tables kept in the drawing travel in the `CADCRAFT_PLOTSTYLES` XRECORD (JSON) of the named
-  object dictionary.
+- A tabela de configuração da página é armazenada no grupo 7 de PLOTSETTINGS; **Display plot styles** é a flag 2 do layout (grupo 70).
+- Os nomes de estilos seguem a referência DXF. A entrada de dicionário de objetos nomeados `ACAD_PLOTSTYLENAME` é um `ACDBDICTIONARYWDFLT`, cujas entradas apontam para objetos `ACDBPLACEHOLDER` (padrão `Normal`). Camadas e objetos os referenciam pelo grupo 390. Um objeto sem grupo 390 usa `ByLayer`. `ByBlock` não é gravado e volta como `ByLayer` ao reabrir.
+- Tabelas armazenadas no desenho ficam no XRECORD `CADCRAFT_PLOTSTYLES` (JSON) do dicionário de objetos nomeados.
