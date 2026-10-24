@@ -10,8 +10,7 @@ in [ui-parity.md](ui-parity.md); dimension and hatch behaviour in [gaps.md](gaps
 
 **Headline (estimated): geometry ≈ 40% (weighted below: 41%), of which the constraint solver ≈ 50%.** Everything built
 from lines, arcs and circles is exact. Ellipses and splines are handled by tessellating them, so
-intersections, offsets, trims and snaps on them are approximations; polyline offsets don't
-recompute arc bulges or clean up loops; tolerances are absolute, so very large or very small
+intersections, offsets, trims and snaps on them are approximations; polyline offsets now recompute arc bulges after joining segment endpoints, but still do not clean up loops; tolerances are absolute, so very large or very small
 drawings behave differently from mid-sized ones. 3D geometry doesn't exist. Remaining:
 **≈ 90–140 Opus 5.5 hours** for 2D precision and the solver, plus the 3D kernel (M11, see
 [target-app-parity.md](target-app-parity.md)).
@@ -73,7 +72,7 @@ constraints 10%.
 | Circle, arc | exact | exact (radius change) |
 | Ellipse | spline approximation within tolerance | **a polyline** from tessellation at 1e-3 × major axis |
 | Spline | spline approximation within tolerance | tessellate at 1e-3, offset vertices along normals, keep about 40 points, refit: **lossy** |
-| Polyline with arcs | exact, with self-intersection trimming, OFFSETGAPTYPE (extend, fillet, chamfer) | segments offset and joined at neighbours' intersections; **arc bulges not recomputed** after endpoints move (comment at L413), **no loop cleanup**, collapsed segments not removed; OFFSETGAPTYPE only echoed |
+| Polyline with arcs | exact, with self-intersection trimming, OFFSETGAPTYPE (extend, fillet, chamfer) | segments offset and joined at neighbouring intersections; arc bulges are recomputed from the final joined endpoints (`crates/engine/src/cmd/modify.rs::offset_polyline`), but there is **no loop cleanup**, collapsed segments are not removed, and OFFSETGAPTYPE is only echoed |
 | Options: Through, Erase, Layer, Multiple | yes | see [gaps.md](gaps.md) |
 
 ## Trim, extend, fillet, chamfer, break, join, lengthen (≈ 70%)
