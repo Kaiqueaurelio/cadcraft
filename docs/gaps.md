@@ -115,7 +115,7 @@ Detail: [localization-parity.md](localization-parity.md).
 
 | # | Gap | Evidence | Est. |
 |---|---|---|---|
-| S1 | No CI runs `cargo xtask ci` on pull requests (only packaging lint and release builds) | `.github/workflows/` | 2–3 |
+| S1 | CI gate is delegated to the shared upstream workflow; keep verifying fork-specific behavior after changes | `.github/workflows/ci.yml` | ongoing |
 | S2 | ~~`cargo fmt --check` fails on main~~ fixed on main (8fceaaf) | — | 0 |
 | S3 | 40 open PRs, many community bug fixes awaiting review | `gh pr list` | 10–20 |
 | S4 | Open correctness issues: extents union far-apart geometry (#166), lines not visible mid-command (#44), browser plot shows raw PDF bytes (#134) (closing a tab and browser saves fixed, #76, #133) | issues | 4–6 |
