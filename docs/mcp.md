@@ -1,71 +1,61 @@
-# CADCraft and AI agents (MCP)
+# CADCraft e agentes de IA (MCP)
 
-CADCraft speaks the [Model Context Protocol](https://modelcontextprotocol.io) over stdio.
+O CADCraft implementa o [Model Context Protocol](https://modelcontextprotocol.io) por meio de stdio.
 
-## Start it
+## Como iniciar
 
 ```sh
-# Headless: an in-process drawing session, no window.
+# Sem interface: sessão de desenho no próprio processo, sem janela.
 cadcraft-cli mcp
 
-# Bridged to the running app (watch the agent draw):
+# Conectado ao aplicativo em execução (acompanhe o desenho do agente):
 cadcraft --control 7979 &
 cadcraft-cli mcp --connect 127.0.0.1:7979
 ```
 
-An MCP client usually starts its servers when it starts, often before the app is open. With
-`--lazy` the bridge starts anyway and reaches the app at the first tool call; until the app answers,
-each call fails with a message saying how to open it. `--launch` also opens CADCraft (macOS) with
-that control port at a call that finds nothing, and waits for it:
+Um cliente MCP normalmente inicia seus servidores ao iniciar, muitas vezes antes de o aplicativo estar aberto. Com `--lazy`, a ponte inicia mesmo assim e tenta alcançar o aplicativo na primeira chamada de ferramenta; até receber resposta, cada chamada falha com uma mensagem explicando como abri-lo. A opção `--launch` também abre o CADCraft no macOS com essa porta de controle quando não encontra uma instância e aguarda a conexão:
 
 ```json
 { "mcpServers": { "cadcraft": { "command": "cadcraft-cli", "args": ["mcp", "--connect", "127.0.0.1:7979", "--launch"] } } }
 ```
 
-`--connect` needs the app's `HOST:PORT`. Without one (or with an unknown argument) `cadcraft-cli mcp`
-exits with an error instead of falling back to a headless session, so a client meant for the app
-never edits a separate drawing by mistake. If the app can't be reached, startup fails too.
+A opção `--connect` exige o endereço `HOST:PORT` do aplicativo. Sem ele (ou com um argumento desconhecido), `cadcraft-cli mcp` encerra com erro em vez de iniciar silenciosamente uma sessão sem interface. Isso evita que um cliente destinado ao aplicativo altere por engano outro desenho. Se o aplicativo não puder ser alcançado, a inicialização também falha.
 
-Example client configuration (Claude Code / Claude Desktop):
+Exemplo de configuração de cliente (Claude Code / Claude Desktop):
 
 ```json
 { "mcpServers": { "cadcraft": { "command": "cadcraft-cli", "args": ["mcp"] } } }
 ```
 
-## Tools
+## Ferramentas disponíveis
 
-| Tool | What it does |
+| Ferramenta | Função |
 |---|---|
-| `command_line {text}` | Type at the command line exactly like a person: `line 0,0 @10,0 @0,5 c`, `circle 5,2 1`, `offset 0.5`, `zoom e`. Spaces act as Enter; empty text is Enter. Returns the new prompt, keywords and output. |
-| `script {text}` | A multi-line script (like `.scr` files). |
-| `execute {command, params}` | Any command with JSON parameters, never a dialog. `list_commands` shows ids and parameter docs. |
-| `list_commands {filter?}` | The command catalog; `filter` matches part of a command's id, label or an alias. |
-| `inspect_drawing {entities?, limit?}` | Counts, extents, layers, styles, blocks, layouts, selection, undo history and entities. |
-| `query_entities {type?, layer?, window?, crossing?, limit?, offset?}` | Filtered entities with handles and geometry. `window` `[[x0,y0],[x1,y1]]` finds objects whose geometry is inside it or crosses it (`crossing: false`: entirely inside). `count` is every match, `returned` the page (`offset`, `limit`, default 500). |
-| `execute {"command": "shapes", "params": {type?, layer?, window?, crossing?, limit?, offset?, tolerance?}}` | Facts about the closed shapes — closed polylines, circles, full ellipses, closed splines: perimeter, area, centroid, winding, the first self-intersection and coincident vertices, exact with arcs and bulges. Other matches are counted under `skipped` with the reason. `selfCheck` says what was found, analysed and skipped, the caps hit with their values (`limit`, `crossingSegments`) and implausible values (perimeter past 10× the bounding-box diagonal, area larger than the drawing extents, each past a 1e-9 relative tolerance for rounding; with no visible objects there are no extents, so no area bound applies). |
-| `execute {"command": "shapes", "params": {type?, layer?, window?, crossing?, limit?, offset?, tolerance?}}` | Facts about the closed shapes — closed polylines, circles, full ellipses, closed splines: perimeter, area, centroid, winding, the first self-intersection and coincident vertices, exact with arcs and bulges. Other matches are counted under `skipped` with the reason. |
-| `execute {"command": "usage", "params": {type?, limit?, offset?}}` | Read-only cross-reference of the layers, blocks, text styles and linetypes: for each, the objects in model space and layouts that use it, the objects in block definitions that use it, whether it is used only inside block definitions, and whether it is empty or unused. `summary` counts each kind and `unused` lists what PURGE would offer, in table order. One scan reads at most 5,000,000 objects; a larger drawing sets `incomplete: true` with an `incompleteReason`, because counts, statuses and summaries then omit the objects past the limit. |
-| `execute {"command": "loops", "params": {tolerance?, maxPairs?, limit?, offset?}}` | Implied closed loops from loose LINE and ARC chains: each closed loop with its member handles, perimeter, area and winding, exact with arcs; each open chain with the endpoint gap, its location (`at`, `ends`) and length; and branch junctions (three or more ends meeting), reported but not resolved. `tolerance` defaults to 1e-9 × the extents diagonal; the quadratic endpoint pairing stops at `maxPairs` (default 1,000,000) and reports `capped` with `pairTestsNeeded` instead of guessing from a partial pairing. |
-| `query_entities {type?, layer?, selected?, window?, crossing?, limit?, offset?}` | Filtered entities with handles and geometry. `selected: true` restricts results to the current selection in the active space; an empty selection returns no entities. Omitted/false queries all entities in that space. Filters combine before paging. `window` `[[x0,y0],[x1,y1]]` finds objects whose geometry is inside it or crosses it (`crossing: false`: entirely inside). `count` is every match, `returned` the page (`offset`, `limit`, default 500). |
-| `render {width?, height?, fit?, window?}` | A PNG image of the drawing, or of just the area `window` `[[x0,y0],[x1,y1]]` (one sheet or room of a large drawing; 1600 px wide with the window's shape unless sized). |
-| `find_text {contains?, layer?, window?, limit?, offset?}` | The readable texts — TEXT, MTEXT without formatting codes, block attributes, multileaders — with text, insertion point, height, rotation, style, layer and handle; filtered by content (any case), layer and a window around the insertion points. Read-only (the `texts` command). |
-| `new_drawing {metric?}`, `open {path}`, `save {path?}`, `cancel` | Files and Escape. `save` to a `.svg`, `.png` or `.pdf` path exports: the drawing keeps its name and unsaved changes. |
-| `screenshot`, `ui_inspect`, `ui_click {x, y}` | Only when connected to the app. |
+| `command_line {text}` | Digita na linha de comando como uma pessoa: `line 0,0 @10,0 @0,5 c`, `circle 5,2 1`, `offset 0.5`, `zoom e`. Espaços funcionam como Enter; texto vazio também envia Enter. Retorna o prompt, as palavras-chave e a saída. |
+| `script {text}` | Executa um script de várias linhas, como um arquivo `.scr`. |
+| `execute {command, params}` | Executa qualquer comando com parâmetros JSON, sem abrir diálogos. `list_commands` mostra identificadores e documentação dos parâmetros. |
+| `list_commands {filter?}` | Catálogo de comandos; o filtro procura parte do identificador, do rótulo ou de um alias. |
+| `inspect_drawing {entities?, limit?}` | Retorna contagens, limites geométricos, camadas, estilos, blocos, layouts, seleção, histórico de desfazer e entidades. |
+| `query_entities {type?, layer?, window?, crossing?, limit?, offset?}` | Consulta entidades filtradas com identificadores e geometria. `window` usa `[[x0,y0],[x1,y1]]` para localizar objetos dentro da área ou que a cruzam; `crossing: false` exige que estejam inteiramente dentro. `count` é o total de correspondências; `returned` é o tamanho da página (`offset`, `limit`, padrão 500). |
+| `execute {"command": "shapes", "params": {...}}` | Analisa formas fechadas (polilinhas fechadas, círculos, elipses completas e splines fechadas), incluindo perímetro, área, centroide, sentido, primeira auto-interseção e vértices coincidentes, com precisão para arcos e bulges. Outras entidades são contabilizadas em `skipped`, com o motivo. `selfCheck` informa o que foi encontrado, analisado ou ignorado e os limites atingidos. |
+| `execute {"command": "usage", "params": {...}}` | Consulta somente leitura das camadas, blocos, estilos de texto e tipos de linha: mostra quais objetos os usam no espaço do modelo, nos layouts e nas definições de blocos, além de indicar itens vazios ou não utilizados. `summary` resume os tipos e `unused` lista o que PURGE ofereceria. A varredura lê no máximo 5.000.000 objetos; acima disso, informa `incomplete: true`. |
+| `execute {"command": "loops", "params": {...}}` | Detecta loops fechados implícitos em cadeias de LINE e ARC. Retorna identificadores dos elementos, perímetro, área e sentido de cada loop; cadeias abertas com distância entre extremidades e junções com três ou mais extremidades. O pareamento de extremidades tem limite e informa quando foi atingido, em vez de inferir resultados incompletos. |
+| `query_entities {type?, layer?, selected?, window?, crossing?, limit?, offset?}` | Consulta entidades com identificadores e geometria. `selected: true` limita os resultados à seleção atual no espaço ativo; seleção vazia retorna zero entidades. Filtros são aplicados antes da paginação. |
+| `render {width?, height?, fit?, window?}` | Gera uma imagem PNG do desenho ou apenas da área `window` indicada, útil para uma folha ou cômodo de um desenho grande. |
+| `find_text {contains?, layer?, window?, limit?, offset?}` | Localiza textos legíveis (TEXT, MTEXT sem códigos de formatação, atributos de bloco e multileaders), retornando conteúdo, ponto de inserção, altura, rotação, estilo, camada e identificador. A consulta não altera o desenho. |
+| `new_drawing {metric?}`, `open {path}`, `save {path?}`, `cancel` | Cria, abre, salva ou cancela. Salvar com caminho `.svg`, `.png` ou `.pdf` exporta sem renomear o desenho nem descartar alterações não salvas. |
+| `screenshot`, `ui_inspect`, `ui_click {x, y}` | Ferramentas disponíveis somente quando conectado ao aplicativo com interface. |
 
-Resources: `cadcraft://drawing` (inspect JSON) and `cadcraft://commands` (catalog).
+Recursos MCP: `cadcraft://drawing` (inspeção em JSON) e `cadcraft://commands` (catálogo).
 
-Arguments are checked against each tool's input schema. An unknown tool, `arguments` that aren't an
-object, a missing required argument or one of the wrong type is a JSON-RPC error `-32602` (invalid
-params), so `command_line {}` never presses Enter by accident. A tool that runs and fails (a bad
-point, an unknown command) returns a result with `isError: true` and the message.
+Os argumentos são validados conforme o esquema de entrada de cada ferramenta. Uma ferramenta desconhecida, argumentos que não sejam um objeto, argumento obrigatório ausente ou tipo incorreto geram erro JSON-RPC `-32602` (parâmetros inválidos). Assim, `command_line {}` não envia Enter por acidente. Se a ferramenta executar e falhar (por exemplo, ponto inválido ou comando desconhecido), retorna um resultado com `isError: true` e a mensagem.
 
-## A typical session
+## Exemplo de sessão
 
 1. `command_line {"text": "rectang 0,0 100,60"}`
 2. `execute {"command": "circle", "params": {"center": [10, 10], "radius": 4}}`
 3. `command_line {"text": "dimlinear 0,0 100,0 50,-8"}`
-4. `inspect_drawing {}` — verify counts and geometry.
-5. `render {}` — look at it.
+4. `inspect_drawing {}` — confira as contagens e a geometria.
+5. `render {}` — visualize o resultado.
 
-The end-to-end test in `crates/mcp/src/tests.rs` runs a session like this and checks the result
-only through MCP.
+O teste de ponta a ponta em `crates/mcp/src/tests.rs` executa uma sessão semelhante e verifica o resultado exclusivamente pelo MCP.
