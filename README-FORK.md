@@ -10,7 +10,7 @@ Este fork está em fase de preparação. O workflow em `.github/workflows/build.
 
 ## Compilar localmente
 
-Requer uma versão do Rust/Cargo compatível com `rust-version` no `Cargo.toml), além das dependências de sistema necessárias ao projeto.
+Requer uma versão do Rust/Cargo compatível com a versão indicada por `rust-version` no `Cargo.toml`, além das dependências de sistema necessárias ao projeto.
 
 ```bash
 git clone https://github.com/Kaiqueaurelio/cadcraft.git
