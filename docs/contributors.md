@@ -1,51 +1,42 @@
-# Contributors in the About window
+# Colaboradores na janela Sobre
 
-**About ▸ Contributors** credits everyone who contributed to CADCraft, and **About ▸ Models** credits
-the AI models named in `Co-Authored-By` trailers. This follows the shared craftrules standard
-[`standards/contributors.md`](https://github.com/storytold/craftrules/blob/main/standards/contributors.md);
-this page is the local copy of the decision.
+A seção **About ▸ Contributors** credita quem contribuiu com o CADCraft; **About ▸ Models** credita os modelos de IA citados nos rodapés `Co-Authored-By` dos commits. O procedimento segue o padrão compartilhado do craftrules em [standards/contributors.md](https://github.com/storytold/craftrules/blob/main/standards/contributors.md). Esta página registra a decisão específica do repositório.
 
-## Decision
+## Decisão e arquivos
 
-- Two files, both **compiled into the binary** by the UI crate's `build.rs` (nothing is read from
-  disk or the network at run time; the web build has them too):
-  - [`contributors/contributors.json`](../contributors/contributors.json): commit stats per GitHub
-    username. **Generated** by `craftrules/scripts/contributors.py`; never hand-edit.
-  - [`contributors/people.toml`](../contributors/people.toml): the names people chose for
-    themselves. **Each contributor adds only their own entry**, in their own PR.
-- Each contributor gets one line: GitHub username (always), display name (opt-in, or their synced
-  GitHub profile name), real name (only if they told us), merged PRs, commits, lines added, lines
-  deleted, binary assets added, binary assets removed, first and last commit date.
-- The list is shown as a **grab bag** (names flowing as text) or a **table**, in the same order. It
-  sorts by name, PRs, commits, lines added, lines deleted, line delta, binary assets added/removed,
-  first or last commit date. The name toggle cycles **Username → Display name → Real name**; a
-  missing name falls back to `@username`. Alphabetical sorting is case-insensitive and ignores the `@`.
+Dois arquivos são incorporados ao binário pela função `build.rs` do crate de interface. Nada é lido do disco ou da rede durante a execução; a versão web também inclui esses dados.
 
-## Credit yourself
+- [`contributors/contributors.json`](../contributors/contributors.json): estatísticas de commits por nome de usuário do GitHub. É **gerado** por `craftrules/scripts/contributors.py`; nunca edite manualmente.
+- [`contributors/people.toml`](../contributors/people.toml): nomes escolhidos pelas próprias pessoas. **Cada colaborador adiciona apenas sua própria entrada**, em seu próprio pull request.
 
-Add your entry to `contributors/people.toml` in a PR you commit yourself (every field optional):
+Cada colaborador recebe uma linha com nome de usuário do GitHub (sempre), nome de exibição (opcional ou sincronizado com o perfil público), nome real (somente se informado pela pessoa), pull requests integrados, commits, linhas adicionadas e removidas, recursos binários adicionados e removidos e datas do primeiro e último commit.
+
+A lista pode ser exibida como uma lista de nomes ou uma tabela, mantendo a mesma ordem. É possível ordenar por nome, pull requests, commits, linhas adicionadas/removidas, saldo de linhas, recursos binários e data do primeiro ou último commit. O seletor de nome alterna entre **Username → Display name → Real name**; quando não há nome, usa `@username`. A ordenação alfabética ignora maiúsculas/minúsculas e o caractere `@`.
+
+## Adicione seus créditos
+
+Inclua sua entrada em `contributors/people.toml` por meio de um pull request enviado por você. Todos os campos são opcionais:
 
 ```toml
-[people.your-github-username]
-real_name = "Your Name"
-display_name = "Nickname"
-sync_github_name = true   # use the name on your public GitHub profile as display name
+[people.seu-usuario-github]
+real_name = "Seu nome"
+display_name = "Apelido"
+sync_github_name = true   # usa como nome de exibição o nome do perfil público do GitHub
 ```
 
-or, with craftrules checked out next to `craft-apps/`:
+Ou, com o repositório craftrules clonado ao lado de `craft-apps/`:
 
 ```sh
-python3 ../../craftrules/scripts/contributors.py --add-me . --real-name "Your Name" --sync-github-name
+python3 ../../craftrules/scripts/contributors.py --add-me . --real-name "Seu nome" --sync-github-name
 ```
 
-Names show after the next refresh: the script checks that each entry was committed by its own
-user (or by a maintainer with a `consent_source`). Delete your entry to remove your names.
+Os nomes aparecem após a próxima atualização. O script verifica se a entrada foi enviada pela própria pessoa ou por um mantenedor com `consent_source`. Remova sua entrada para retirar seus nomes da lista.
 
-## Refreshing (maintainers)
+## Atualização por mantenedores
 
 ```sh
-python3 ../../craftrules/scripts/contributors.py .           # regenerate + verify; needs git, Python 3.11+, gh
-python3 ../../craftrules/scripts/contributors.py --check .   # verify people.toml only
+python3 ../../craftrules/scripts/contributors.py .          # gera novamente e verifica; requer git, Python 3.11+ e gh
+python3 ../../craftrules/scripts/contributors.py --check .  # verifica apenas people.toml
 ```
 
-Commit the updated `contributors/contributors.json`. Git author names and emails are never recorded.
+Faça commit do arquivo atualizado `contributors/contributors.json`. Os nomes e e-mails de autoria registrados pelo Git nunca são exibidos.
