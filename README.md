@@ -1,40 +1,33 @@
-> **Decode CAD — edição comunitária de Kaique Aurélio:** este projeto deriva do [CADCraft original](https://github.com/storytold/cadcraft). O ícone gráfico original do aplicativo foi mantido sem alterações; o nome exibido foi atualizado. Consulte [README-FORK.md](README-FORK.md) e preserve os créditos e as licenças do projeto original.
+> **Decode CAD — desenvolvido e mantido pela Decode Analytics.** Esta edição é construída a partir de código aberto e adaptada para distribuição sob a identidade Decode CAD. Os avisos e atribuições exigidos continuam disponíveis em [LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE), [NOTICE](NOTICE) e [ATTRIBUTION.md](ATTRIBUTION.md).
 
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="Ícone original do aplicativo: esquadro de desenho e arco de compasso sobre uma grade azul">
+  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="Ícone do aplicativo Decode CAD">
 </p>
 
 <h1 align="center">Decode CAD</h1>
 
 <p align="center">
-  <b>Desenho e projeto auxiliados por computador: um aplicativo CAD 2D e 3D moderno, de código aberto e desenvolvido inteiramente em Rust.</b>
+  <b>CAD 2D e 3D de código aberto para desenho técnico, documentação e projetos, desenvolvido em Rust.</b>
 </p>
 
 <p align="center">
-  Um fluxo de trabalho CAD rápido e de código aberto: linha de comando, captura de objetos, camadas, cotas, hachuras, blocos e desenhos DXF. Funciona nativamente no macOS, Windows, Linux e FreeBSD, além de funcionar no navegador por meio de WebAssembly.<br>
+  Ferramentas de desenho, camadas, cotas, hachuras, blocos, leitura e gravação DXF/DWG, exportação e automação — para desktop e navegador, conforme as plataformas disponíveis neste repositório.
 </p>
 
 <p align="center">
   <img alt="Desenvolvido em Rust" src="https://img.shields.io/badge/desenvolvido%20em-Rust-0b6f88?style=flat-square&logo=rust&logoColor=white">
-  <img alt="Compatível com macOS, Windows, Linux, FreeBSD e navegador" src="https://img.shields.io/badge/compatibilidade-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20BSD%20%C2%B7%20Web-14a3c7?style=flat-square">
-  <img alt="Licença: MIT ou Apache-2.0" src="https://img.shields.io/badge/licença-MIT%20%2F%20Apache--2.0-0b6f88?style=flat-square">
-  <img alt="Controle por agentes via MCP" src="https://img.shields.io/badge/agentes-MCP-14a3c7?style=flat-square">
-  <img alt="Estado: desenvolvimento inicial" src="https://img.shields.io/badge/estado-desenvolvimento%20inicial-f07a3a?style=flat-square">
-  <br>
-  <a href="https://sonarcloud.io/project/overview?id=storytold_cadcraft"><img alt="Analisado pelo SonarCloud" src="https://img.shields.io/badge/analisado%20por-SonarCloud-4b9fd5?style=flat-square&logo=sonarqubecloud&logoColor=white"></a>
-  <a href="https://coderabbit.ai"><img alt="Revisado pelo CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/cadcraft?style=flat-square&label=Revisado%20por%20CodeRabbit&logo=coderabbit"></a>
+  <img alt="Licença MIT ou Apache-2.0" src="https://img.shields.io/badge/licen%C3%A7a-MIT%20%2F%20Apache--2.0-0b6f88?style=flat-square">
+  <img alt="Desenvolvido pela Decode Analytics" src="https://img.shields.io/badge/desenvolvido%20por-Decode%20Analytics-1769aa?style=flat-square">
 </p>
 
-<br>
-
 <p align="center">
-  <img src="docs/images/ui-apartment.png" alt="CADCraft com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
-  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — tudo criado com comandos do CADCraft.</sub>
+  <img src="docs/images/ui-apartment.png" alt="Decode CAD com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
+  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — criada com comandos do Decode CAD.</sub>
 </p>
 
 <p align="center">
   <a href="#capturas-de-tela">Capturas de tela</a> ·
-  <a href="#por-que-usar-o-cadcraft">Por que usar o CADCraft</a> ·
+  <a href="#por-que-usar-o-decode-cad">Por que usar o Decode CAD</a> ·
   <a href="#recursos-disponíveis-atualmente">Recursos disponíveis</a> ·
   <a href="#início-rápido">Início rápido</a> ·
   <a href="#controle-por-agentes-mcp-e-cli">Agentes, MCP e CLI</a> ·
@@ -48,8 +41,8 @@
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/images/ui-layout.png" alt="Layout de impressão no CADCraft: folha branca, área imprimível tracejada e janela de visualização com a planta em escala"></td>
-    <td width="50%"><img src="docs/images/ui-bracket.png" alt="CADCraft com desenho técnico de um suporte de fixação, furos, linhas de centro, cotas, corte hachurado, anotações e legenda técnica"></td>
+    <td width="50%"><img src="docs/images/ui-layout.png" alt="Layout de impressão no Decode CAD: folha branca, área imprimível tracejada e janela de visualização com a planta em escala"></td>
+    <td width="50%"><img src="docs/images/ui-bracket.png" alt="Decode CAD com desenho técnico de um suporte de fixação, furos, linhas de centro, cotas, corte hachurado, anotações e legenda técnica"></td>
   </tr>
   <tr>
     <td><sub><b>Layouts:</b> espaço do papel com janelas de visualização, configurações de página e impressão em PDF. Clique duas vezes em uma janela para trabalhar no espaço do modelo através dela.</sub></td>
@@ -57,17 +50,17 @@
   </tr>
 </table>
 
-## Por que usar o CADCraft
+## Por que usar o Decode CAD
 
-- **Fluxo de trabalho familiar.** Digite `L`, clique em dois pontos, digite `@5<45` e pressione Enter. A linha de comando, as sugestões clicáveis, o preenchimento automático, os atalhos, a captura de objetos, o rastreamento polar, o modo ortogonal, a entrada direta de distância, a seleção por janela e cruzamento, as alças e a repetição pelo botão direito seguem convenções conhecidas de desenho técnico.
+- **Fluxo de trabalho familiar.** Digite `L`, clique em dois pontos, digite `@5<45` e pressione Enter. A linha de comando, sugestões clicáveis, preenchimento automático, atalhos, captura de objetos, rastreamento polar, modo ortogonal, entrada direta de distância, seleção por janela e cruzamento, alças e repetição pelo botão direito seguem convenções conhecidas de desenho técnico.
 - **Arquivos abertos.** O DXF é lido e gravado nativamente, em formato ASCII e binário, das versões R12 a 2018. Arquivos DWG das versões R13 a 2018 podem ser abertos e salvos por meio da biblioteca de código aberto acadrust. Também é possível exportar para SVG e PNG.
-- **Rápido e nativo.** Desenvolvido em Rust e egui, sem Electron nem visualização web incorporada. Há versões para macOS (universal), Windows, Linux e FreeBSD, além de uma versão WebAssembly para navegadores.
-- **Preparado para agentes.** Menus, ferramentas e solicitações podem ser acionados como comandos. Agentes podem digitar na linha de comando, executar comandos com JSON, inspecionar o desenho e gerar imagens por meio de MCP, de um canal de controle JSON ou da CLI.
-- **Gratuito.** Licenciado sob MIT ou Apache-2.0, sem conta obrigatória nem assinatura.
+- **Aplicativo nativo.** Desenvolvido em Rust e egui, sem Electron nem visualização web incorporada. Há suporte a macOS, Windows, Linux e FreeBSD, além de versão WebAssembly para navegadores, conforme os workflows e artefatos disponíveis.
+- **Preparado para automação.** Menus, ferramentas e solicitações podem ser acionados como comandos. Programas e agentes podem usar a linha de comando, comandos JSON, inspeção do desenho e geração de imagens via MCP, canal de controle JSON ou CLI.
+- **Código aberto.** O repositório inclui licenças MIT e Apache-2.0. Confira os avisos e a licença de cada componente antes de redistribuir.
 
 ## Recursos disponíveis atualmente
 
-O CADCraft está em desenvolvimento inicial e acelerado. Consulte [ROADMAP.md](ROADMAP.md) para ver os indicadores de compatibilidade e o estado real dos recursos.
+O Decode CAD está em desenvolvimento. Consulte [ROADMAP.md](ROADMAP.md) para ver os indicadores de compatibilidade e o estado dos recursos.
 
 | Área | Recursos |
 |---|---|
@@ -105,11 +98,11 @@ offset 0.25                     selecione o círculo e um lado
 zoom e                          ajustar zoom à extensão do desenho
 ```
 
-Para iniciar a versão web, execute `cd apps/cadcraft-web && trunk serve`. É necessário instalar o [Trunk](https://github.com/trunk-rs/trunk).
+Para iniciar a versão web, execute `cd apps/cadcraft-web && trunk serve`. É necessário instalar o Trunk.
 
 ### Fontes
 
-O CADCraft não inclui fontes próprias no repositório: utiliza as fontes TrueType/OpenType instaladas no sistema. Compilações feitas com a opção de fontes [craft-fonts](https://github.com/storytold/craft-fonts) também podem incorporá-las. Fontes SHX ainda não são lidas diretamente; textos que as utilizam são desenhados com a fonte vetorial interna ou com uma fonte instalada compatível.
+O Decode CAD pode usar fontes TrueType/OpenType instaladas no sistema. Compilações configuradas com a entrada opcional `CRAFT_FONTS_DIR` podem incorporar fontes adicionais; consulte os avisos dessas fontes antes de redistribuir. Fontes SHX ainda não são lidas diretamente; textos que as utilizam são desenhados com a fonte vetorial interna ou com uma fonte instalada compatível.
 
 | Variável | Variável de ambiente | Finalidade |
 |---|---|---|
@@ -118,24 +111,24 @@ O CADCraft não inclui fontes próprias no repositório: utiliza as fontes TrueT
 
 O ponto (`.`) limpa qualquer uma dessas configurações.
 
-**Suas próprias fontes.** Fontes `.ttf`, `.otf` e `.ttc` podem ser instaladas no sistema e selecionadas pelo nome do arquivo ou da família em um estilo de texto (`STYLE`) ou no texto MTEXT. Reinicie o CADCraft depois de instalar fontes, pois as pastas são verificadas na inicialização.
+**Suas próprias fontes.** Fontes `.ttf`, `.otf` e `.ttc` podem ser instaladas no sistema e selecionadas pelo nome do arquivo ou da família em um estilo de texto (`STYLE`) ou no texto MTEXT. Reinicie o Decode CAD depois de instalar fontes, pois as pastas são verificadas na inicialização.
 
-**Textos da direita para a esquerda.** TEXT e MTEXT organizam linhas usando o algoritmo bidirecional Unicode, e textos em escrita árabe usam formas contextuais OpenType. A justificação continua relacionada à caixa de texto. Para persa e outros idiomas com escrita árabe, instale uma fonte compatível, como [Vazirmatn](https://github.com/rastikerdar/vazirmatn), ou configure `FONTFALLBACK`.
+**Textos da direita para a esquerda.** TEXT e MTEXT organizam linhas usando o algoritmo bidirecional Unicode, e textos em escrita árabe usam formas contextuais OpenType. A justificação continua relacionada à caixa de texto. Instale uma fonte compatível com o idioma necessário e consulte a documentação das fontes antes de distribuí-las com o aplicativo.
 
 ### Registros de execução
 
-O aplicativo para computador grava os registros no erro padrão e em `logs/cadcraft.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `CADCRAFT_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro.
+O aplicativo para computador grava os registros no erro padrão e em `logs/cadcraft.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `CADCRAFT_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. Os nomes internos dos arquivos e variáveis de ambiente permanecem inalterados por compatibilidade.
 
 | Variável | Efeito |
 |---|---|
 | `CADCRAFT_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
-| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do CADCraft e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace`. |
+| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace`. |
 
-O código de registro fica em `apps/cadcraft/src/logging.rs`. Na versão web, os registros são enviados ao console do navegador.
+Na versão web, os registros são enviados ao console do navegador.
 
 ## Controle por agentes, MCP e CLI
 
-O CADCraft oferece uma interface de linha de comando para automação, execução sem interface gráfica, conversão de arquivos e controle por agentes.
+O Decode CAD oferece uma interface de linha de comando para automação, execução sem interface gráfica, conversão de arquivos e controle por agentes.
 
 ```sh
 # Servidor MCP sem interface gráfica, usando entrada e saída padrão:
@@ -152,7 +145,7 @@ cadcraft-cli convert drawing.dxf drawing.svg
 
 As ferramentas MCP incluem `command_line` (digitar na linha de comando), `execute` (executar comandos com JSON), `inspect_drawing`, `query_entities` e `render` (gerar PNG). Quando conectado ao aplicativo, também há `screenshot` e `ui_click`. O canal de controle JSON está descrito em [docs/control-protocol.md](docs/control-protocol.md).
 
-Para usar rotinas LISP, scripts, arquivos de aliases ou controlar o CADCraft a partir de programas próprios, consulte [docs/customization.md](docs/customization.md).
+Para usar rotinas LISP, scripts, arquivos de aliases ou controlar o Decode CAD a partir de programas próprios, consulte [docs/customization.md](docs/customization.md).
 
 ## Arquitetura
 
@@ -168,15 +161,15 @@ ui-egui · mcp                 interface egui substituível e servidor MCP
 apps: cadcraft · cadcraft-cli · cadcraft-web
 ```
 
-Os módulos abaixo de `ui-egui` não dependem de egui, permitindo substituir a interface. O comando `cargo xtask ci` verifica formatação, Clippy, testes, atribuição de recursos, organização dos módulos e compilação para WebAssembly.
+Os nomes internos dos crates e das ferramentas de build permanecem como estão no código. O comando `cargo xtask ci` verifica formatação, Clippy, testes, atribuição de recursos, organização dos módulos e compilação para WebAssembly.
 
 O aplicativo também oferece recursos de acessibilidade, como rótulos acessíveis, foco visível pelo teclado, opção para mostrar o cursor do sistema e respeito à configuração de redução de animações do sistema operacional.
 
 ## Acessibilidade
 
-Na área de desenho, o CADCraft oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **Exibir ▸ Acessibilidade ▸ Mostrar cursor do sistema** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx CADCRAFT_SYSTEM_CURSOR 1`.
+Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx CADCRAFT_SYSTEM_CURSOR 1`.
 
-O CADCraft respeita a preferência do sistema para reduzir animações. A configuração também pode ser ajustada no menu **Exibir ▸ Acessibilidade ▸ Efeitos de animação**, escolhendo usar a configuração do sistema, ativar ou desativar os efeitos.
+O Decode CAD respeita a preferência do sistema para reduzir animações. A configuração também pode ser ajustada no menu **View ▸ Accessibility ▸ Animation Effects**, escolhendo usar a configuração do sistema, ativar ou desativar os efeitos.
 
 ## Plano de desenvolvimento
 
@@ -184,75 +177,48 @@ Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de comp
 
 ## Downloads
 
-Consulte a página de [versões mais recentes](https://github.com/storytold/cadcraft/releases/latest) para baixar as compilações disponíveis e a página de [todas as versões](https://github.com/storytold/cadcraft/releases) para consultar versões anteriores e suas notas. O marcador `<ver>` nos nomes dos arquivos representa o número da versão; o arquivo `SHA256SUMS.txt` contém as somas de verificação dos arquivos.
+Consulte a seção [Releases do Decode CAD](https://github.com/Kaiqueaurelio/cadcraft/releases) para verificar os binários publicados por este fork. Se não houver uma versão publicada, use as instruções de compilação local acima ou confira as [execuções de CI](https://github.com/Kaiqueaurelio/cadcraft/actions). Não use builds de outro repositório como se fossem builds oficiais do Decode CAD.
 
-> [!WARNING]
-> Baixe as versões oficiais pelos [lançamentos do repositório original](https://github.com/storytold/cadcraft/releases) e confira se o proprietário é `storytold`. Antes de executar um arquivo, verifique se sua soma de verificação corresponde à linha dele em `SHA256SUMS.txt`.
+Os nomes de arquivos abaixo descrevem formatos de distribuição que podem ser gerados pelos workflows; confirme que o artefato existe na release antes de tentar baixá-lo.
 
 ### Windows
 
-| Arquitetura | Instalador | Versão portátil |
-|---|---|---|
-| x64 (Intel/AMD de 64 bits) | `cadcraft-<ver>-windows-x64.msi` | `cadcraft-<ver>-windows-x64-portable.zip` |
-| arm64 (Snapdragon e outros computadores ARM) | `cadcraft-<ver>-windows-arm64.msi` | `cadcraft-<ver>-windows-arm64-portable.zip` |
-| x86 (32 bits) | `cadcraft-<ver>-windows-x86.msi` | `cadcraft-<ver>-windows-x86-portable.zip` |
-
-Os instaladores e executáveis são assinados digitalmente. O instalador adiciona o CADCraft ao menu Iniciar e oferece a opção de criar um atalho na área de trabalho.
-
-Se o aplicativo não abrir no Windows, tente iniciar com o backend gráfico Vulkan. No PowerShell, na pasta do executável:
-
-```powershell
-$env:WGPU_BACKEND = "vulkan"
-& .\cadcraft.exe
-Remove-Item Env:WGPU_BACKEND
-```
+| Arquitetura | Artefato possível |
+|---|---|
+| x64 (Intel/AMD de 64 bits) | `cadcraft-<ver>-windows-x64.msi` ou `cadcraft-windows-x86_64` |
+| arm64 (Windows ARM) | Consulte os workflows de Windows ARM64 antes de distribuir |
+| x86 (32 bits) | Não anunciado como build garantido desta edição |
 
 ### macOS
 
-| Versão | Arquivo | Observações |
-|---|---|---|
-| Aplicativo universal (Apple Silicon e Intel) | `cadcraft-<ver>-macos-universal.dmg` | Assinado e autenticado |
-| Ferramenta de linha de comando universal | `cadcraft-cli-<ver>-macos-universal.zip` | Assinada e autenticada |
+| Versão | Artefato possível |
+|---|---|
+| Aplicativo universal | Consulte as releases e execuções de CI desta edição antes de distribuir |
 
 ### Linux
 
-| Formato | x86_64 | aarch64 (ARM64) | Observações |
-|---|---|---|---|
-| AppImage | `cadcraft-<ver>-linux-x86_64.AppImage` | `cadcraft-<ver>-linux-aarch64.AppImage` | Executável portátil |
-| Flatpak | `cadcraft-<ver>-linux-x86_64.flatpak` | `cadcraft-<ver>-linux-aarch64.flatpak` | Instalação isolada; use `flatpak install --user <arquivo>` |
-| Debian/Ubuntu | `cadcraft-<ver>-linux-x86_64.deb` | `cadcraft-<ver>-linux-aarch64.deb` | Pacote DEB |
-| Fedora/RHEL/openSUSE | `cadcraft-<ver>-linux-x86_64.rpm` | `cadcraft-<ver>-linux-aarch64.rpm` | Pacote RPM |
-| Arquivo compactado | `cadcraft-<ver>-linux-x86_64.tar.gz` | `cadcraft-<ver>-linux-aarch64.tar.gz` | Extraia para a pasta desejada |
-
-Para RISC-V (riscv64), há também `cadcraft-<ver>-linux-riscv64.tar.gz`, compilado de forma cruzada; exige glibc 2.39 ou posterior.
-
-### FreeBSD
-
-| Arquitetura | Arquivo |
+| Formato | Artefato possível |
 |---|---|
-| x86_64 | `cadcraft-<ver>-freebsd-x86_64.tar.gz` |
+| Executável x86_64 | `cadcraft-linux-x86_64` (quando publicado pela execução de build) |
+| Pacotes AppImage, Flatpak, DEB e RPM | Só indicar como disponíveis se forem publicados pelo workflow de release |
 
-### Navegador (WebAssembly)
+### FreeBSD e navegador
 
-| Versão | Arquivo | Observações |
-|---|---|---|
-| Site estático | `cadcraft-web-<ver>.zip` | Funciona em navegadores modernos e pode ser hospedado em qualquer servidor de arquivos estáticos |
+Consulte os workflows e as releases do fork para confirmar quais artefatos foram publicados. A presença de um workflow não significa, por si só, que exista um binário pronto para download.
 
-## Projeto e créditos
+## Desenvolvido pela Decode Analytics
 
-O Decode CAD é uma edição comunitária baseada no projeto aberto [CADCraft original](https://github.com/storytold/cadcraft). O código e os componentes herdados mantêm seus créditos e licenças originais.
+O Decode CAD é uma edição mantida pela **Decode Analytics**. A identidade visual e a distribuição desta edição são administradas pela Decode Analytics; componentes e trechos derivados de dependências preservam seus respectivos avisos legais e licenças.
 
 ## Licença e créditos
 
-O CADCraft é disponibilizado sob a licença [MIT](LICENSE-MIT) ou [Apache-2.0](LICENSE-APACHE), à sua escolha. Direitos autorais © 2026 ArtCraft Team e colaboradores do CADCraft. Os avisos obrigatórios estão em [NOTICE](NOTICE).
+O Decode CAD é distribuído sob a licença [MIT](LICENSE-MIT) ou [Apache-2.0](LICENSE-APACHE), conforme os termos aplicáveis. **Copyright © 2026 Decode Analytics e colaboradores desta edição**, além dos titulares identificados nos arquivos e componentes derivados. Os avisos legais aplicáveis estão em [NOTICE](NOTICE).
 
-Fontes, ícones, imagens e outros recursos incluídos mantêm suas próprias licenças de código aberto. Consulte [ATTRIBUTION.md](ATTRIBUTION.md) para ver autores, origens e licenças.
+Fontes, ícones, imagens e outros recursos incluídos podem manter licenças próprias. Consulte [ATTRIBUTION.md](ATTRIBUTION.md) e os avisos das respectivas dependências antes de redistribuir.
 
-Os ícones do CADCraft, sua fonte vetorial de desenho técnico, os padrões de hachura e os tipos de linha são criações originais. Os desenhos de exemplo também são gerados por código.
+Os ícones da interface, a fonte vetorial de desenho técnico, os padrões de hachura e os tipos de linha incluídos podem conter material herdado do projeto-base; a proveniência é descrita em [ATTRIBUTION.md](ATTRIBUTION.md).
 
-A identidade visual do Decode CAD não utiliza os logotipos ou marcas gráficas do projeto de origem. O ícone original do aplicativo foi mantido sem alterações, conforme solicitado.
-
-
+A identidade pública desta edição é Decode CAD, desenvolvida pela Decode Analytics. Recursos visuais de terceiros que não sejam necessários à execução ou à atribuição legal não são usados como marca promocional do produto.
 
 ### Organização dos painéis
 
