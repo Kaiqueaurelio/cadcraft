@@ -1,79 +1,55 @@
-# CADCraft control protocol
+# Protocolo de controle do CADCraft
 
-Start the desktop app with `--control PORT` (or `CADCRAFT_CONTROL_PORT=PORT`). It listens on
-`127.0.0.1:PORT` for JSON lines: one request per line, one reply per line. A port given with
-`--control` wins over the variable; a bare `--control` keeps the variable's port.
+Inicie o aplicativo desktop com `--control PORT` (ou `CADCRAFT_CONTROL_PORT=PORT`). Ele escuta em `127.0.0.1:PORT` linhas JSON: uma solicitação por linha e uma resposta por linha. A porta informada com `--control` tem prioridade sobre a variável; usar `--control` sem valor mantém a porta definida na variável.
 
 ```json
 {"id": 1, "method": "cmdline.input", "params": {"text": "circle 0,0 5"}, "token": "<session token>"}
 {"id": 1, "ok": true, "result": {"prompt": "Command:", "output": ["Command: CIRCLE"], ...}}
 ```
 
-Every request must carry the session `token`. Because loopback TCP cannot tell local operating
-system users apart, the app writes an unguessable per-session token to an owner-only file when the
-control server starts, and refuses (`unauthorized`) any request without a matching token. The file
-is `cadcraft-control-<port>.token` in the per-user runtime directory (`$XDG_RUNTIME_DIR`, else
-`~/.cache`; `%LOCALAPPDATA%` on Windows); its path is logged at startup. A client reads the token
-from that file — which requires the desktop user's own filesystem access — and includes it on each
-line. The MCP bridge (`cadcraft-cli mcp --connect`) does this automatically.
+Toda solicitação precisa conter o `token` da sessão. Como o TCP de loopback não distingue usuários locais do sistema operacional, ao iniciar o servidor de controle o aplicativo grava um token imprevisível por sessão em um arquivo acessível somente pelo proprietário e recusa (`unauthorized`) qualquer solicitação sem o token correspondente. O arquivo se chama `cadcraft-control-<port>.token` e fica no diretório de execução do usuário (`$XDG_RUNTIME_DIR`, ou `~/.cache` como alternativa; `%LOCALAPPDATA%` no Windows); o caminho é registrado no log durante a inicialização. O cliente lê o token desse arquivo — o que exige acesso ao sistema de arquivos do próprio usuário do desktop — e o inclui em cada linha. A ponte MCP (`cadcraft-cli mcp --connect`) faz isso automaticamente.
 
-Errors come back as `{"id": …, "ok": false, "error": "message"}`. An unknown method's error points
-to `control.methods`, which lists the methods the server answers.
+Erros são retornados como `{"id": …, "ok": false, "error": "message"}`. O erro de um método desconhecido aponta para `control.methods`, que lista os métodos atendidos pelo servidor.
 
-A line that is not a JSON object with a string `method` (an HTTP request, text that isn't JSON,
-bytes that aren't UTF-8) gets one error reply and the server closes the connection; nothing sent
-after it runs. Blank lines are skipped.
+Uma linha que não seja um objeto JSON com um campo `method` do tipo string (uma solicitação HTTP, texto que não seja JSON ou bytes que não sejam UTF-8) recebe uma resposta de erro e faz o servidor fechar a conexão; nada enviado depois dessa linha é executado. Linhas em branco são ignoradas.
 
-The server bounds what a client can hold: 16 connections at once (more get an error line and are
-closed), 256 MiB per request line (longer closes the connection), 64 queued requests (more are
-answered `{"ok": false, "error": "busy: …", "state": "not-run"}`), and 10 minutes idle or 30 seconds
-per blocked reply write before the socket is closed.
+O servidor limita os recursos que um cliente pode consumir: no máximo 16 conexões simultâneas (as excedentes recebem uma linha de erro e são fechadas), 256 MiB por linha de solicitação (linhas maiores encerram a conexão), 64 solicitações na fila (as excedentes recebem `{"ok": false, "error": "busy: …", "state": "not-run"}`) e 10 minutos de inatividade ou 30 segundos para uma gravação de resposta bloqueada antes de o socket ser fechado.
 
-The server waits up to 60 s for the app to answer a request. After that it replies with a timeout, and
-`state` tells whether sending the request again is safe:
+O servidor aguarda até 60 s para que o aplicativo responda. Depois disso, retorna timeout, e o campo `state` informa se é seguro reenviar a solicitação:
 
-- `{"id": …, "ok": false, "error": "timeout", "state": "not-run"}`: the app had not started the request.
-  It is cancelled and will never run, so sending it again is safe.
-- `{"id": …, "ok": false, "error": "timeout", "state": "may-have-run"}`: the app had already started it.
-  It may still finish and change the drawing, and its late result is discarded. Inspect the drawing
-  (`drawing.inspect`) before sending it again.
+- `{"id": …, "ok": false, "error": "timeout", "state": "not-run"}`: o aplicativo ainda não havia iniciado a solicitação. Ela é cancelada e nunca será executada, então é seguro enviá-la novamente.
+- `{"id": …, "ok": false, "error": "timeout", "state": "may-have-run"}`: o aplicativo já havia começado a executar a solicitação. Ela ainda pode terminar e alterar o desenho, mas o resultado tardio é descartado. Inspecione o desenho (`drawing.inspect`) antes de reenviar.
 
-The table below describes top-level control-protocol methods: names for the request's `method`
-field. `engine.commands` returns a separate command catalog, not a list of additional methods.
+A tabela abaixo descreve os métodos de nível superior do protocolo de controle: nomes usados no campo `method` da solicitação. `engine.commands` retorna um catálogo separado de comandos, não uma lista de métodos adicionais.
 
-| Method | Params | What it does |
+| Método | Parâmetros | Função |
 |---|---|---|
-| `cmdline.input` | `{text}` | Type a line at the command line exactly like a user. Starts commands by name/alias and answers prompts (points `x,y`, `@dx,dy`, `@d<a`, distances, keywords, empty = Enter). Spaces act as Enter except at text prompts. |
-| `cmdline.script` | `{text}` | Run a multi-line script (like `.scr` files). |
-| `cmdline.key` | `{key: "enter"\|"escape"}` | Press Enter or Escape. Replies like `cmdline.input`: the state, `output`, and `error` when Enter was refused. |
-| `cmdline.state` | | Current prompt, keywords, accepted input kinds, history tail. |
-| `engine.execute` | `{command, params}` | Run any command with JSON parameters. Never opens a dialog. `command` is an alias of this method, with the same parameters and result. |
-| `engine.commands` | | Every command: id, label, menu path, shortcut, aliases, params doc, enabled. |
-| `drawing.inspect` | `{entities?, limit?}` | Drawing summary (counts, extents, layers, styles, blocks, layouts, selection, undo) and entities with handles and geometry. |
-| `ui.inspect` | | UI state, canvas rect, view, cursor and snap, performance counters; `closePrompt`: the drawing a "Save changes?" prompt is asking about (null when none); and actual egui keyboard focus (`focus.id`, `focus.label`, `focus.role`). |
-| `ui.elements` | `{label?, role?, focused?}` | Observed toolbar, tab, drafting and layer-palette controls from the latest UI frame. Filters match exactly. Each entry has its real egui `id`, label, role, rectangle `[x,y,width,height]`, enabled/visible/selected state and current focus. |
-| `ui.menu.list` / `ui.menu.invoke` | `{command}` | The menu tree; invoke an item like a click (interactive). |
-| `ui.pointer` | `{x, y, space?: "world"\|"screen", button?, action?: "click"\|"move"}` | Click in the drawing area (world coordinates by default). Right button = Enter. |
-| `ui.click` / `ui.move` | `{x, y, button?, shift?, ctrl?}` | Real egui pointer events in screen points (reach every widget). |
-| `ui.drag` | `{x, y, to: [x, y], button?}` | Real press, move and release (drag the command line's top edge, the ViewCube ring…). |
-| `ui.key` / `ui.text` | `{key, cmd?, shift?, alt?}` / `{text}` | Synthetic keyboard input. |
-| `ui.set` | UiState fields | Show/hide palettes, toolbars, command line, ViewCube…; `theme: "system"\|"light"\|"dark"` (also `engine.execute` with `ui.theme {theme}`); `ui.inspect` reports the theme shown (`theme`: light/dark). `animations: "system"\|"on"\|"off"` (also `ui.animations {animations}`) shows or hides animation effects (dialog and menu fades, smoothed scrolling), `system` following the operating system's setting; `ui.inspect` reports whether they show (`animations`: true/false). `saveFormat: "dxf"\|"dwg"` (also `ui.saveformat {format}`) is the format Save As suggests for new drawings; `saveVersion: "2000"`…`"2018"` (also `ui.saveversion {version}`) the version it saves them in (SAVEAS also takes `version` and `binary` directly). |
-| `ui.resize` | `{width, height}` | Resize the window. |
-| `ui.focus` | | Activate the native window. Does not assign focus to a widget. |
-| `ui.screenshot` | `{path?}` | PNG of the window (needs a presented frame). |
-| `ui.render` | `{path?, width?, height?, fit?}` | Headless render. `fit` (default true) frames the whole drawing; `false` uses the current view. Replies `{pngBase64, width, height, bytes, path?}`. |
-| `app.open` / `app.save` / `app.quit` | `{path}` | File operations. |
-| `control.methods` | | Every method this server answers: `{method, params, description}`. Headless (`cadcraft-cli mcp`) lists only the methods it serves. |
-| `ping` | | Replies `"pong"`. A cheap health check. |
+| `cmdline.input` | `{text}` | Digita uma linha na linha de comando exatamente como um usuário. Inicia comandos pelo nome/alias e responde a prompts (pontos `x,y`, `@dx,dy`, `@d<a`, distâncias, palavras-chave, vazio = Enter). Espaços funcionam como Enter, exceto em prompts de texto. |
+| `cmdline.script` | `{text}` | Executa um script de várias linhas (como arquivos `.scr`). |
+| `cmdline.key` | `{key: "enter"|"escape"}` | Pressiona Enter ou Escape. Responde como `cmdline.input`: estado, `output` e `error` quando Enter é recusado. |
+| `cmdline.state` | — | Prompt atual, palavras-chave, tipos de entrada aceitos e trecho final do histórico. |
+| `engine.execute` | `{command, params}` | Executa qualquer comando com parâmetros JSON. Nunca abre um diálogo. `command` é um alias deste método, com os mesmos parâmetros e resultado. |
+| `engine.commands` | — | Todos os comandos: id, label, caminho do menu, atalho, aliases, documentação dos parâmetros e estado enabled. |
+| `drawing.inspect` | `{entities?, limit?}` | Resumo do desenho (contagens, limites, camadas, estilos, blocos, layouts, seleção e desfazer) e entidades com handles e geometria. |
+| `ui.inspect` | — | Estado da interface, retângulo do canvas, vista, cursor e snap, contadores de desempenho; `closePrompt`: desenho ao qual se refere um prompt "Save changes?" (null quando não há nenhum); e foco real do teclado egui (`focus.id`, `focus.label`, `focus.role`). |
+| `ui.elements` | `{label?, role?, focused?}` | Controles observados na barra de ferramentas, abas, desenho e paleta de camadas do quadro mais recente. Os filtros exigem correspondência exata. Cada item contém o `id` egui real, label, role, retângulo `[x,y,width,height]`, estados enabled/visible/selected e foco atual. |
+| `ui.menu.list` / `ui.menu.invoke` | `{command}` | Árvore de menus; aciona um item como um clique (interativo). |
+| `ui.pointer` | `{x, y, space?: "world"|"screen", button?, action?: "click"|"move"}` | Clica na área de desenho (coordenadas do mundo por padrão). O botão direito equivale a Enter. |
+| `ui.click` / `ui.move` | `{x, y, button?, shift?, ctrl?}` | Eventos reais de ponteiro egui em pontos de tela (alcançam todos os widgets). |
+| `ui.drag` | `{x, y, to: [x, y], button?}` | Executa pressionar, mover e soltar de verdade (por exemplo, arrastar a borda superior da linha de comando ou o anel do ViewCube). |
+| `ui.key` / `ui.text` | `{key, cmd?, shift?, alt?}` / `{text}` | Entrada sintética de teclado. |
+| `ui.set` | Campos de UiState | Mostra/oculta paletas, barras de ferramentas, linha de comando, ViewCube etc.; `theme: "system"|"light"|"dark"` (também `engine.execute` com `ui.theme {theme}`); `ui.inspect` informa o tema exibido (`theme`: light/dark). `animations: "system"|"on"|"off"` (também `ui.animations {animations}`) exibe ou oculta efeitos de animação (transições de diálogos e menus, rolagem suavizada); `system` segue a configuração do sistema operacional. `ui.inspect` informa se as animações estão ativas (`animations`: true/false). `saveFormat: "dxf"|"dwg"` (também `ui.saveformat {format}`) define o formato sugerido por Save As para novos desenhos; `saveVersion: "2000"`…`"2018"` (também `ui.saveversion {version}`) define a versão usada ao salvar (SAVEAS também aceita `version` e `binary` diretamente). |
+| `ui.resize` | `{width, height}` | Redimensiona a janela. |
+| `ui.focus` | — | Ativa a janela nativa. Não transfere o foco para um widget. |
+| `ui.screenshot` | `{path?}` | Captura PNG da janela (exige que um quadro tenha sido apresentado). |
+| `ui.render` | `{path?, width?, height?, fit?}` | Renderização headless. `fit` (true por padrão) enquadra o desenho inteiro; `false` usa a vista atual. Retorna `{pngBase64, width, height, bytes, path?}`. |
+| `app.open` / `app.save` / `app.quit` | `{path}` | Operações com arquivos. |
+| `control.methods` | — | Todos os métodos atendidos pelo servidor: `{method, params, description}`. O modo headless (`cadcraft-cli mcp`) lista apenas os métodos que disponibiliza. |
+| `ping` | — | Retorna `"pong"`. Verificação simples de integridade. |
 
-To run a command listed by `engine.commands`, put its id in `params.command` and its arguments
-in the nested `params.params` object, using `engine.execute` as the top-level method. This
-includes `open` and `document.bytes`, and the UI commands in the desktop app's catalog.
-`drawing.inspect` is also an engine command, but has an explicit top-level method; a dotted
-command id alone does not make it a protocol method.
+Para executar um comando listado por `engine.commands`, informe seu id em `params.command` e seus argumentos no objeto aninhado `params.params`, usando `engine.execute` como método de nível superior. Isso inclui `open` e `document.bytes), além dos comandos de interface no catálogo do aplicativo desktop. `drawing.inspect` também é um comando do engine, mas possui um método explícito de nível superior; um id de comando com ponto no nome não se torna automaticamente um método do protocolo.
 
-For example, inspect the drawing and list commands directly, then open a drawing and get its
-DXF bytes through `engine.execute` (one request per line):
+Por exemplo, inspecione o desenho e liste os comandos diretamente; depois, abra um desenho e obtenha seus bytes DXF via `engine.execute` (uma solicitação por linha):
 
 ```json
 {"id":2,"method":"drawing.inspect","params":{}}
@@ -82,116 +58,73 @@ DXF bytes through `engine.execute` (one request per line):
 {"id":5,"method":"engine.execute","params":{"command":"document.bytes","params":{}}}
 ```
 
-The `open` example assumes the app was started from the repository root; otherwise use a path
-to an existing drawing accessible to the app. `document.bytes` defaults to DXF and returns
-base64-encoded bytes in the result's `data` field. The `command` alias can be used identically:
+O exemplo de `open` pressupõe que o aplicativo foi iniciado na raiz do repositório; caso contrário, use o caminho de um desenho existente e acessível. `document.bytes` usa DXF por padrão e retorna bytes codificados em base64 no campo `data` do resultado. O alias `command` pode ser usado da mesma forma:
 
 ```json
 {"id":6,"method":"command","params":{"command":"document.bytes","params":{}}}
 ```
 
-Sending `open` or `document.bytes` as the top-level `method` returns an `unknown method` error:
-the protocol dispatches methods explicitly and does not fall through to the command registry.
-`app.open` is a top-level convenience method for opening a drawing with `{path}`.
+Enviar `open` ou `document.bytes` como `method` de nível superior retorna erro `unknown method`: o protocolo despacha explicitamente os métodos e não recorre ao registro de comandos como alternativa. `app.open` é um método conveniente de nível superior para abrir um desenho com `{path}`.
 
-To read selected objects as structured geometry in a single query, execute `entities` with
-`selected: true` (a boolean; omitted/false keeps the unfiltered selection behavior):
+Para ler objetos selecionados como geometria estruturada em uma única consulta, execute `entities` com `selected: true` (booleano; omitido ou false mantém o comportamento de seleção sem filtro):
 
 ```json
 {"id":7,"method":"engine.execute","params":{"command":"entities","params":{"selected":true,"limit":1000}}}
 ```
 
-Only selected entities in the active space are returned; an empty selection returns an empty
-page. The selection filter combines with `type`, `layer` and `window` before `offset`/`limit`.
-The existing response is unchanged: `count` is all matches, `returned` is the page size and
-`entities` contains handles, layers and geometry. This query does not change selection, drawing
-contents or undo history. `entities` is a command, not a top-level protocol method.
+Somente entidades selecionadas no espaço ativo são retornadas; uma seleção vazia retorna uma página vazia. O filtro de seleção é combinado com `type`, `layer` e `window` antes de `offset`/`limit`. A resposta existente não muda: `count` é o total de correspondências, `returned` é o tamanho da página e `entities` contém handles, camadas e geometria. Essa consulta não altera a seleção, o conteúdo do desenho nem o histórico de desfazer. `entities` é um comando, não um método de nível superior do protocolo.
 
-The MCP server (`cadcraft-cli mcp --connect 127.0.0.1:PORT`) wraps this protocol; headless
-(`cadcraft-cli mcp`) it serves the same methods from an in-process session.
-MCP tool names are another interface: `execute` maps to `engine.execute`, `list_commands` to
-`engine.commands`, and the MCP `open` tool to `app.open`. See [mcp.md](mcp.md).
+O servidor MCP (`cadcraft-cli mcp --connect 127.0.0.1:PORT`) encapsula esse protocolo; no modo headless (`cadcraft-cli mcp`), ele oferece os mesmos métodos por meio de uma sessão em processo. Os nomes das ferramentas MCP são outra interface: `execute` corresponde a `engine.execute`, `list_commands` a `engine.commands` e a ferramenta MCP `open` a `app.open`. Consulte [mcp.md](mcp.md).
 
-`ui.key` queues real egui key events; its reply acknowledges the queue. Poll `ui.inspect` or
-`ui.elements` for the resulting focus or state before sending the next action. Use Tab and
-Shift-Tab to traverse controls and Enter/Space to activate them. The observed registry is not
-the operating system's accessibility tree and does not establish physical input or screen-reader
-acceptance. Unregistered controls still report their actual focus ID, with a null label/role.
+`ui.key` enfileira eventos reais de tecla egui; a resposta confirma o enfileiramento. Consulte `ui.inspect` ou `ui.elements` para verificar o foco ou estado resultante antes de enviar a próxima ação. Use Tab e Shift-Tab para percorrer os controles e Enter/Space para ativá-los. O registro observado não é a árvore de acessibilidade do sistema operacional e não comprova aceitação de entrada física ou por leitor de tela. Controles não registrados ainda informam seu id real de foco, com label/role null.
 
-The native host restores layout choices from `workspace.json` and saves changes atomically.
-It stores palette/toolset visibility, selected toolset, collapsed groups, command-line history
-height and related chrome choices. It does not store drawings, command buffers, dialogs or the
-current Start tab. The default directory is `~/Library/Application Support/CADCraft` on macOS,
-`%APPDATA%/CADCraft` on Windows, and `$XDG_CONFIG_HOME/cadcraft` or `~/.config/cadcraft` elsewhere.
-Set `CADCRAFT_CONFIG_DIR` to a private directory for an isolated profile; an explicitly empty
-value disables workspace reads and writes. An invalid, oversized or newer-version file is
-reported and left untouched, with persistence disabled for that launch. Repair or move that
-file before restarting to resume saving workspace choices.
+O host nativo restaura escolhas de layout a partir de `workspace.json` e salva alterações atomicamente. Ele armazena visibilidade de paletas/conjuntos de ferramentas, conjunto selecionado, grupos recolhidos, altura do histórico da linha de comando e outras preferências da interface. Não armazena desenhos, buffers de comando, diálogos nem a aba Start atual. O diretório padrão é `~/Library/Application Support/CADCraft` no macOS, `%APPDATA%/CADCraft` no Windows e `$XDG_CONFIG_HOME/cadcraft` ou `~/.config/cadcraft` nos demais sistemas. Defina `CADCRAFT_CONFIG_DIR` para usar um perfil isolado; um valor explicitamente vazio desativa leitura e gravação do workspace. Arquivos inválidos, grandes demais ou de versão mais nova são reportados e mantidos intactos, com a persistência desativada nessa inicialização. Corrija ou mova o arquivo antes de reiniciar para voltar a salvar as preferências do workspace.
 
-## Panel docking
+## Encaixe de painéis
 
-Tool Sets, Layers, and Properties can be regrouped, split, floated within the app window, closed, and reopened. The drawing canvas stays visible and cannot be closed or turned into a tab. The document/session view is protected. Layouts, active tabs, panel visibility, and floating rectangles are saved with the app's existing UI preferences. These operations do not edit document contents.
+Tool Sets, Layers e Properties podem ser reorganizados em grupos, divididos, flutuados dentro da janela do aplicativo, fechados e reabertos. O canvas de desenho permanece visível e não pode ser fechado nem transformado em aba. A visualização do documento/sessão é protegida. Layouts, abas ativas, visibilidade dos painéis e retângulos flutuantes são salvos junto das preferências existentes da interface. Essas operações não editam o conteúdo dos documentos.
 
-Panel IDs: `toolSets`, `layers`, `properties`, `externalReferences`. The protected center is `canvas`.
+IDs de painel: `toolSets`, `layers`, `properties`, `externalReferences`. A área central protegida é `canvas`.
 
-`ui.dock` accepts `operation`; basic per-panel operations also require `panel`. The advanced `resizeSplit` operation below uses a split `path` instead of a panel. Basic operations are `open`, `close`, `activate`, `float` (with finite positive `rect: [x, y, width, height]`), or `move` (with `target` and `zone: center|left|right|top|bottom`). Center groups with the target; side zones split beside it. `ui.dock.reset` restores the default arrangement. Invalid moves return an error without changing the layout.
+`ui.dock` aceita `operation`; operações básicas por painel também exigem `panel`. A operação avançada `resizeSplit` usa um caminho de divisão (`path`) em vez de um painel. As operações básicas são `open`, `close`, `activate`, `float` (com `rect: [x, y, width, height]` finito e positivo) e `move` (com `target` e `zone: center|left|right|top|bottom`). A zona central agrupa com o alvo; as zonas laterais criam uma divisão ao lado dele. `ui.dock.reset` restaura a organização padrão. Movimentos inválidos retornam um erro sem alterar o layout.
 
-The QuickCalc palette (`quickCalc`) is not part of the default arrangement. Typed `QUICKCALC`/`QC`
-and `ui.panel.quickcalc` explicitly open and activate it: it floats the first time and later
-reopens at its saved location. **Window > QuickCalc** and **Ctrl/Cmd+8** invoke
-`ui.toggle.quickcalc` instead, closing the panel when present and reopening it otherwise.
-The shortcut also works with text-field focus. Toggling preserves the running drawing command
-and pending command-line input. The expression, history and calculator variables survive
-closing/reopening within the same session; they are not saved across application restarts.
+A paleta QuickCalc (`quickCalc`) não faz parte da organização padrão. Os comandos digitados `QUICKCALC`/`QC` e `ui.panel.quickcalc` abrem e ativam explicitamente a paleta: ela flutua na primeira vez e depois reabre no local salvo. **Window > QuickCalc** e **Ctrl/Cmd+8** acionam `ui.toggle.quickcalc`, fechando o painel se estiver aberto e reabrindo-o caso contrário. O atalho também funciona quando o foco está em um campo de texto. Alternar a paleta preserva o comando de desenho em execução e a entrada pendente da linha de comando. A expressão, o histórico e as variáveis da calculadora permanecem durante a sessão, mas não são salvos entre reinicializações.
 
-Invoke these UI commands through `engine.execute`, for example `{"command":"ui.dock","params":{"operation":"float","panel":"layers","rect":[100,100,320,440]}}`.
+Acione esses comandos de interface por meio de `engine.execute`, por exemplo: `{"command":"ui.dock","params":{"operation":"float","panel":"layers","rect":[100,100,320,440]}}`.
 
-Advanced `ui.dock` operations use the same validated transaction as pointer gestures:
-`moveFloating` updates `rect`, `resizeSplit` accepts a boolean child `path` and
-`size` (`{"Ratio":0.5}`, `{"FixedFirst":280}`, or `{"FixedSecond":280}`),
-`setStackOpen` takes `open`, and `resizeStack` takes a point `height` or null.
-A center `move` can include `before` (panel ID or null to append) for tab order.
-The equivalent `{"action": ...}` form accepts a serialized shared docking action;
-this is also the form emitted by the renderer. Protected-canvas and app-specific panel
-rules apply equally to both forms.
+As operações avançadas de `ui.dock` usam a mesma transação validada dos gestos do ponteiro: `moveFloating` atualiza `rect`; `resizeSplit` aceita um caminho booleano de filho (`path`) e `size` (`{"Ratio":0.5}`, `{"FixedFirst":280}` ou `{"FixedSecond":280}`); `setStackOpen` recebe `open`; e `resizeStack` recebe uma altura em pontos ou null. Um `move` central pode incluir `before` (id de painel ou null para acrescentar ao final) para definir a ordem das abas. A forma equivalente `{"action": ...}` aceita uma ação compartilhada de encaixe serializada; essa também é a forma emitida pelo renderizador. As regras do canvas protegido e dos painéis específicos do aplicativo se aplicam às duas formas.
 
-## Command-line replies
+## Respostas da linha de comando
 
-The app and the headless session reply with the same fields.
+O aplicativo e a sessão headless retornam os mesmos campos.
 
-`cmdline.state`, `cmdline.key` and `cmdline.input` return the command-line state:
+`cmdline.state`, `cmdline.key` e `cmdline.input` retornam o estado da linha de comando:
 
-| Field | Value |
+| Campo | Valor |
 |---|---|
-| `prompt` | The prompt text (`"Command:"` when idle). |
-| `running` | The id of the running command, or `null`. |
-| `keywords` | The current prompt's options. |
-| `accept` | The kinds of input the current prompt accepts, or `null` when idle. |
-| `buffer` | Text typed in the command line but not yet submitted (always `""` headless). |
-| `history` | The last 20 history lines. |
-| `historyExpanded` | Whether the history is expanded (always `false` headless). |
+| `prompt` | Texto do prompt (`"Command:"` quando ocioso). |
+| `running` | Id do comando em execução ou `null`. |
+| `keywords` | Opções do prompt atual. |
+| `accept` | Tipos de entrada aceitos pelo prompt atual ou `null` quando ocioso. |
+| `buffer` | Texto digitado na linha de comando, mas ainda não enviado (sempre `""` no modo headless). |
+| `history` | As últimas 20 linhas do histórico. |
+| `historyExpanded` | Indica se o histórico está expandido (sempre `false` no modo headless). |
 
-`cmdline.input` adds:
+`cmdline.input` acrescenta:
 
-- `output`: the history lines the input added. This includes the error message when the line was refused.
-- `error`: the error message, only when the line was refused (unknown command, invalid input…).
+- `output`: linhas de histórico adicionadas pela entrada, incluindo a mensagem de erro quando a linha é recusada.
+- `error`: mensagem de erro, somente quando a linha é recusada (comando desconhecido, entrada inválida etc.).
 
-A refused line still replies `"ok": true`, because the text was typed. Check `error`.
+Uma linha recusada ainda retorna `"ok": true`, porque o texto foi digitado. Verifique o campo `error`.
 
-`app.open` without a string `path` fails with `"missing path"` before any command runs.
+`app.open` sem um `path` do tipo string falha com `"missing path"` antes da execução de qualquer comando.
 
-## Interface language
+## Idioma da interface
 
-Select a language with `engine.execute` and the UI command `ui.language`:
+Selecione um idioma com `engine.execute` e o comando de interface `ui.language`:
 
 ```json
 {"id":1,"method":"engine.execute","params":{"command":"ui.language","params":{"lang":"uk"}}}
 ```
 
-Supported values are `auto`, `en`, `uk`, `pt-BR`, `de`, `es`, `cs`, `ru`, `fr`, `zh`, `it`, `ko`, `sv`, `ar` and `hu`.
-Chinese needs an installed CJK font, Arabic an installed Arabic font; Korean needs a font covering the Korean interface from the
-optional craft-fonts input or the operating system. Without a suitable font, the saved choice is
-retained and the result's `shown` is `en`. `ui.set` also accepts
-`{"interfaceLanguage":"uk"}`; `ui.inspect` reports the saved choice in its UI state.
-Invalid choices leave the current language unchanged. Menus, command labels and prompt text
-returned by the control channel retain their English source text. See [localization.md](localization.md).
+Os valores aceitos são `auto`, `en`, `uk`, `pt-BR`, `de`, `es`, `cs`, `ru`, `fr`, `zh`, `it`, `ko`, `sv`, `ar` e `hu`. Para chinês, é necessária uma fonte CJK instalada; para árabe, uma fonte árabe instalada; para coreano, uma fonte que cubra a interface em coreano, fornecida pelo pacote opcional craft-fonts ou pelo sistema operacional. Sem uma fonte adequada, a preferência salva é mantida, mas o idioma exibido passa a ser `en`. `ui.set` também aceita `{"interfaceLanguage":"uk"}`; `ui.inspect` informa a preferência salva no estado da interface. Escolhas inválidas não alteram o idioma atual. Os menus, rótulos de comandos e textos de prompt retornados pelo canal de controle mantêm o texto-fonte em inglês. Consulte [localization.md](localization.md).
