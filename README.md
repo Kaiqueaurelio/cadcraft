@@ -1,4 +1,4 @@
-> **Edição comunitária de Kaique Aurélio:** este repositório é um fork do [CADCraft original](https://github.com/storytold/cadcraft). Consulte [README-FORK.md](README-FORK.md) para o estado desta edição e as informações de compilação. Créditos e licenças do projeto original devem ser preservados.
+> **Edição comunitária de Kaique Aurélio:** este repositório é uma derivação do [CADCraft original](https://github.com/storytold/cadcraft). Consulte [README-FORK.md](README-FORK.md) para conhecer o estado desta edição e as instruções de compilação. Preserve os créditos e as licenças do projeto original.
 
 <p align="center">
   <a href="https://getartcraft.com/">
@@ -10,417 +10,306 @@
 </p>
 
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="CADCraft icon: a drafting set square and compass arc on a blue grid tile">
+  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="Ícone do CADCraft: esquadro de desenho e arco de compasso sobre uma grade azul">
 </p>
 
 <h1 align="center">CADCraft</h1>
 
 <p align="center">
-  <b>Computer-aided design and drafting; an open-source, modern 2D and 3D CAD application, built in pure Rust.</b>
+  <b>Desenho e projeto auxiliados por computador: um aplicativo CAD 2D e 3D moderno, de código aberto e desenvolvido inteiramente em Rust.</b>
 </p>
 
 <p align="center">
-  A fast, open-source CAD workflow: the command line, object snaps, layers,
-  dimensions, hatches, blocks and DXF drawings you already know. It runs natively on macOS,
-  Windows, Linux and FreeBSD, and in the browser via WebAssembly.<br>
-  <i>By the ArtCraft team.</i>
+  Um fluxo de trabalho CAD rápido e de código aberto: linha de comando, captura de objetos, camadas, cotas, hachuras, blocos e desenhos DXF. Funciona nativamente no macOS, Windows, Linux e FreeBSD, além de funcionar no navegador por meio de WebAssembly.<br>
+  <i>Desenvolvido pela equipe ArtCraft.</i>
 </p>
 
 <p align="center">
-  <img alt="Written in Rust" src="https://img.shields.io/badge/written%20in-Rust-0b6f88?style=flat-square&logo=rust&logoColor=white">
-  <img alt="Runs on macOS, Windows, Linux, FreeBSD and the web" src="https://img.shields.io/badge/runs%20on-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20BSD%20%C2%B7%20Web-14a3c7?style=flat-square">
-  <img alt="License: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-0b6f88?style=flat-square">
-  <img alt="Agent-drivable over MCP" src="https://img.shields.io/badge/agents-MCP-14a3c7?style=flat-square">
-  <img alt="Status: early development" src="https://img.shields.io/badge/status-early%20development-f07a3a?style=flat-square">
+  <img alt="Desenvolvido em Rust" src="https://img.shields.io/badge/desenvolvido%20em-Rust-0b6f88?style=flat-square&logo=rust&logoColor=white">
+  <img alt="Compatível com macOS, Windows, Linux, FreeBSD e navegador" src="https://img.shields.io/badge/compatibilidade-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20BSD%20%C2%B7%20Web-14a3c7?style=flat-square">
+  <img alt="Licença: MIT ou Apache-2.0" src="https://img.shields.io/badge/licença-MIT%20%2F%20Apache--2.0-0b6f88?style=flat-square">
+  <img alt="Controle por agentes via MCP" src="https://img.shields.io/badge/agentes-MCP-14a3c7?style=flat-square">
+  <img alt="Estado: desenvolvimento inicial" src="https://img.shields.io/badge/estado-desenvolvimento%20inicial-f07a3a?style=flat-square">
   <br>
-  <a href="https://sonarcloud.io/project/overview?id=storytold_cadcraft"><img alt="Scanned by SonarCloud" src="https://img.shields.io/badge/Scanned_by-SonarCloud-4b9fd5?style=flat-square&logo=sonarqubecloud&logoColor=white"></a>
-  <a href="https://coderabbit.ai"><img alt="Reviewed by CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/cadcraft?style=flat-square&label=Reviewed%20by%20CodeRabbit&logo=coderabbit"></a>
+  <a href="https://sonarcloud.io/project/overview?id=storytold_cadcraft"><img alt="Analisado pelo SonarCloud" src="https://img.shields.io/badge/analisado%20por-SonarCloud-4b9fd5?style=flat-square&logo=sonarqubecloud&logoColor=white"></a>
+  <a href="https://coderabbit.ai"><img alt="Revisado pelo CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/cadcraft?style=flat-square&label=Revisado%20por%20CodeRabbit&logo=coderabbit"></a>
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
+  <a href="https://discord.gg/artcraft"><img alt="Participe da comunidade ArtCraft no Discord" src="https://img.shields.io/badge/Participe%20no%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
 </p>
 
 <p align="center">
-  <a href="https://getartcraft.com/apps/cadcraft"><b>CADCraft on getartcraft.com</b></a> ·
+  <a href="https://getartcraft.com/apps/cadcraft"><b>CADCraft no site getartcraft.com</b></a> ·
   <a href="https://getartcraft.com/">ArtCraft</a> ·
-  <a href="https://getartcraft.com/apps">All Crafting Apps</a>
+  <a href="https://getartcraft.com/apps">Todos os aplicativos criativos</a>
 </p>
 
 <br>
 
 <p align="center">
-  <img src="docs/images/ui-apartment.png" alt="CADCraft with an apartment floor plan open: hatched grey walls, blue windows, green door swings, furniture outlines, yellow room names with areas, a yellow room schedule table, a multileader note and cyan dimensions with architectural ticks; Tool Sets on the left, Layers and Properties on the right, the command line at the bottom" width="100%">
-  <br><sub><b>Apartment plan</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): walls with pick-point hatching, TrueType MTEXT room labels, a TABLE, a multileader and architectural dimensions — built entirely from CADCraft commands.</sub>
+  <img src="docs/images/ui-apartment.png" alt="CADCraft com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
+  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — tudo criado com comandos do CADCraft.</sub>
 </p>
 
 > [!NOTE]
-> **ArtCraft is a community of artists from all walks of life.** Painters, photographers,
-> filmmakers, illustrators, designers, animators, hobbyists, and people who picked up a pencil
-> last week. If you make things, you're one of us. **[Come say hi on Discord](https://discord.gg/artcraft).**
+> **A ArtCraft é uma comunidade de pessoas criativas de todos os tipos.** Pintores, fotógrafos, cineastas, ilustradores, designers, animadores, entusiastas e pessoas que pegaram um lápis pela primeira vez na semana passada. Se você cria alguma coisa, faz parte da comunidade. [Venha conversar no Discord](https://discord.gg/artcraft).
 
 <p align="center">
-  <a href="#screenshots">Screenshots</a> ·
-  <a href="#why-cadcraft">Why CADCraft</a> ·
-  <a href="#what-works-today">What works today</a> ·
-  <a href="#quick-start">Quick start</a> ·
-  <a href="#drive-it-from-agents-mcp-and-the-cli">Agents, MCP and the CLI</a> ·
-  <a href="#architecture">Architecture</a> ·
-  <a href="#roadmap">Roadmap</a> ·
+  <a href="#capturas-de-tela">Capturas de tela</a> ·
+  <a href="#por-que-usar-o-cadcraft">Por que usar o CADCraft</a> ·
+  <a href="#recursos-disponíveis-atualmente">Recursos disponíveis</a> ·
+  <a href="#início-rápido">Início rápido</a> ·
+  <a href="#controle-por-agentes-mcp-e-cli">Agentes, MCP e CLI</a> ·
+  <a href="#arquitetura">Arquitetura</a> ·
+  <a href="#plano-de-desenvolvimento">Plano de desenvolvimento</a> ·
   <a href="#downloads">Downloads</a> ·
-  <a href="#the-crafting-apps">The Crafting Apps</a> ·
-  <a href="#license-and-credits">License and credits</a>
+  <a href="#licença-e-créditos">Licença e créditos</a>
 </p>
 
-## Screenshots
+## Capturas de tela
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/images/ui-layout.png" alt="A paper-space layout in CADCraft: a white sheet with a dashed printable area and a viewport showing the apartment plan at scale, the status bar showing the A1 Plan layout tab and a PAPER toggle"></td>
-    <td width="50%"><img src="docs/images/ui-bracket.png" alt="CADCraft with a mounting bracket part drawing: front view with bolt holes, centre lines and dimensions, a hatched section view, notes and a title block"></td>
+    <td width="50%"><img src="docs/images/ui-layout.png" alt="Layout de impressão no CADCraft: folha branca, área imprimível tracejada e janela de visualização com a planta em escala"></td>
+    <td width="50%"><img src="docs/images/ui-bracket.png" alt="CADCraft com desenho técnico de um suporte de fixação, furos, linhas de centro, cotas, corte hachurado, anotações e legenda técnica"></td>
   </tr>
   <tr>
-    <td><sub><b>Layouts</b>: paper space with viewports, page setups and PLOT to PDF. Double-click a viewport to work in model space through it.</sub></td>
-    <td><sub><b>Mounting bracket</b>: a two-view part drawing with centre lines, hidden lines, an ANSI31 section hatch and a title block.</sub></td>
+    <td><sub><b>Layouts:</b> espaço do papel com janelas de visualização, configurações de página e impressão em PDF. Clique duas vezes em uma janela para trabalhar no espaço do modelo através dela.</sub></td>
+    <td><sub><b>Suporte de fixação:</b> desenho de uma peça em duas vistas, com linhas de centro, linhas ocultas, hachura de corte ANSI31 e legenda técnica.</sub></td>
   </tr>
 </table>
 
-## Why CADCraft
+## Por que usar o CADCraft
 
-- **The workflow you know.** Type `L`, click two points, type `@5<45`, press Enter. The command
-  line, prompts with clickable `[Keywords]`, AutoComplete, object snaps, polar tracking, ortho,
-  direct distance entry, window and crossing selection, grips, and right-click-to-repeat behave
-  the way decades of drafting habit expect.
-- **Open files.** DXF is read and written natively (ASCII and binary, R12 through 2018), and DWG
-  files (R13 through 2018) open and save through the open-source acadrust library. Export to SVG
-  and PNG today.
-- **Fast and native.** Pure Rust and egui, no Electron, no web view. One binary on macOS
-  (universal), Windows, Linux and FreeBSD, plus a WebAssembly build for the browser.
-- **Built for agents.** Every menu item, tool and prompt is a command. Agents can type at the
-  command line exactly like a person, call any command with JSON, inspect the drawing to verify
-  their work, and render it — over MCP, a JSON control channel, or the CLI.
-- **Free.** MIT OR Apache-2.0, with no account and no subscription.
+- **Fluxo de trabalho familiar.** Digite `L`, clique em dois pontos, digite `@5<45` e pressione Enter. A linha de comando, as sugestões clicáveis, o preenchimento automático, os atalhos, a captura de objetos, o rastreamento polar, o modo ortogonal, a entrada direta de distância, a seleção por janela e cruzamento, as alças e a repetição pelo botão direito seguem convenções conhecidas de desenho técnico.
+- **Arquivos abertos.** O DXF é lido e gravado nativamente, em formato ASCII e binário, das versões R12 a 2018. Arquivos DWG das versões R13 a 2018 podem ser abertos e salvos por meio da biblioteca de código aberto acadrust. Também é possível exportar para SVG e PNG.
+- **Rápido e nativo.** Desenvolvido em Rust e egui, sem Electron nem visualização web incorporada. Há versões para macOS (universal), Windows, Linux e FreeBSD, além de uma versão WebAssembly para navegadores.
+- **Preparado para agentes.** Menus, ferramentas e solicitações podem ser acionados como comandos. Agentes podem digitar na linha de comando, executar comandos com JSON, inspecionar o desenho e gerar imagens por meio de MCP, de um canal de controle JSON ou da CLI.
+- **Gratuito.** Licenciado sob MIT ou Apache-2.0, sem conta obrigatória nem assinatura.
 
-## What works today
+## Recursos disponíveis atualmente
 
-CADCraft is in early, fast development. Honest status (see [ROADMAP.md](ROADMAP.md) for parity
-numbers):
+O CADCraft está em desenvolvimento inicial e acelerado. Consulte [ROADMAP.md](ROADMAP.md) para ver os indicadores de compatibilidade e o estado real dos recursos.
 
-| Area | Status |
+| Área | Recursos |
 |---|---|
-| Drawing area | Model space with adaptive grid, axes, pan/zoom (wheel, middle-drag, pinch), crosshair cursor with pickbox, UCS icon, ViewCube, viewport label |
-| Command line | Prompts with keywords, history, AutoComplete, aliases, `@dx,dy`, `@d<a`, `#x,y`, direct distance entry, Enter/space/right-click to repeat, transparent commands, `.scr`-style scripts |
-| Draw | LINE, PLINE (arcs, widths), CIRCLE (center/radius/diameter, 2P, 3P), ARC, RECTANG (fillet/chamfer), POLYGON, ELLIPSE (+arcs), SPLINE, POINT, XLINE, RAY, DONUT, TEXT, MTEXT |
-| Modify | ERASE, MOVE, COPY, ROTATE, SCALE, MIRROR, STRETCH, OFFSET, TRIM, EXTEND, FILLET, CHAMFER, BREAK, JOIN, EXPLODE, rectangular/polar ARRAY, draw order, OVERKILL |
-| Precision | Object snaps (endpoint, midpoint, center, geometric center, node, quadrant, intersection, insertion, perpendicular, tangent, nearest; deferred tangent/perpendicular for the first point of a line, e.g. belt lines tangent to two circles), polar tracking, ortho, grid snap |
-| Layers & properties | Layers palette and Layer Properties Manager (on/off, freeze, lock, plot, colour, linetype), layer tools (isolate, freeze, off, lock, match, previous), Properties palette with per-object editing, linetypes, lineweights, colour index and true colour |
-| Annotation | All DIM* commands with full DIMSTYLE variables, overrides and every arrowhead, associative dimensions that follow geometry, MLEADER, TABLE, TrueType fonts (`.ttf`, `.otf`, `.ttc` collections), MTEXT formatting codes (fonts, heights, colours, stacked fractions), our own single-stroke drafting font |
-| Hatch & blocks | Pick-point hatch boundaries with islands, pattern, solid and gradient fills from our own pattern library, BLOCK/INSERT, attributes and nested blocks |
-| Files | DXF read (R12–2018, ASCII and binary) and write (R2000), including dimension styles, associativity, tables and constraints; DWG read (via the acadrust library) and write (R2000); PDF plotting, SVG and PNG export. Entities CADCraft doesn't model yet are not kept on save: see [file-format parity](docs/file-format-parity.md) |
-| Layouts & plotting | Paper-space layouts, viewports (scale, lock, per-viewport layer freeze), MSPACE/PSPACE through viewports, page setups, PLOT and EXPORTPDF |
-| Parametric | Geometric and dimensional constraints, AUTOCONSTRAIN, PARAMETERS with expressions, conflict detection; constraints re-solve after every edit |
-| Grips | Hot grips with Space to cycle Stretch, Move, Rotate, Scale and Mirror |
-| Interface languages | English, Ukrainian (Українська), Brazilian Portuguese (Português (Brasil)), German (Deutsch), Spanish (Español), Czech (Čeština), Russian (Русский), French (Français), Simplified Chinese (简体中文, with an installed CJK font), Italian (Italiano), Korean (한국어, with an installed Hangul font), Swedish (Svenska), Arabic (العربية, with an installed Arabic font), Hungarian (Magyar) and Turkish (Türkçe), live switching and a remembered Auto/system-language choice; [details](docs/localization.md) |
-| Automation | MCP server, JSON control channel, `cadcraft-cli` (info, convert, run, commands, mcp) |
+| Área de desenho | Espaço do modelo com grade adaptável, eixos, deslocamento e zoom, cursor em mira, ícone UCS, cubo de visualização e identificação da janela |
+| Linha de comando | Sugestões, histórico, preenchimento automático, aliases, coordenadas relativas, entrada direta de distância, repetição de comandos e scripts no estilo `.scr` |
+| Desenho | `LINE`, `PLINE`, `CIRCLE`, `ARC`, `RECTANG`, `POLYGON`, `ELLIPSE`, `SPLINE`, `POINT`, `XLINE`, `RAY`, `DONUT`, `TEXT` e `MTEXT` |
+| Edição | `ERASE`, `MOVE`, `COPY`, `ROTATE`, `SCALE`, `MIRROR`, `STRETCH`, `OFFSET`, `TRIM`, `EXTEND`, `FILLET`, `CHAMFER`, `BREAK`, `JOIN`, `EXPLODE`, `ARRAY` e `OVERKILL` |
+| Precisão | Captura de objetos por extremidade, ponto médio, centro, interseção, perpendicular, tangente e outros pontos; rastreamento polar, modo ortogonal e ajuste à grade |
+| Camadas e propriedades | Gerenciador de camadas, visibilidade, congelamento, bloqueio, impressão, cor, tipos e espessuras de linha, além de edição das propriedades de cada objeto |
+| Anotações | Comandos de cotagem, estilos e ajustes de cotas, cotas associativas, chamadas múltiplas, tabelas, fontes TrueType e formatação de texto |
+| Hachuras e blocos | Limites de hachura definidos por ponto, ilhas, padrões, preenchimentos sólidos e gradientes, blocos, atributos e blocos aninhados |
+| Arquivos | Leitura de DXF R12–2018 e gravação R2000; leitura de DWG pela biblioteca acadrust e gravação R2000; geração de PDF, SVG e PNG. Elementos ainda não compatíveis podem não ser preservados ao salvar; consulte [compatibilidade de formatos](docs/file-format-parity.md) |
+| Layouts e impressão | Layouts no espaço do papel, janelas de visualização, escala, bloqueio, configurações de página, `PLOT` e `EXPORTPDF` |
+| Parametria | Restrições geométricas e dimensionais, `AUTOCONSTRAIN`, parâmetros com expressões, detecção de conflitos e recálculo após edições |
+| Alças de edição | Alças interativas; use Espaço para alternar entre esticar, mover, girar, dimensionar e espelhar |
+| Idiomas da interface | Inglês, ucraniano, português brasileiro, alemão, espanhol, tcheco, russo, francês, chinês simplificado, italiano, coreano, sueco, árabe, húngaro, turco e grego, com troca em tempo real e seleção automática pelo idioma do sistema; [detalhes](docs/localization.md) |
+| Automação | Servidor MCP, canal de controle JSON e `cadcraft-cli` para informações, conversão, execução e comandos |
 
-## Quick start
+## Início rápido
 
-Desktop and web UI builds require Rust 1.95 or later. The core workspace's declared minimum
-remains Rust 1.90.
+As versões para computador e navegador exigem Rust 1.95 ou posterior. A versão mínima declarada para o núcleo do projeto continua sendo Rust 1.90.
 
 ```sh
-git clone https://github.com/storytold/cadcraft
+git clone https://github.com/Kaiqueaurelio/cadcraft.git
 cd cadcraft
-cargo run --release -p cadcraft -- --sample       # opens the sample drawing
+cargo run --release -p cadcraft -- --sample
 ```
 
-Then try typing at the command line:
+O comando acima abre um desenho de exemplo. Depois, experimente estes comandos na linha de comando:
 
 ```text
-line 0,0 @10,0 @0,5 c          a closed triangle
-circle 5,2 1                    a circle
-offset 0.25                     then pick the circle and a side
-zoom e                          zoom to extents
+line 0,0 @10,0 @0,5 c          triângulo fechado
+circle 5,2 1                    círculo
+offset 0.25                     selecione o círculo e um lado
+zoom e                          ajustar zoom à extensão do desenho
 ```
 
-The web build: `cd apps/cadcraft-web && trunk serve` (needs [trunk](https://github.com/trunk-rs/trunk)).
+Para iniciar a versão web, execute `cd apps/cadcraft-web && trunk serve`. É necessário instalar o [Trunk](https://github.com/trunk-rs/trunk).
 
-### Fonts
+### Fontes
 
-CADCraft has no fonts in its repository; it uses the TrueType/OpenType fonts installed on your
-system. Builds made with the optional [craft-fonts](https://github.com/storytold/craft-fonts)
-input (`CRAFT_FONTS_DIR=<absolute path to a checkout> cargo build --release`) also embed its
-fonts: BIZ UDPGothic, BIZ UDMincho and Shippori Mincho (Japanese) and Noto Sans Arabic (the web
-build, which has no system fonts, only BIZ UDPGothic Regular and Noto Sans Arabic). A text style
-can use them by family name, and they draw characters a text's font lacks when no installed
-wide-coverage CJK font has them. Without `CRAFT_FONTS_DIR` nothing is embedded. SHX
-fonts (including big fonts such as `chineset.shx`) aren't read yet: text in an SHX style is drawn
-with our own stroke font, and any character a text's font lacks (CJK, for example) is drawn from
-an installed font that has it, preferring wide-coverage fonts such as Noto Sans CJK, Source Han
-Sans, WenQuanYi, PingFang or Microsoft JhengHei. Two settings, set with `SETVAR` or (for every
-run) an environment variable, steer this:
+O CADCraft não inclui fontes próprias no repositório: utiliza as fontes TrueType/OpenType instaladas no sistema. Compilações feitas com a opção de fontes [craft-fonts](https://github.com/storytold/craft-fonts) também podem incorporá-las. Fontes SHX ainda não são lidas diretamente; textos que as utilizam são desenhados com a fonte vetorial interna ou com uma fonte instalada compatível.
 
-| Variable | Environment | Meaning |
+| Variável | Variável de ambiente | Finalidade |
 |---|---|---|
-| `FONTALT` | `CADCRAFT_FONTALT` | Font used instead of a text style font that can't be found (an SHX file, a missing TTF), by file or family name, e.g. `Noto Sans CJK TC`. Empty (default) = our stroke font. |
-| `FONTFALLBACK` | `CADCRAFT_FONTFALLBACK` | Fonts tried first for characters a text's font lacks, comma-separated, e.g. `Noto Sans CJK TC, msjh.ttc`. |
+| `FONTALT` | `CADCRAFT_FONTALT` | Fonte alternativa quando a fonte definida no estilo não é encontrada. Pode ser indicada pelo nome do arquivo ou da família. Vazia (padrão): usa a fonte vetorial interna. |
+| `FONTFALLBACK` | `CADCRAFT_FONTFALLBACK` | Lista de fontes separadas por vírgula para caracteres ausentes na fonte principal. |
 
-`.` clears either one.
+O ponto (`.`) limpa qualquer uma dessas configurações.
 
-**Your own fonts.** Any `.ttf`, `.otf` or `.ttc` font works: install it in the system font folder
-(Windows `C:\Windows\Fonts` or per-user fonts, macOS `/Library/Fonts` or `~/Library/Fonts`,
-Linux and the BSDs `/usr/share/fonts`, `/usr/local/share/fonts`, `~/.local/share/fonts` or
-`~/.fonts`) and name it in a text style (`STYLE`, or `style {"name":"FA","font":"Vazirmatn"}`)
-by file name (`Vazirmatn-Regular.ttf`) or family name (`Vazirmatn`), or inline in MTEXT with
-`\fVazirmatn;`. Restart CADCraft after installing a font: the font folders are scanned once.
+**Suas próprias fontes.** Fontes `.ttf`, `.otf` e `.ttc` podem ser instaladas no sistema e selecionadas pelo nome do arquivo ou da família em um estilo de texto (`STYLE`) ou no texto MTEXT. Reinicie o CADCraft depois de instalar fontes, pois as pastas são verificadas na inicialização.
 
-**Right-to-left text (Persian, Arabic, Urdu, Hebrew).** TEXT and MTEXT lines are laid out with the
-Unicode Bidirectional Algorithm (the paragraph direction comes from its first letter, so numbers
-and Latin words inside Persian text keep their own order), and Arabic-script text is shaped with
-OpenType (contextual letter forms, lam-alef and other ligatures, ZWNJ / ZWJ, mark positioning).
-Justification (left, centre, right, MTEXT attachment and wrapping) still refers to the text's box.
-Our stroke font has no Arabic letters, so Persian in a stroke-font style is drawn from an
-installed font that has them: Vazirmatn, Noto Naskh Arabic, Noto Sans Arabic, Segoe UI, Tahoma,
-Arial and DejaVu Sans are looked for first. To choose the font, install a free Persian font such
-as [Vazirmatn](https://github.com/rastikerdar/vazirmatn) (SIL Open Font License) and either use it
-in the text style or set `FONTFALLBACK` (`CADCRAFT_FONTFALLBACK="Vazirmatn"`). Formatting changes
-inside a word (an MTEXT colour change in the middle of a Persian word) break the joining at that
-point.
+**Textos da direita para a esquerda.** TEXT e MTEXT organizam linhas usando o algoritmo bidirecional Unicode, e textos em escrita árabe usam formas contextuais OpenType. A justificação continua relacionada à caixa de texto. Para persa e outros idiomas com escrita árabe, instale uma fonte compatível, como [Vazirmatn](https://github.com/rastikerdar/vazirmatn), ou configure `FONTFALLBACK`.
 
-### Logs
+### Registros de execução
 
-The desktop app writes its `log` records to standard error and to `logs/cadcraft.log` in the
-settings directory (Linux and the BSDs `~/.config/cadcraft/logs/`, or
-`$XDG_CONFIG_HOME/cadcraft/logs/`; macOS `~/Library/Application Support/CADCraft/logs/`; Windows
-`%APPDATA%\CADCraft\logs\`; or under `CADCRAFT_CONFIG_DIR`). A start from a desktop menu or the
-Dock has no terminal, so this file is what to attach to a bug report. Each launch moves the
-previous log to `cadcraft.1.log` (and that one to `cadcraft.2.log`), so the log of a run that
-crashed survives the next start. The file stops growing at 16 MiB. `--version` writes no file.
+O aplicativo para computador grava os registros no erro padrão e em `logs/cadcraft.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `CADCRAFT_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro.
 
-| Variable | Effect |
+| Variável | Efeito |
 |---|---|
-| `CADCRAFT_CONFIG_DIR` | Use this directory instead of the platform settings directory (the log goes to its `logs/`) |
-| `RUST_LOG` | Log levels for standard error and the log file. Default: `info` for CADCraft's own crates, `warn` for everything else. env_logger-style directives replace that, e.g. `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace` or `RUST_LOG=info,wgpu_core=warn`; a directive ending in `*` covers every target starting with it (`cadcraft*=debug`). `cadcraft_engine=debug` also logs every command-line message. |
+| `CADCRAFT_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
+| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do CADCraft e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace`. |
 
-The logger is `apps/cadcraft/src/logging.rs`; the web build logs to the browser console instead.
+O código de registro fica em `apps/cadcraft/src/logging.rs`. Na versão web, os registros são enviados ao console do navegador.
 
-## Drive it from agents, MCP and the CLI
+## Controle por agentes, MCP e CLI
+
+O CADCraft oferece uma interface de linha de comando para automação, execução sem interface gráfica, conversão de arquivos e controle por agentes.
 
 ```sh
-# MCP server on stdio, headless:
+# Servidor MCP sem interface gráfica, usando entrada e saída padrão:
 cadcraft-cli mcp
-# …or bridged to the running app (start it with --control 7979):
+
+# Conectar ao aplicativo em execução (inicie-o com --control 7979):
 cadcraft-cli mcp --connect 127.0.0.1:7979
 
-# One-shot headless runs:
+# Executar comandos e exportar um desenho:
 cadcraft-cli run --sample --script 'CIRCLE 22,3 1\n' --save out.dxf --export out.png
 cadcraft-cli info drawing.dxf
 cadcraft-cli convert drawing.dxf drawing.svg
-
-# Frame part of the drawing (model space, drawing units, lower-left corner first):
-cadcraft-cli convert drawing.dwg detail.png --window 0,0,20000,15000
-cadcraft-cli run drawing.dwg --cmd 'zoom {"mode":"window","p1":[0,0],"p2":[20000,15000]}' --export detail.png
-cadcraft-cli run drawing.dwg --cmd 'select {"window":[[0,0],[20000,15000]]}' --cmd 'zoom {"mode":"object"}' --export sel.png
-
-# Act on what an earlier --cmd made: {last} is the last handle it returned.
-cadcraft-cli run --metric --cmd 'layout.set {"name":"Layout1"}' \
-  --cmd 'mview {"p1":[20,20],"p2":[200,150]}' --cmd 'viewport.set {"handle":"{last}","scale":1}'
 ```
 
-How image exports (PNG 2400×1600, SVG, PDF) are framed: `convert` fits the model-space extents.
-`run --export` shows the current view when the script or commands changed it (`zoom`, `pan`,
-`view.set`, …) and otherwise fits the extents too. `--window x0,y0,x1,y1` shows exactly that
-rectangle, centred and scaled without distortion; `--view extents` or `--view current` forces
-either framing. To frame a selection set, `zoom {"mode":"object"}` after selecting.
+As ferramentas MCP incluem `command_line` (digitar na linha de comando), `execute` (executar comandos com JSON), `inspect_drawing`, `query_entities` e `render` (gerar PNG). Quando conectado ao aplicativo, também há `screenshot` e `ui_click`. O canal de controle JSON está descrito em [docs/control-protocol.md](docs/control-protocol.md).
 
-MCP tools include `command_line` (type at the prompt), `execute` (any command with JSON),
-`inspect_drawing`, `query_entities`, `render` (returns a PNG) and, when connected to the app,
-`screenshot` and `ui_click`. The desktop app's JSON control channel is documented in
-[docs/control-protocol.md](docs/control-protocol.md).
+Para usar rotinas LISP, scripts, arquivos de aliases ou controlar o CADCraft a partir de programas próprios, consulte [docs/customization.md](docs/customization.md).
 
-To run LISP routines, scripts and alias files, or to drive CADCraft from your own programs, see
-[docs/customization.md](docs/customization.md).
-
-## Architecture
+## Arquitetura
 
 ```text
-geom ─┐                       f64 geometry: arcs, bulges, splines, intersections, offsets
-dxf   │  (standalone)         DXF tag reader/writer
-color ┤                       colour index, true colour
-doc   ┤                       drawing database, copy-on-write entity store (cheap undo)
-fonts ┤ render               stroke font + TEXT/MTEXT layout │ display lists, linetypes, hatches, dims, CPU raster
-io    ┤                       DXF mapping, SVG/PNG export
-engine┤                       sessions, commands, command line + prompts, snaps, selection, undo
-ui-egui · mcp                 the swappable egui front end · MCP server
+geom ─┐                       geometria f64: arcos, splines, interseções e deslocamentos
+dxf   │  (independente)       leitura e gravação de tags DXF
+color ┤                       índice de cores e cores reais
+doc   ┤                       banco de dados do desenho e armazenamento de entidades
+fonts ┤ render                fonte vetorial, layout TEXT/MTEXT e renderização
+io    ┤                       conversão DXF, exportação SVG/PNG
+engine┤                       sessões, comandos, linha de comando, captura, seleção e desfazer
+ui-egui · mcp                 interface egui substituível e servidor MCP
 apps: cadcraft · cadcraft-cli · cadcraft-web
 ```
 
-Nothing below `ui-egui` knows about egui, so the front end can be replaced. `cargo xtask ci`
-checks formatting, clippy, tests, asset attribution, the crate layering and the wasm build.
+Os módulos abaixo de `ui-egui` não dependem de egui, permitindo substituir a interface. O comando `cargo xtask ci` verifica formatação, Clippy, testes, atribuição de recursos, organização dos módulos e compilação para WebAssembly.
 
-Drafting and layer-palette icon buttons use the pinned `craft-ui` button component for interaction,
-accessible labels and keyboard focus. CADCraft keeps its multicolor icon painter, dark palette,
-disabled tint and tool commands. The native host saves workspace visibility and toolset choices
-atomically; `CADCRAFT_CONFIG_DIR` selects an isolated profile. Compact toolbar groups move into a
-More menu, and status readouts truncate with a full-value tooltip before they reach layout tabs.
-Painted toolbar and tab controls
-have accessible labels and visible keyboard focus. Property controls remain application-specific.
+O aplicativo também oferece recursos de acessibilidade, como rótulos acessíveis, foco visível pelo teclado, opção para mostrar o cursor do sistema e respeito à configuração de redução de animações do sistema operacional.
 
-## Accessibility
+## Acessibilidade
 
-### System cursor
+Na área de desenho, o CADCraft oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **Exibir ▸ Acessibilidade ▸ Mostrar cursor do sistema** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx CADCRAFT_SYSTEM_CURSOR 1`.
 
-Over the drawing area CADCraft hides the system cursor and draws its own crosshair. Tools that follow the system cursor (Windows Magnifier set to follow or centre the mouse pointer, other screen magnifiers, screen recorders, remote desktops) lose track of it there. Turn on **View ▸ Accessibility ▸ Show System Cursor** to keep a small system crosshair visible at the centre of the drawn one, or start CADCraft with the environment variable `CADCRAFT_SYSTEM_CURSOR=1` (on Windows, set it once with `setx CADCRAFT_SYSTEM_CURSOR 1` and start CADCraft again). Agents can switch it with the control channel: `ui.set {"systemCursor": true}`.
+O CADCraft respeita a preferência do sistema para reduzir animações. A configuração também pode ser ajustada no menu **Exibir ▸ Acessibilidade ▸ Efeitos de animação**, escolhendo usar a configuração do sistema, ativar ou desativar os efeitos.
 
-### Animation effects
+## Plano de desenvolvimento
 
-CADCraft follows the operating system's animation setting. When the system is set to show no animations, dialogs, menus and tooltips appear at once instead of fading in, collapsing sections and scroll bars change at once, and the mouse wheel scrolls lists a whole step at a time instead of gliding. Zooming the drawing with the wheel always moves a whole step; with Ctrl held (a touchpad pinch, on Windows) it glides to the new zoom only while animation effects show.
-
-| System | Where the setting is |
-|---|---|
-| Windows | Settings ▸ Accessibility ▸ Visual effects ▸ Animation effects |
-| macOS | System Settings ▸ Accessibility ▸ Reduce motion |
-| Linux, BSD | the desktop's reduced-motion (or animations) setting, read through the XDG Desktop Portal |
-| Web | the browser's `prefers-reduced-motion` |
-
-A change to the system setting is picked up while CADCraft runs, within a few seconds. To choose for CADCraft alone, use **View ▸ Accessibility ▸ Animation Effects**: **Use System Setting** (the default), **On** or **Off**. Options ▸ Display has the same choice. Agents can set it with the control channel: `ui.set {"animations": "off"}` (`"system"`, `"on"` or `"off"`), and `ui.inspect` reports whether animations show (`animations`).
-
-Drafting feedback is not an animation effect and stays as it is: rubber bands and previews, snap markers, the pause that acquires an object snap tracking point, the text cursor's blink, the spinner shown while a drawing opens, and pan and zoom, which follow the pointer and the wheel directly.
-
-## Roadmap
-
-See [ROADMAP.md](ROADMAP.md) for the stage, measured parity and the estimate of remaining work, and [docs/gaps.md](docs/gaps.md) for everything still missing.
+Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos.
 
 ## Downloads
 
-**Download CADCraft** from GitHub: the [latest release](https://github.com/storytold/cadcraft/releases/latest) has every build listed below, and [all releases](https://github.com/storytold/cadcraft/releases) has earlier versions and their notes. `<ver>` in the file names is the version number, and `SHA256SUMS.txt` lists a checksum for every file.
+Consulte a página de [versões mais recentes](https://github.com/storytold/cadcraft/releases/latest) para baixar as compilações disponíveis e a página de [todas as versões](https://github.com/storytold/cadcraft/releases) para consultar versões anteriores e suas notas. O marcador `<ver>` nos nomes dos arquivos representa o número da versão; o arquivo `SHA256SUMS.txt` contém as somas de verificação dos arquivos.
 
 > [!WARNING]
-> Download official CADCraft builds from the [storytold/cadcraft releases](https://github.com/storytold/cadcraft/releases). Verify that the repository owner is `storytold`. Before you run a download, check that its checksum matches the line for that file in the release's `SHA256SUMS.txt`:
->
-> ```sh
-> shasum -a 256 cadcraft-<ver>-macos-universal.dmg     # macOS (on Linux: sha256sum FILE)
-> Get-FileHash .\cadcraft-<ver>-windows-x64.msi        # Windows PowerShell
-> ```
+> Baixe as versões oficiais pelos [lançamentos do repositório original](https://github.com/storytold/cadcraft/releases) e confira se o proprietário é `storytold`. Antes de executar um arquivo, verifique se sua soma de verificação corresponde à linha dele em `SHA256SUMS.txt`.
 
 ### Windows
 
-| Build | Installer | Portable |
+| Arquitetura | Instalador | Versão portátil |
 |---|---|---|
-| x64 (64-bit Intel/AMD) | `cadcraft-<ver>-windows-x64.msi` | `cadcraft-<ver>-windows-x64-portable.zip` |
-| arm64 (Snapdragon and other ARM PCs) | `cadcraft-<ver>-windows-arm64.msi` | `cadcraft-<ver>-windows-arm64-portable.zip` |
-| x86 (32-bit) | `cadcraft-<ver>-windows-x86.msi` | `cadcraft-<ver>-windows-x86-portable.zip` |
+| x64 (Intel/AMD de 64 bits) | `cadcraft-<ver>-windows-x64.msi` | `cadcraft-<ver>-windows-x64-portable.zip` |
+| arm64 (Snapdragon e outros computadores ARM) | `cadcraft-<ver>-windows-arm64.msi` | `cadcraft-<ver>-windows-arm64-portable.zip` |
+| x86 (32 bits) | `cadcraft-<ver>-windows-x86.msi` | `cadcraft-<ver>-windows-x86-portable.zip` |
 
-Installers and executables are code-signed.
+Os instaladores e executáveis são assinados digitalmente. O instalador adiciona o CADCraft ao menu Iniciar e oferece a opção de criar um atalho na área de trabalho.
 
-The installer adds CADCraft to the Start menu and asks whether to add a desktop shortcut too (unticked by default). For a silent install with the desktop shortcut: `msiexec /i cadcraft-<ver>-windows-x64.msi /qn DESKTOPSHORTCUT=1`.
-
-**If the app doesn't open on Windows:** the desktop app initializes only DirectX 12 by default.
-Letting wgpu also create an OpenGL instance can crash some graphics drivers (AMD's
-`atio6axx.dll`) before the window appears, so the app would flash in Task Manager and quit.
-`WGPU_BACKEND` overrides the default for troubleshooting (for example `dx12` or `vulkan`). In
-PowerShell, from the folder containing the executable:
+Se o aplicativo não abrir no Windows, tente iniciar com o backend gráfico Vulkan. No PowerShell, na pasta do executável:
 
 ```powershell
 $env:WGPU_BACKEND = "vulkan"
 & .\cadcraft.exe
-Remove-Item Env:WGPU_BACKEND                     # restore the default for later launches
+Remove-Item Env:WGPU_BACKEND
 ```
-
-An explicit `gl` override can bring the driver crash back on affected systems. The macOS, Linux
-and web backend defaults are unchanged.
 
 ### macOS
 
-| Build | File | Notes |
+| Versão | Arquivo | Observações |
 |---|---|---|
-| App, universal (Apple silicon + Intel) | `cadcraft-<ver>-macos-universal.dmg` | Signed and notarized |
-| Command-line tool, universal | `cadcraft-cli-<ver>-macos-universal.zip` | Signed and notarized |
+| Aplicativo universal (Apple Silicon e Intel) | `cadcraft-<ver>-macos-universal.dmg` | Assinado e autenticado |
+| Ferramenta de linha de comando universal | `cadcraft-cli-<ver>-macos-universal.zip` | Assinada e autenticada |
 
 ### Linux
 
-| Format | x86_64 | aarch64 (ARM64) | Notes |
+| Formato | x86_64 | aarch64 (ARM64) | Observações |
 |---|---|---|---|
-| AppImage | `cadcraft-<ver>-linux-x86_64.AppImage` | `cadcraft-<ver>-linux-aarch64.AppImage` | Runs anywhere; updates itself with [AppImageUpdate](https://github.com/AppImageCommunity/AppImageUpdate) (`.zsync` files) |
-| Flatpak | `cadcraft-<ver>-linux-x86_64.flatpak` | `cadcraft-<ver>-linux-aarch64.flatpak` | Sandboxed; `flatpak install --user <file>` |
-| Debian/Ubuntu | `cadcraft-<ver>-linux-x86_64.deb` | `cadcraft-<ver>-linux-aarch64.deb` | |
-| Fedora/RHEL/openSUSE | `cadcraft-<ver>-linux-x86_64.rpm` | `cadcraft-<ver>-linux-aarch64.rpm` | |
-| Tarball | `cadcraft-<ver>-linux-x86_64.tar.gz` | `cadcraft-<ver>-linux-aarch64.tar.gz` | Unpack anywhere |
+| AppImage | `cadcraft-<ver>-linux-x86_64.AppImage` | `cadcraft-<ver>-linux-aarch64.AppImage` | Executável portátil |
+| Flatpak | `cadcraft-<ver>-linux-x86_64.flatpak` | `cadcraft-<ver>-linux-aarch64.flatpak` | Instalação isolada; use `flatpak install --user <arquivo>` |
+| Debian/Ubuntu | `cadcraft-<ver>-linux-x86_64.deb` | `cadcraft-<ver>-linux-aarch64.deb` | Pacote DEB |
+| Fedora/RHEL/openSUSE | `cadcraft-<ver>-linux-x86_64.rpm` | `cadcraft-<ver>-linux-aarch64.rpm` | Pacote RPM |
+| Arquivo compactado | `cadcraft-<ver>-linux-x86_64.tar.gz` | `cadcraft-<ver>-linux-aarch64.tar.gz` | Extraia para a pasta desejada |
 
-RISC-V (riscv64): `cadcraft-<ver>-linux-riscv64.tar.gz`, cross-compiled; needs glibc 2.39 or newer (Ubuntu 24.04+, Debian 13+).
+Para RISC-V (riscv64), há também `cadcraft-<ver>-linux-riscv64.tar.gz`, compilado de forma cruzada; exige glibc 2.39 ou posterior.
 
 ### FreeBSD
 
-| Build | File |
+| Arquitetura | Arquivo |
 |---|---|
 | x86_64 | `cadcraft-<ver>-freebsd-x86_64.tar.gz` |
 
-### Web (WebAssembly)
+### Navegador (WebAssembly)
 
-| Build | File | Notes |
+| Versão | Arquivo | Observações |
 |---|---|---|
-| Static site | `cadcraft-web-<ver>.zip` | Runs in a modern browser; host it on any static server |
+| Site estático | `cadcraft-web-<ver>.zip` | Funciona em navegadores modernos e pode ser hospedado em qualquer servidor de arquivos estáticos |
 
-## The Crafting Apps
+## Aplicativos criativos da ArtCraft
 
-CADCraft is one of the **Crafting Apps**: free, open-source creative tools from the
-[ArtCraft](https://getartcraft.com/) team, each written from scratch in Rust and each able to
-stand on its own.
+O CADCraft faz parte dos **Aplicativos criativos** da equipe [ArtCraft](https://getartcraft.com/): ferramentas criativas gratuitas e de código aberto, desenvolvidas em Rust e capazes de funcionar de forma independente.
 
-| | App | What it's for | Code | Learn more |
-|:-:|---|---|---|---|
-| <img src="https://raw.githubusercontent.com/storytold/photocraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.photocraft.png" alt="" width="32" height="32"> | **PhotoCraft** | Image editing: layers, masks, type and real PSD files | [GitHub](https://github.com/storytold/photocraft) | [Website](https://getartcraft.com/apps/photocraft) |
-| <img src="https://raw.githubusercontent.com/storytold/vectorcraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.vectorcraft.png" alt="" width="32" height="32"> | **VectorCraft** | Vector illustration | [GitHub](https://github.com/storytold/vectorcraft) | [Website](https://getartcraft.com/apps/vectorcraft) |
-| <img src="https://raw.githubusercontent.com/storytold/filmcraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.filmcraft.png" alt="" width="32" height="32"> | **FilmCraft** | Video editing, color and sound | [GitHub](https://github.com/storytold/filmcraft) | [Website](https://getartcraft.com/apps/filmcraft) |
-| <img src="https://raw.githubusercontent.com/storytold/lightcraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.lightcraft.png" alt="" width="32" height="32"> | **LightCraft** | Photo library and raw development | [GitHub](https://github.com/storytold/lightcraft) | [Website](https://getartcraft.com/apps/lightcraft) |
-| <img src="https://raw.githubusercontent.com/storytold/pdfcraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.pdfcraft.png" alt="" width="32" height="32"> | **PdfCraft** | Reading, organizing and protecting PDFs | [GitHub](https://github.com/storytold/pdfcraft) | [Website](https://getartcraft.com/apps/pdfcraft) |
-| <img src="https://raw.githubusercontent.com/storytold/effectcraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.effectcraft.png" alt="" width="32" height="32"> | **EffectCraft** | Motion graphics and visual effects | [GitHub](https://github.com/storytold/effectcraft) | [Website](https://getartcraft.com/apps/effectcraft) |
-| <img src="https://raw.githubusercontent.com/storytold/designcraft/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.designcraft.png" alt="" width="32" height="32"> | **DesignCraft** | Page layout and publishing | [GitHub](https://github.com/storytold/designcraft) | [Website](https://getartcraft.com/apps/designcraft) |
-| <img src="https://raw.githubusercontent.com/storytold/cadcraft/main/assets/app-icon/cadcraft-64.png" alt="" width="32" height="32"> | **CADCraft** | **Computer-aided design and drafting · you are here** | [GitHub](https://github.com/storytold/cadcraft) | [Website](https://getartcraft.com/apps/cadcraft) |
+| Aplicativo | Finalidade | Código-fonte | Saiba mais |
+|---|---|---|---|
+| **PhotoCraft** | Edição de imagens: camadas, máscaras, texto e arquivos PSD | [GitHub](https://github.com/storytold/photocraft) | [Site](https://getartcraft.com/apps/photocraft) |
+| **VectorCraft** | Ilustração vetorial | [GitHub](https://github.com/storytold/vectorcraft) | [Site](https://getartcraft.com/apps/vectorcraft) |
+| **FilmCraft** | Edição de vídeo, cor e áudio | [GitHub](https://github.com/storytold/filmcraft) | [Site](https://getartcraft.com/apps/filmcraft) |
+| **LightCraft** | Biblioteca de fotos e revelação de arquivos RAW | [GitHub](https://github.com/storytold/lightcraft) | [Site](https://getartcraft.com/apps/lightcraft) |
+| **PdfCraft** | Leitura, organização e proteção de PDFs | [GitHub](https://github.com/storytold/pdfcraft) | [Site](https://getartcraft.com/apps/pdfcraft) |
+| **EffectCraft** | Animação gráfica e efeitos visuais | [GitHub](https://github.com/storytold/effectcraft) | [Site](https://getartcraft.com/apps/effectcraft) |
+| **DesignCraft** | Diagramação e publicação | [GitHub](https://github.com/storytold/designcraft) | [Site](https://getartcraft.com/apps/designcraft) |
+| **CADCraft** | Desenho técnico e projeto auxiliados por computador | [GitHub](https://github.com/storytold/cadcraft) | [Site](https://getartcraft.com/apps/cadcraft) |
 
-And [**ArtCraft**](https://getartcraft.com/) itself, our AI image and video studio for artists who want real control.
-
-<br>
+A [ArtCraft](https://getartcraft.com/) também oferece um estúdio de criação de imagens e vídeos com inteligência artificial.
 
 <p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
+  <a href="https://discord.gg/artcraft"><img alt="Participe da comunidade ArtCraft no Discord" src="https://img.shields.io/badge/Participe%20no%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
 </p>
 
-<h3 align="center">Come make things with us</h3>
+<h3 align="center">Venha criar com a gente</h3>
 
 <p align="center">
-  Our Discord is where artists of every kind hang out: people who paint, shoot, draw, cut film,
-  set type, and people still figuring out what they like to make. Share what you're working on,
-  ask for help, tell us what's broken, or tell us what you wish these tools could do.
-  Whatever your medium and however long you've been at it, you're welcome here.
+  O Discord é o espaço da comunidade para compartilhar projetos, pedir ajuda, relatar problemas e sugerir melhorias. Pessoas de todas as áreas e níveis de experiência são bem-vindas.
 </p>
 
 <p align="center">
   <a href="https://discord.gg/artcraft"><b>discord.gg/artcraft</b></a> ·
   <a href="https://getartcraft.com/">getartcraft.com</a> ·
-  <a href="https://getartcraft.com/apps">The Crafting Apps</a> ·
+  <a href="https://getartcraft.com/apps">Aplicativos criativos</a> ·
   <a href="https://getartcraft.com/apps/cadcraft">CADCraft</a>
 </p>
 
-## License and credits
+## Licença e créditos
 
-CADCraft is dual-licensed under [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option.
-Copyright (c) 2026 ArtCraft Team and the CADCraft contributors. Required notices are in [NOTICE](NOTICE).
+O CADCraft é disponibilizado sob a licença [MIT](LICENSE-MIT) ou [Apache-2.0](LICENSE-APACHE), à sua escolha. Direitos autorais © 2026 ArtCraft Team e colaboradores do CADCraft. Os avisos obrigatórios estão em [NOTICE](NOTICE).
 
-Bundled fonts, icons, images and other assets keep their own open licenses; each one is listed
-with its author, source and license in [ATTRIBUTION.md](ATTRIBUTION.md).
+Fontes, ícones, imagens e outros recursos incluídos mantêm suas próprias licenças de código aberto. Consulte [ATTRIBUTION.md](ATTRIBUTION.md) para ver autores, origens e licenças.
 
-CADCraft's icons, its single-stroke drafting font, its hatch patterns and its linetypes are all
-original work, drawn or defined in code. The sample drawings are generated in code too.
+Os ícones do CADCraft, sua fonte vetorial de desenho técnico, os padrões de hachura e os tipos de linha são criações originais. Os desenhos de exemplo também são gerados por código.
 
-The ArtCraft name, wordmark and logos in [`docs/brand/`](docs/brand/) are trademarks of the
-ArtCraft Team and are not covered by this license. They may be used only unmodified, and only as
-part of this repository and CADCraft, under [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt).
-Forks and modified versions must remove them.
+O nome ArtCraft, sua marca nominativa e seus logotipos em `docs/brand/` são marcas registradas da equipe ArtCraft e não estão cobertos pela licença do código. Só podem ser usados sem alterações e como parte deste repositório e do CADCraft, conforme `docs/brand/LICENSE-brand.txt`. Derivações e versões modificadas devem removê-los.
 
 <p align="center">
   <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
-  <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
+  <sub>Feito pela equipe e pela comunidade <a href="https://getartcraft.com/">ArtCraft</a>.</sub>
 </p>
 
-Tool Sets, Layers, and Properties can be regrouped, split, floated within the app window, closed, and reopened. The drawing canvas stays visible and cannot be closed or turned into a tab. Drag a panel header to a target edge or another header. Its context menu offers Float panel, Move to group, and Close panel. Existing panel toggles reopen panels at their saved location; Reset Panel Layout restores the app layout. Floating panels remain inside the current app window.
+### Organização dos painéis
+
+Os painéis Conjuntos de ferramentas, Camadas e Propriedades podem ser agrupados, separados, destacados dentro da janela do aplicativo, fechados e reabertos. A área de desenho permanece visível e não pode ser fechada nem transformada em aba. Arraste o cabeçalho de um painel até uma borda ou outro cabeçalho. O menu de contexto oferece as opções **Destacar painel**, **Mover para grupo** e **Fechar painel**. Os controles existentes reabrem os painéis na última posição salva; **Redefinir organização dos painéis** restaura a disposição inicial. Painéis destacados permanecem dentro da janela atual do aplicativo.
