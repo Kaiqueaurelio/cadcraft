@@ -1,6 +1,6 @@
 # Hospedando o CADCraft na web
 
-O arquivo `cadcraft-web-<versão>.zip` (obtido nas versões do GitHub ou por meio de `packaging/web/package.sh`) contém um site estático na pasta `cadcraft-web-<versão>/`:
+O arquivo `cadcraft-web-<versão>.zip` (obtido na página de versões do GitHub ou gerado por `packaging/web/package.sh`) contém um site estático na pasta `cadcraft-web-<versão>/`:
 
 | Arquivo | Descrição |
 |---|---|
@@ -13,9 +13,7 @@ Não há código executado no servidor. Envie o conteúdo da pasta para qualquer
 
 ## Funciona em qualquer caminho
 
-Todas as URLs em `index.html` são relativas (`public_url = "./"` em `apps/cadcraft-web/Trunk.toml`). Por isso, o site funciona na raiz de um domínio (`https://exemplo.com/`), em um caminho com prefixo (`https://exemplo.com/ferramentas/cadcraft/`) ou em um bucket de CDN.
-
-Os nomes dos recursos incluem um hash do conteúdo e podem ser armazenados em cache indefinidamente. Somente o `index.html` precisa ser revalidado.
+Todas as URLs em `index.html` são relativas (`public_url = "./"` em `apps/cadcraft-web/Trunk.toml`). Assim, o site funciona na raiz de um domínio (`https://example.com/`), em um caminho com prefixo (`https://example.com/tools/cadcraft/`) ou em um bucket de CDN. Os nomes dos recursos incluem um hash do conteúdo e podem ser armazenados em cache indefinidamente. Somente o `index.html` precisa ser revalidado.
 
 ## Configurações necessárias no servidor
 
@@ -37,8 +35,36 @@ location /cadcraft/ {
 }
 ```
 
-## Solução de problemas
+Para testar localmente, execute `python3 -m http.server 8765` dentro da pasta e abra http://localhost:8765/.
 
-- Se o aplicativo não iniciar, confirme que o arquivo `.wasm` é servido com o tipo MIME correto.
-- Se o navegador continuar usando uma versão antiga após uma atualização, verifique a política de cache do `index.html`.
-- Para testar localmente, use um servidor HTTP local em vez de abrir o arquivo `index.html` diretamente.
+## Incorporando o aplicativo em uma página (iframe)
+
+```html
+<iframe
+  src="https://example.com/cadcraft/"
+  title="Editor de imagens CADCraft"
+  style="width: 100%; height: 720px; border: 0;"
+  allow="fullscreen; clipboard-read; clipboard-write"
+  allowfullscreen>
+</iframe>
+```
+
+- O aplicativo preenche o iframe e acompanha seu tamanho; portanto, ajuste o tamanho do iframe, não o do aplicativo.
+- Os atalhos de teclado são enviados ao iframe depois que o usuário clica nele, como acontece com qualquer aplicativo incorporado.
+- **Incorporação entre origens diferentes:** funciona. As preferências ficam no `localStorage` do iframe. Navegadores que particionam ou bloqueiam armazenamento de terceiros podem esquecê-las entre visitas; nesse caso, o aplicativo inicia com as configurações padrão.
+- **Iframes em sandbox:** precisam, no mínimo, de `sandbox="allow-scripts allow-same-origin allow-downloads allow-popups"`. Sem `allow-same-origin`, não há armazenamento. Sem `allow-downloads`, as ações Salvar e Exportar (downloads do navegador) são bloqueadas.
+- Não envie `X-Frame-Options: DENY` nem uma política CSP `frame-ancestors` que exclua a página que incorpora o aplicativo.
+
+## Seleção do renderizador e opções alternativas
+
+O CADCraft renderiza usando wgpu. Quando disponível no navegador, usa **WebGPU**; caso contrário, alterna automaticamente para **WebGL2**. Parâmetros na URL podem substituir essa escolha e também funcionam no atributo `src` do iframe:
+
+| Parâmetro | Efeito |
+|---|---|
+| *(nenhum)* | Usa WebGPU, se disponível; caso contrário, WebGL2. |
+| `?webgl` | Força o mecanismo WebGL2 (útil quando um driver WebGPU apresenta problemas). |
+| `?cpu` | Força o caminho de renderização em canvas pela CPU (mais lento, porém mais compatível). |
+
+Exemplo: `<iframe src="https://example.com/cadcraft/?webgl" ...>`.
+
+Se o navegador não oferecer WebGPU nem WebGL2, será exibida uma mensagem no lugar do aplicativo.
