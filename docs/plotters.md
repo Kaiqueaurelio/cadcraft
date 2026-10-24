@@ -1,38 +1,44 @@
 # Plotters
 
-Um plotter (dispositivo de saída) determina o que uma plotagem gera e quais tamanhos de papel estão disponíveis. As configurações de página e as plotagens selecionam um dispositivo e um dos papéis disponíveis nele. Cada papel tem margens que delimitam a área imprimível. Os layouts mostram essa área como um contorno tracejado na folha.
+A plotter (output device) decides what a plot writes and on which paper sizes. Page setups
+and plots pick a device and one of its papers. Each paper carries margins, which bound its
+printable area. Layouts show the printable area as a dashed outline on the sheet.
 
-## Dispositivos
+## Devices
 
-Os dispositivos integrados aparecem primeiro:
+The built-in devices come first:
 
-| Dispositivo | Saída |
+| Device | Output |
 |---|---|
-| `CADCraft PDF` | PDF vetorial |
-| `CADCraft PNG` | PNG rasterizado em papel branco, na resolução do dispositivo (300 dpi) |
-| `CADCraft SVG` | SVG vetorial |
+| `CADCraft PDF` | vector PDF |
+| `CADCraft PNG` | raster PNG on white paper at the device resolution (300 dpi) |
+| `CADCraft SVG` | vector SVG |
 
-Eles oferecem os tamanhos padrão:
+They offer the standard sizes:
 
-- ISO 216 A0–A6 e B0–B5
-- ANSI A–E e Legal
-- ARCH A–E e E1
+- ISO 216 A0–A6 and B0–B5
+- ANSI A–E and Legal
+- ARCH A–E and E1
 
-As folhas ISO têm margens de 5 mm. As folhas em polegadas têm margens de um quarto de polegada (6,35 mm). Uma configuração de página com o dispositivo `None` gera um PDF no papel definido para a configuração, como antes.
+ISO sheets have 5 mm margins. Inch sheets have quarter-inch (6.35 mm) margins. A page setup
+with the device `None` plots to PDF on the page setup's paper, as before.
 
-Os dispositivos do usuário são arquivos no formato próprio do CADCraft, armazenados na pasta `plotters` do diretório de configurações:
+User devices are files in our own format, kept in the `plotters` folder of the CADCraft
+settings directory:
 
-| Sistema | Pasta |
+| System | Folder |
 |---|---|
-| Linux e FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` ou `~/.config/cadcraft/plotters` |
+| Linux and FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` or `~/.config/cadcraft/plotters` |
 | macOS | `~/Library/Application Support/CADCraft/plotters` |
 | Windows | `%APPDATA%\CADCraft\plotters` |
 
-A variável `CADCRAFT_CONFIG_DIR` substitui o diretório de configurações. Na versão web, os dispositivos ficam disponíveis durante a sessão, a menos que o host forneça armazenamento (`cmd::plotters::set_plotter_store`). Arquivos binários `.pc3` não são lidos; não encontramos uma especificação pública desse formato.
+`CADCRAFT_CONFIG_DIR` replaces the settings directory. On the web, devices last for the
+session unless the host provides storage (`cmd::plotters::set_plotter_store`). Binary `.pc3`
+files are not read; we haven't found a public specification of that format.
 
-## Arquivos
+## Files
 
-`<name>.plotter.json`, JSON em UTF-8 com um marcador de formato:
+`<name>.plotter.json`, UTF-8 JSON with a format marker:
 
 ```json
 {
@@ -50,56 +56,77 @@ A variável `CADCRAFT_CONFIG_DIR` substitui o diretório de configurações. Na 
 }
 ```
 
-- `output` aceita `pdf`, `png` ou `svg`.
-- `resolution` é medida em pontos por polegada (50–2400) e se aplica ao PNG.
-- `orientation` (`portrait` ou `landscape`) é usada quando uma configuração de página troca para esse dispositivo.
-- Os tamanhos de papel são informados em milímetros na folha em orientação retrato. `margins` representa esquerda, inferior, direita e superior, em mm.
+- `output` is `pdf`, `png` or `svg`.
+- `resolution` is in dots per inch (50–2400) and applies to PNG.
+- `orientation` (`portrait` or `landscape`) is used when a page setup switches to the device.
+- Paper sizes are in millimetres on the portrait sheet. `margins` are left, bottom, right and
+  top, in mm.
 
-Ao ler arquivos, valores potencialmente maliciosos ou inválidos são limitados:
+Reading fixes hostile values:
 
-- Os tamanhos ficam entre 1 e 5080 mm; largura e altura são trocadas quando necessário para usar orientação retrato.
-- As margens ficam entre 0 e 1000 mm. Margens que eliminem toda a área imprimível são descartadas.
-- Os nomes dos papéis são únicos, e cada dispositivo aceita no máximo 512 papéis.
-- Se `defaultPaper` estiver ausente ou for desconhecido, o primeiro papel será usado.
-- Arquivos com mais de 1 MB são recusados.
+- Sizes are kept within 1–5080 mm, and width and height are swapped to portrait.
+- Margins are kept within 0–1000 mm. Margins that leave no printable area are dropped.
+- Paper names are unique, and a device keeps at most 512 papers.
+- A missing or unknown `defaultPaper` becomes the first paper.
+- Files over 1 MB are refused.
 
-No nome do arquivo, caracteres que não sejam letras, números, espaços ou `-_()+,` são substituídos por `_`.
+In the file name, characters other than letters, digits, spaces and `-_()+,` become `_`.
 
-## Comandos
+## Commands
 
-- `plottermanager {action, …}` (também disponível em **File ▸ Plotter Manager...**) gerencia os dispositivos:
-  - `list` (padrão) lista os dispositivos integrados primeiro.
-  - `get {name}` retorna um dispositivo.
-  - `new {name, from?, output?, …}` copia o dispositivo indicado em `from` ou cria uma cópia do dispositivo integrado correspondente a `output`, com os papéis padrão.
-  - `set {name, description?, output?, resolution?, orientation?, defaultPaper?, paper?: {name, width, height, margins?}, removePaper?}` edita um dispositivo. `paper` adiciona um papel ou substitui aquele que tiver o mesmo nome.
-  - `delete {name}` remove um dispositivo.
-  - `load {text, name?}` armazena o conteúdo de um arquivo de dispositivo.
-  - `save {name, path?}` grava o arquivo em `path` ou retorna seu conteúdo em `text`.
+- `plottermanager {action, …}` (also **File ▸ Plotter Manager...**) manages the devices:
+  - `list` (the default) shows the built-in devices first.
+  - `get {name}` returns a device.
+  - `new {name, from?, output?, …}` copies `from`, or the built-in device for `output` with
+    the standard papers.
+  - `set {name, description?, output?, resolution?, orientation?, defaultPaper?, paper?: {name,
+    width, height, margins?}, removePaper?}` edits a device. `paper` adds a paper or replaces
+    the one of that name.
+  - `delete {name}` removes a device.
+  - `load {text, name?}` stores a device file's contents.
+  - `save {name, path?}` writes the file to `path`, or returns it as `text`.
 
-  Os dispositivos integrados não podem ser editados nem excluídos.
-- Digitar `PLOTTERMANAGER` ou `-PLOTTERMANAGER` solicita uma opção:
-  - `?` lista os dispositivos.
-  - `New` solicita um nome e uma saída (`Pdf`, `PNg`, `Svg`).
-  - `Delete` solicita um dispositivo.
-  - `Paper` solicita um dispositivo, o nome do papel e `width,height` em mm, e adiciona esse papel.
-- `pagesetup {layout, device, paper?}` define o dispositivo do layout. `paper` identifica um dos papéis do dispositivo ou um tamanho padrão pelo nome curto (`A3`, `Letter`). As margens do papel passam a definir a área imprimível do layout. Se `paper` não for informado, a troca de dispositivo mantém o papel atual se ele existir no novo dispositivo; caso contrário, usa o papel padrão desse dispositivo. A troca de dispositivo também usa a orientação do dispositivo, a menos que `landscape` seja informado. `device: "None"` remove a seleção do dispositivo.
-- `plot {device?, paper?, …}` gera a plotagem usando `device` ou o dispositivo da configuração de página do layout.
-  - O dispositivo define o formato de saída e a resolução.
-  - `paper` (um dos papéis do dispositivo) define o tamanho e as margens dessa plotagem.
-  - Uma plotagem do espaço do modelo sem `paper` usa o papel e a orientação padrão do dispositivo.
-  - Para plotagens do Model, `center` é `true` por padrão, preservando a saída centralizada existente. Defina `center: false` com `offset: [x, y]` para posicionar o canto inferior esquerdo dos limites plotados a partir da origem inferior esquerda da área imprimível; os deslocamentos são em milímetros, têm padrão `[0, 0]` e ficam limitados a ±100.000 mm. PDF e PNG aceitam esses controles. Plotagens SVG mantêm a visualização dos limites; um deslocamento ativo é recusado em vez de ser ignorado. Plotagens de layout não usam deslocamentos do modelo.
-  - `exportpdf` aceita as mesmas opções e sempre gera PDF.
+  Built-in devices can't be edited or deleted.
+- Typed `PLOTTERMANAGER` or `-PLOTTERMANAGER` prompts for an option:
+  - `?` lists the devices.
+  - `New` asks for a name and an output (`Pdf`, `PNg`, `Svg`).
+  - `Delete` asks for a device.
+  - `Paper` asks for a device, a paper name and `width,height` in mm, and adds that paper.
+- `pagesetup {layout, device, paper?}` sets the layout's device. `paper` names one of the
+  device's papers, or a standard size by its short name (`A3`, `Letter`). The paper's
+  margins become the layout's printable area. Without `paper`, a device change keeps the
+  current paper if the device has it, else takes the device's default paper. A device change
+  also takes the device's orientation unless `landscape` is given. `device: "None"` clears it.
+- `plot {device?, paper?, …}` plots with `device`, or with the layout's page setup device.
+  - The device sets the output and resolution.
+  - `paper` (one of the device's papers) sets the size and margins for this plot.
+  - A model-space plot without `paper` uses the device's default paper and orientation.
+  - For Model plots, `center` defaults to `true`, preserving the existing centered output. Set
+    `center: false` with `offset: [x, y]` to place the plotted bounds' lower-left corner from the
+    printable area's lower-left origin; offsets are millimetres, default to `[0, 0]`, and are
+    bounded to ±100,000 mm. PDF and PNG support these controls. SVG plots keep their extents view;
+    an active offset is rejected rather than ignored. Layout plots do not use model offsets.
+  - `exportpdf` takes the same options and always writes PDF.
 
-As plotagens PDF do espaço do modelo ainda não aplicam as margens do papel. Elas ajustam o desenho dentro das margens padrão. As plotagens PNG aplicam essas margens. As plotagens SVG mostram a folha inteira de um layout ou os limites do espaço do modelo.
+Model-space PDF plots don't apply the paper's margins yet. They fit the drawing inside the
+default margins. PNG plots apply them. SVG plots show a layout's whole sheet, or the
+model-space extents.
 
-## Transparência na plotagem
+## Plot transparency
 
-Os objetos são plotados com sua transparência (a própria, a da camada quando definida como ByLayer ou a da referência de bloco quando definida como ByBlock) somente quando essa opção é solicitada, como no AutoCAD:
+Objects plot with their transparency (their own, their layer's when ByLayer, the block
+reference's when ByBlock) only when asked, as in AutoCAD:
 
-- `pagesetup {layout, plotTransparency: bool}` armazena a opção "Plot transparency" do layout (desativada por padrão). O Page Setup Manager e a caixa de diálogo Plot têm essa opção.
-- `plot {plotTransparency?: bool}` (assim como `exportpdf` e `preview`) substitui essa configuração para uma única plotagem. Nas plotagens do espaço do modelo, a opção fica desativada, a menos que seja solicitada.
-- `PLOTTRANSPARENCYOVERRIDE` tem prioridade: 0 nunca plota transparência, 1 (padrão) usa a configuração acima e 2 sempre plota transparência.
+- `pagesetup {layout, plotTransparency: bool}` stores the layout's "Plot transparency" (off by
+  default). The Page Setup Manager and the Plot dialog have the checkbox.
+- `plot {plotTransparency?: bool}` (and `exportpdf`, `preview`) overrides it for one plot.
+  Model-space plots have it off unless asked.
+- `PLOTTRANSPARENCYOVERRIDE` decides first: 0 never plots transparency, 1 (default) uses the
+  setting above, 2 always plots it.
 
-As plotagens PDF gravam a transparência como alpha (`/ExtGState` com `/ca` e `/CA`), as PNG fazem a mesclagem e as SVG usam `opacity`. Uma plotagem sem transparência é gravada exatamente como antes. Os sinalizadores de layout de plotagem do DXF não têm um bit para essa opção, portanto ela não é salva em arquivos DXF ou DWG.
+PDF plots write it as alpha (`/ExtGState` with `/ca` and `/CA`), PNG plots blend it, SVG plots use
+`opacity`. A plot without transparency is written exactly as before. The DXF plot layout flags
+have no bit for the option, so it isn't saved in DXF or DWG files.
 
-Na tela, `TRANSPARENCYDISPLAY` (ativado por padrão; botão Transparency na barra de status) exibe a transparência. As exportações PNG e SVG de um desenho sempre a representam.
+On screen, `TRANSPARENCYDISPLAY` (on by default; the status bar's Transparency button) shows
+transparency; PNG and SVG exports of a drawing always draw it.
