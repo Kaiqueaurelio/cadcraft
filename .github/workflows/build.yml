@@ -10,9 +10,11 @@ on:
 permissions:
   contents: read
 
+# Do not cancel an active multi-platform build when another documentation or config
+# commit lands on the same ref; each commit should produce a traceable result.
 concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
