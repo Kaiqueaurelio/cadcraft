@@ -205,7 +205,7 @@ fn app_icon() -> Option<egui::IconData> {
 
 fn version_string() -> String {
     let sha = option_env!("CADCRAFT_BUILD_SHA").unwrap_or("dev");
-    format!("cadcraft {} ({sha})", env!("CARGO_PKG_VERSION"))
+    format!("Decode CAD {} ({sha})", env!("CARGO_PKG_VERSION"))
 }
 
 /// The control port from `--control <port>` or `CADCRAFT_CONTROL_PORT` (`source`); a value that is
@@ -271,7 +271,7 @@ fn main() -> eframe::Result {
         // swapchains hold two frames back under vsync (`CADCRAFT_VSYNC=1` restores vsync).
         wgpu_options: eframe::egui_wgpu::WgpuConfiguration::default().with_surface_config(surface),
         viewport: egui::ViewportBuilder::default()
-            .with_title("CADCraft")
+            .with_title("Decode CAD")
             .with_inner_size([1600.0, 1000.0])
             .with_min_inner_size([900.0, 560.0])
             .with_drag_and_drop(true)
@@ -312,7 +312,7 @@ fn main() -> eframe::Result {
         }));
     }
     eframe::run_native(
-        "CADCraft",
+        "Decode CAD",
         options,
         Box::new(move |cc| {
             let mut app = CadApp::new(Session::empty(), services());
