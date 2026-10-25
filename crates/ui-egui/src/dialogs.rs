@@ -339,9 +339,6 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 _ => {
                     ui.horizontal(|ui| {
                         paint_decode_logo(ui, 104.0);
-                        if let Some(logo) = &logo {
-                            ui.add(egui::Image::new(logo).fit_to_exact_size(vec2(104.0, 104.0)));
-                        }
                         ui.vertical(|ui| {
                             ui.heading("Decode CAD");
                             ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
@@ -360,7 +357,7 @@ fn about(ctx: &egui::Context, open: &mut bool) {
 }
 
 fn paint_decode_logo(ui: &mut egui::Ui, size: f32) {
-    use egui::{Color32, Pos2, Rect, Stroke, StrokeKind, pos2, vec2};
+    use egui::{Color32, Rect, Stroke, StrokeKind, pos2, vec2};
     let (rect, _) = ui.allocate_exact_size(vec2(size, size), egui::Sense::hover());
     let painter = ui.painter();
     painter.rect_filled(rect, size * 0.18, Color32::from_rgb(14, 24, 42));
@@ -383,7 +380,6 @@ fn paint_decode_logo(ui: &mut egui::Ui, size: f32) {
     ];
     for segment in arc.windows(2) { painter.line_segment([segment[0], segment[1]], white); }
     painter.line_segment([point(0.15,-0.22), point(0.23,-0.265)], Stroke::new(size * 0.028, Color32::from_rgb(255, 166, 74)));
-    let _ = Pos2::ZERO;
   }
   
 fn commands(app: &mut CadApp, ctx: &egui::Context, open: &mut bool) {
