@@ -1,7 +1,7 @@
 # DecodeCAD functional parity with CADCraft
 
 **Audit date:** 2026-10-24  
-**DecodeCAD revision audited:** `2c6abcfb94e1472f24730e17de98cb4ef605ca1a`  
+**DecodeCAD revision audited:** `fb3781f84e73ebb517681d35f2cf64ff9f4eb5a4`  
 **CADCraft upstream revision:** `b90165666917ec3ac6c308c2ea1c55bb6ea8317d`
 
 ## Result
@@ -33,5 +33,14 @@ Therefore this audit establishes source-level synchronization with the inspected
 
 ## Verification
 
-The upstream regression and docking tests were included in the port. GitHub Actions for the pull request are the build/test evidence; see the [distribution pull request](https://github.com/Kaiqueaurelio/decodecad/pull/6) and its checks. The final verification status must be updated from those checks before the distribution PR is merged or a release is published.
+The upstream regression and docking tests were included in the port and the final pull request revision passed its checks before merge.
+
+| Verification | Result | Evidence |
+|---|---|---|
+| `cargo xtask ci` quality gate | Passed | [GitHub Actions run 40150585788](https://github.com/Kaiqueaurelio/decodecad/actions/runs/40150585788) |
+| Desktop release build (Linux, Windows, macOS) | Passed | [GitHub Actions run 40150585401](https://github.com/Kaiqueaurelio/decodecad/actions/runs/40150585401) |
+| Windows MSI and portable ZIP; Linux DEB, AppImage and tar | Passed | [GitHub Actions run 40150585410](https://github.com/Kaiqueaurelio/decodecad/actions/runs/40150585410) |
+| Nix evaluation, packaging lint, SonarCloud | Passed | [Nix](https://github.com/Kaiqueaurelio/decodecad/actions/runs/40150585754), [packaging lint](https://github.com/Kaiqueaurelio/decodecad/actions/runs/40150585664), [SonarCloud](https://github.com/Kaiqueaurelio/decodecad/actions/runs/40150585781) |
+
+The CI installer artifacts are temporary GitHub Actions downloads. A public customer download requires a GitHub Release. These checks establish successful builds and project tests for this revision; they do not replace testing against real customer drawings or AutoCAD.
 
