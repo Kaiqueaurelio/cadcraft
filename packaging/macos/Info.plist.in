@@ -11,7 +11,7 @@
   <key>CFBundleName</key>
   <string>Decode CAD</string>
   <key>CFBundleExecutable</key>
-  <string>CADCraft</string>
+  <string>Decode CAD</string>
   <key>CFBundleIdentifier</key>
   <string>ai.storyteller.cadcraft</string>
   <key>CFBundleInfoDictionaryVersion</key>
@@ -29,7 +29,7 @@
   <key>CADCraftBuildCommit</key>
   <string>@BUILD_SHA@</string>
   <key>CFBundleIconFile</key>
-  <string>CADCraft</string>
+  <string>Decode CAD</string>
   <key>LSApplicationCategoryType</key>
   <string>public.app-category.graphics-design</string>
   <!-- Must match MACOSX_DEPLOYMENT_TARGET in package.sh. Big Sur is the first release on
@@ -43,7 +43,7 @@
   <key>NSRequiresAquaSystemAppearance</key>
   <false/>
   <key>NSHumanReadableCopyright</key>
-  <string>Copyright © the CADCraft authors. MIT OR Apache-2.0.</string>
+  <string>Copyright © 2026 Decode Analytics and contributors; upstream notices retained. MIT OR Apache-2.0.</string>
 
   <!-- Drawing files CADCraft opens (declared here in case macOS has no type for them). -->
   <key>UTImportedTypeDeclarations</key>
@@ -91,7 +91,7 @@
       <key>LSItemContentTypes</key>
       <array><string>ai.storyteller.cadcraft.dxf</string></array>
       <key>CFBundleTypeIconFile</key>
-      <string>CADCraft</string>
+      <string>Decode CAD</string>
     </dict>
     <dict>
       <key>CFBundleTypeName</key>
@@ -103,7 +103,7 @@
       <key>LSItemContentTypes</key>
       <array><string>ai.storyteller.cadcraft.dwg</string></array>
       <key>CFBundleTypeIconFile</key>
-      <string>CADCraft</string>
+      <string>Decode CAD</string>
     </dict>
   </array>
 
