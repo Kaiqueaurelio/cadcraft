@@ -37,6 +37,14 @@
   <a href="#licença-e-créditos">Licença e créditos</a>
 </p>
 
+<p align="center">
+  <b>Baixe o Decode CAD</b><br>
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases"><img alt="Downloads para Windows" src="https://img.shields.io/badge/Download-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white"></a>
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases"><img alt="Downloads para Linux" src="https://img.shields.io/badge/Download-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"></a>
+</p>
+
+> Os botões levam à página de lançamentos. Escolha o instalador correspondente ao seu sistema operacional; os downloads aparecem quando uma versão for publicada.
+
 ## Capturas de tela
 
 <table>
@@ -177,7 +185,7 @@ Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de comp
 
 ## Downloads
 
-Consulte a seção [Releases do Decode CAD](https://github.com/Kaiqueaurelio/cadcraft/releases) para verificar os binários publicados por este fork. Se não houver uma versão publicada, use as instruções de compilação local acima ou confira as [execuções de CI](https://github.com/Kaiqueaurelio/cadcraft/actions). Não use builds de outro repositório como se fossem builds oficiais do Decode CAD.
+Use os botões **Windows** e **Linux** no início desta página ou abra [Releases do Decode CAD](https://github.com/Kaiqueaurelio/decodecad/releases). Cada lançamento lista os instaladores disponíveis para cada sistema. Se ainda não houver uma versão publicada, os botões mostrarão a página de lançamentos sem arquivos; acompanhe as [execuções de CI](https://github.com/Kaiqueaurelio/decodecad/actions).
 
 Os nomes de arquivos abaixo descrevem formatos de distribuição que podem ser gerados pelos workflows; confirme que o artefato existe na release antes de tentar baixá-lo.
 
