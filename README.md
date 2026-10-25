@@ -104,12 +104,12 @@ O ponto (`.`) limpa qualquer uma dessas configurações.
 
 ### Registros de execução
 
-O aplicativo para computador grava os registros no erro padrão e em `logs/decode-cad.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `DECODE_CAD_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. As variáveis com prefixo `DECODE_CAD_` são preferenciais; as variantes anteriores ainda são aceitas silenciosamente. Os nomes das pastas de configurações antigas são mantidos para preservar dados existentes.
+O aplicativo para computador grava os registros no erro padrão e em `logs/decode-cad.log`, dentro da pasta de configurações da plataforma, ou na pasta definida em `DECODE_CAD_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. As variáveis com prefixo `DECODE_CAD_` são preferenciais; nomes de configuração anteriores continuam aceitos em modo de compatibilidade para preservar os dados existentes.
 
 | Variável | Efeito |
 |---|---|
 | `DECODE_CAD_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
-| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=debug`. |
+| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=info`. |
 
 Na versão web, os registros são enviados ao console do navegador.
 
