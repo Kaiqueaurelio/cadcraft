@@ -1382,11 +1382,7 @@ fn annotative(tags: &[Tag]) -> bool {
 /// styles); otherwise the file.
 fn style_font(tags: &[Tag], file: String) -> String {
     let present = |name: String| {
-        if name.trim().eq_ignore_ascii_case("CADCraft Stroke") {
-            cadcraft_fonts::BUILTIN_FONT.to_string()
-        } else {
-            name
-        }
+        if name.trim().eq_ignore_ascii_case("CADCraft Stroke") { cadcraft_fonts::BUILTIN_FONT.to_string() } else { name }
     };
     if file.trim().is_empty()
         && let Some(face) =
