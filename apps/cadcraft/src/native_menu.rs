@@ -91,7 +91,7 @@ impl NativeMenu {
         while let Ok(ev) = MenuEvent::receiver().try_recv() {
             if let Some((cmd, _, _)) = self.items.get(ev.id.as_ref()) {
                 if cmd == "ui.discord" {
-                    ctx.open_url(egui::OpenUrl::new_tab("https://discord.gg/artcraft"));
+                    ctx.open_url(egui::OpenUrl::new_tab("https://github.com/Kaiqueaurelio/decodecad/issues"));
                 } else {
                     menus::activate(app, &cmd.clone());
                 }
