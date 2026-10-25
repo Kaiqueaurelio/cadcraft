@@ -195,7 +195,7 @@ mod tests {
     /// Token issuance creates its missing directory hierarchy before writing the credential.
     #[test]
     fn issuance_creates_missing_parent() {
-        let dir = std::env::temp_dir().join(format!("cadcraft-token-parent-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("decode-cad-token-parent-{}", std::process::id()));
         let path = dir.join("missing/cache/session.token");
         issue_at(&path, b"secret").unwrap();
         assert_eq!(std::fs::read(&path).unwrap(), b"secret");
