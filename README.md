@@ -93,8 +93,8 @@ O Decode CAD pode usar fontes TrueType/OpenType instaladas no sistema. Compilaç
 
 | Variável | Variável de ambiente | Finalidade |
 |---|---|---|
-| `FONTALT` | `CADCRAFT_FONTALT` | Fonte alternativa quando a fonte definida no estilo não é encontrada. Pode ser indicada pelo nome do arquivo ou da família. Vazia (padrão): usa a fonte vetorial interna. |
-| `FONTFALLBACK` | `CADCRAFT_FONTFALLBACK` | Lista de fontes separadas por vírgula para caracteres ausentes na fonte principal. |
+| `FONTALT` | `DECODE_CAD_FONTALT` | Fonte alternativa quando a fonte definida no estilo não é encontrada. Pode ser indicada pelo nome do arquivo ou da família. Vazia (padrão): usa a fonte vetorial interna. |
+| `FONTFALLBACK` | `DECODE_CAD_FONTFALLBACK` | Lista de fontes separadas por vírgula para caracteres ausentes na fonte principal. |
 
 O ponto (`.`) limpa qualquer uma dessas configurações.
 
@@ -104,11 +104,11 @@ O ponto (`.`) limpa qualquer uma dessas configurações.
 
 ### Registros de execução
 
-O aplicativo para computador grava os registros no erro padrão e em `logs/cadcraft.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `CADCRAFT_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. Os nomes internos dos arquivos e variáveis de ambiente permanecem inalterados por compatibilidade.
+O aplicativo para computador grava os registros no erro padrão e em `logs/decode-cad.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `DECODE_CAD_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. As variáveis com prefixo `DECODE_CAD_` são preferenciais; as variantes anteriores ainda são aceitas silenciosamente. Os nomes das pastas de configurações antigas são mantidos para preservar dados existentes.
 
 | Variável | Efeito |
 |---|---|
-| `CADCRAFT_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
+| `DECODE_CAD_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
 | `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace`. |
 
 Na versão web, os registros são enviados ao console do navegador.
@@ -154,7 +154,7 @@ O aplicativo também oferece recursos de acessibilidade, como rótulos acessíve
 
 ## Acessibilidade
 
-Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx CADCRAFT_SYSTEM_CURSOR 1`.
+Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx DECODE_CAD_SYSTEM_CURSOR 1`.
 
 O Decode CAD respeita a preferência do sistema para reduzir animações. A configuração também pode ser ajustada no menu **View ▸ Accessibility ▸ Animation Effects**, escolhendo usar a configuração do sistema, ativar ou desativar os efeitos.
 
