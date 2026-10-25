@@ -110,7 +110,7 @@ impl PlotterStore {
             write: |n, t| {
                 let p = file(n)?;
                 std::fs::create_dir_all(dir()?).map_err(|e| e.to_string())?;
-                let tmp = p.with_extension("json.cadcraft-tmp");
+                let tmp = p.with_extension("json.decode-cad-tmp");
                 std::fs::write(&tmp, t).map_err(|e| format!("{n}: {e}"))?;
                 std::fs::rename(&tmp, &p).map_err(|e| format!("{n}: {e}"))
             },
