@@ -1376,16 +1376,23 @@ fn annotative(tags: &[Tag]) -> bool {
     list.iter().filter(|t| t.code == 1070).nth(1).is_some_and(|t| t.i64() != 0)
 }
 
-/// A text style's font: CADCraft's own font name from `CADCRAFT` xdata (`1000 FONT`, name)
+/// A text style's font: the application's built-in font name from legacy `CADCRAFT` xdata (`1000 FONT`, name).
 /// while the font file is still the `txt` written for other readers; the TrueType family of the
 /// style's `ACAD` xdata (`1000` typeface) when it has no font file (how AutoCAD stores TrueType
 /// styles); otherwise the file.
 fn style_font(tags: &[Tag], file: String) -> String {
+    let present = |name: String| {
+        if name.trim().eq_ignore_ascii_case("CADCraft Stroke") {
+            cadcraft_fonts::BUILTIN_FONT.to_string()
+        } else {
+            name
+        }
+    };
     if file.trim().is_empty()
         && let Some(face) =
             crate::dxf_ext::xdata(tags, "ACAD").iter().find(|t| t.code == 1000).map(|t| t.str().trim().to_string()).filter(|f| !f.is_empty())
     {
-        return face;
+        return present(face);
     }
     let x = crate::dxf_ext::xdata(tags, crate::dxf_ext::APP);
     let own = x.windows(2).find_map(|w| match w {
@@ -1394,8 +1401,8 @@ fn style_font(tags: &[Tag], file: String) -> String {
     });
     let stem = file.trim().to_ascii_lowercase();
     match own {
-        Some(name) if !name.trim().is_empty() && (stem == "txt" || stem == "txt.shx") => name,
-        _ => file,
+        Some(name) if !name.trim().is_empty() && (stem == "txt" || stem == "txt.shx") => present(name),
+        _ => present(file),
     }
 }
 
