@@ -14,13 +14,13 @@ use std::path::PathBuf;
 /// Length of the token in bytes (256 bits), rendered as lowercase hex.
 const TOKEN_BYTES: usize = 32;
 
-/// The file holding the control token for `port`, inside a per-user private directory.
+/// The Decode CAD control-token file for `port`, inside a per-user private directory.
 ///
 /// On Unix the runtime dir (`XDG_RUNTIME_DIR`, already `0700` and per-user) is preferred, else the
 /// user's home; on Windows the local app-data directory. The file itself is created with
 /// owner-only permissions regardless.
 pub fn token_path(port: u16) -> io::Result<PathBuf> {
-    Ok(private_dir()?.join(format!("cadcraft-control-{port}.token")))
+    Ok(private_dir()?.join(format!("decode-cad-control-{port}.token")))
 }
 
 /// Choose the Unix runtime directory, home cache, or temporary directory for an owner-only token file.
@@ -75,7 +75,15 @@ fn issue_at(path: &std::path::Path, bytes: &[u8]) -> io::Result<()> {
 
 /// Read the token for `port`, trimming trailing whitespace. Used by clients (the MCP bridge).
 pub fn read(port: u16) -> io::Result<String> {
-    let raw = std::fs::read_to_string(token_path(port)?)?;
+    let path = token_path(port)?;
+    let raw = match std::fs::read_to_string(&path) {
+        Ok(raw) => raw,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => {
+            let legacy = private_dir()?.join(format!("cadcraft-control-{port}.token"));
+            std::fs::read_to_string(legacy)?
+        }
+        Err(error) => return Err(error),
+    };
     let token = raw.trim().to_string();
     if token.is_empty() {
         return Err(io::Error::new(io::ErrorKind::InvalidData, "empty control token"));
@@ -87,6 +95,9 @@ pub fn read(port: u16) -> io::Result<String> {
 pub fn revoke(port: u16) {
     if let Ok(path) = token_path(port) {
         let _ = std::fs::remove_file(path);
+    }
+    if let Ok(legacy) = private_dir().map(|dir| dir.join(format!("cadcraft-control-{port}.token"))) {
+        let _ = std::fs::remove_file(legacy);
     }
 }
 
