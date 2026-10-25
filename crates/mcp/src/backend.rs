@@ -18,7 +18,7 @@ pub trait Backend {
     fn describe(&self) -> String;
 }
 
-/// A running CADCraft app reached through its loopback control port.
+/// A running Decode CAD app reached through its loopback control port.
 pub struct Remote {
     addr: String,
     conn: Option<(BufReader<TcpStream>, TcpStream)>,
@@ -84,7 +84,7 @@ impl Remote {
         Err(std::io::Error::new(
             std::io::ErrorKind::TimedOut,
             format!(
-                "CADCraft was opened but its control port {} did not answer; if it was already open without the port, quit it and try again",
+                "Decode CAD was opened but its control port {} did not answer; if it was already open without the port, quit it and try again",
                 self.addr
             ),
         ))
@@ -152,19 +152,19 @@ fn not_open(addr: &str, e: std::io::Error) -> std::io::Error {
     std::io::Error::new(
         e.kind(),
         format!(
-            "CADCraft is not answering at {addr} ({e}). Open CADCraft with its control port (`--control PORT` or CADCRAFT_CONTROL_PORT), then try again"
+            "Decode CAD is not answering at {addr} ({e}). Open Decode CAD with its control port (`--control PORT` or CADCRAFT_CONTROL_PORT), then try again"
         ),
     )
 }
 
-/// Open the app with the control port of `addr` (macOS: `open -a CADCraft`).
+/// Open the app with the control port of `addr` (macOS: `open -a Decode CAD`).
 fn launch_app(addr: &str) -> std::io::Result<()> {
     let port = addr.rsplit(':').next().filter(|p| p.parse::<u16>().is_ok()).ok_or_else(|| std::io::Error::other(format!("no port in {addr}")))?;
     if cfg!(target_os = "macos") {
-        let ok = std::process::Command::new("open").args(["-a", "CADCraft", "--args", "--control", port]).status()?.success();
-        if ok { Ok(()) } else { Err(std::io::Error::other("could not open CADCraft (is it in Applications?)")) }
+        let ok = std::process::Command::new("open").args(["-a", "Decode CAD", "--args", "--control", port]).status()?.success();
+        if ok { Ok(()) } else { Err(std::io::Error::other("could not open Decode CAD (is it in Applications?)")) }
     } else {
-        Err(std::io::Error::other(format!("CADCraft is not running; start it with `cadcraft --control {port}`")))
+        Err(std::io::Error::other(format!("Decode CAD is not running; start it with `cadcraft --control {port}`")))
     }
 }
 
@@ -203,7 +203,7 @@ impl Backend for Remote {
                 // A mutation whose reply was lost must never be sent twice.
                 if sent && !is_read_only(method) {
                     return Err(format!(
-                        "CADCraft at {}: {e}; the reply was lost, so `{method}` may or may not have been applied. Inspect the drawing first",
+                        "Decode CAD at {}: {e}; the reply was lost, so `{method}` may or may not have been applied. Inspect the drawing first",
                         self.addr
                     ));
                 }
@@ -217,7 +217,7 @@ impl Backend for Remote {
                 self.roundtrip(&req.to_string()).map_err(|(e, _)| {
                     self.token = None;
                     self.conn = None;
-                    format!("CADCraft at {}: {e}", self.addr)
+                    format!("Decode CAD at {}: {e}", self.addr)
                 })?
             }
         };
@@ -232,7 +232,7 @@ impl Backend for Remote {
             }
             // A timeout says whether the request can still have run (#345).
             Err(match v.get("state").and_then(Value::as_str) {
-                Some("not-run") => format!("{e}: CADCraft did not start `{method}` and won't; it is safe to send again"),
+                Some("not-run") => format!("{e}: Decode CAD did not start `{method}` and won't; it is safe to send again"),
                 Some("may-have-run") => format!("{e}: `{method}` may or may not have been applied. Inspect the drawing first"),
                 _ => e.to_string(),
             })
@@ -242,7 +242,7 @@ impl Backend for Remote {
         true
     }
     fn describe(&self) -> String {
-        format!("connected to CADCraft at {}", self.addr)
+        format!("connected to Decode CAD at {}", self.addr)
     }
 }
 
@@ -397,7 +397,7 @@ impl Backend for Headless {
         false
     }
     fn describe(&self) -> String {
-        "headless CADCraft session".into()
+        "headless Decode CAD session".into()
     }
 }
 
