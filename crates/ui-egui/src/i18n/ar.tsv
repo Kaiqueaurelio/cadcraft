@@ -39,7 +39,7 @@
 	A drawing opened from a file keeps that file's format.	الرسم المفتوح من ملف يحتفظ بتنسيق ذلك الملف.
 	A variable name starts with a letter and has only letters, digits and _	يبدأ اسم المتغير بحرف ولا يحوي إلا أحرفاً وأرقاماً و _
 	About	حول
-	About CADCraft	حول CADCraft
+	About Decode CAD	حول Decode CAD
 	Absolute	مطلق
 	Accessibility	إمكانية الوصول
 	Add	إضافة
@@ -635,7 +635,7 @@
 	Offset	الإزاحة
 	On	تشغيل
 	On/Off	تشغيل/إيقاف
-	One of the Crafting Apps by the ArtCraft team and community.	أحد تطبيقات Crafting من فريق ArtCraft والمجتمع.
+	Developed and maintained by Decode Analytics.	تم تطويره وصيانته بواسطة Decode Analytics.
 	Only in this drawing: {n}	في هذا الرسم فقط: {n}
 	Only in {name}: {n}	في {name} فقط: {n}
 	Open	فتح
