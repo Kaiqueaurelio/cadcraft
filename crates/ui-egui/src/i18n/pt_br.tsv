@@ -30,7 +30,7 @@
 	A drawing opened from a file keeps that file's format.	Um desenho aberto de um arquivo mantém o formato desse arquivo.
 	A variable name starts with a letter and has only letters, digits and _	Um nome de variável começa com uma letra e contém apenas letras, dígitos e _
 	About	Sobre
-	About CADCraft	Sobre o CADCraft
+	About Decode CAD	Sobre o Decode CAD
 	Absolute	Absoluto
 	Add Current Scale	Adicionar escala atual
 	Add Leader	Adicionar linha de chamada
@@ -608,7 +608,7 @@
 	Offset	Offset
 	On	Ativado
 	On/Off	Ativar/desativar
-	One of the Crafting Apps by the ArtCraft team and community.	Um dos Crafting Apps da equipe e da comunidade ArtCraft.
+	Developed and maintained by Decode Analytics.	Desenvolvido e mantido pela Decode Analytics.
 	Only in this drawing: {n}	Somente neste desenho: {n}
 	Only in {name}: {n}	Somente em {name}: {n}
 	Open	Abrir
