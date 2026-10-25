@@ -341,18 +341,18 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 _ => {
                     let logo_id = egui::Id::new("decode_cad_about_logo");
                     let mut logo = ctx.data_mut(|data| data.get_temp::<egui::TextureHandle>(logo_id));
-                    if logo.is_none() {
-                        if let Ok(decoded) = image::load_from_memory(ABOUT_LOGO_PNG) {
-                            let rgba = decoded.to_rgba8();
-                            let size = [rgba.width() as usize, rgba.height() as usize];
-                            let texture = ctx.load_texture(
-                                "decode-cad-about-logo",
-                                egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw()),
-                                egui::TextureOptions::LINEAR,
-                            );
-                            ctx.data_mut(|data| data.insert_temp(logo_id, texture.clone()));
-                            logo = Some(texture);
-                        }
+                    if logo.is_none()
+                        && let Ok(decoded) = image::load_from_memory(ABOUT_LOGO_PNG)
+                    {
+                        let rgba = decoded.to_rgba8();
+                        let size = [rgba.width() as usize, rgba.height() as usize];
+                        let texture = ctx.load_texture(
+                            "decode-cad-about-logo",
+                            egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw()),
+                            egui::TextureOptions::LINEAR,
+                        );
+                        ctx.data_mut(|data| data.insert_temp(logo_id, texture.clone()));
+                        logo = Some(texture);
                     }
                     ui.horizontal(|ui| {
                         if let Some(logo) = &logo {
