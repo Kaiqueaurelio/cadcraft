@@ -12,7 +12,7 @@ Start the desktop app with `--control PORT` (or `DECODE_CAD_CONTROL_PORT=PORT`).
 Every request must carry the session `token`. Because loopback TCP cannot tell local operating
 system users apart, the app writes an unguessable per-session token to an owner-only file when the
 control server starts, and refuses (`unauthorized`) any request without a matching token. The file
-is `cadcraft-control-<port>.token` in the per-user runtime directory (`$XDG_RUNTIME_DIR`, else
+is `decode-cad-control-<port>.token` in the per-user runtime directory (`$XDG_RUNTIME_DIR`, else
 `~/.cache`; `%LOCALAPPDATA%` on Windows); its path is logged at startup. A client reads the token
 from that file — which requires the desktop user's own filesystem access — and includes it on each
 line. The MCP bridge (`decode-cad-cli mcp --connect`) does this automatically.
