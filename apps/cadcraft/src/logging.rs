@@ -30,7 +30,7 @@ use log::LevelFilter;
 pub const LOG_FILE: &str = "decode-cad.log";
 /// The log directory inside the settings directory.
 pub const LOG_DIR: &str = "logs";
-/// How many previous logs are kept (`decode-cad.1.log` … `cadcraft.<KEEP>.log`).
+/// How many previous logs are kept (`decode-cad.1.log` … `decode-cad.<KEEP>.log`).
 pub const KEEP: usize = 2;
 /// The log file stops growing past this size (a runaway warning can't fill the disk).
 pub const MAX_FILE_BYTES: u64 = 16 * 1024 * 1024;
@@ -302,7 +302,7 @@ mod tests {
 
     fn temp_dir(tag: &str) -> PathBuf {
         static N: AtomicUsize = AtomicUsize::new(0);
-        let d = std::env::temp_dir().join(format!("cadcraft-logging-{tag}-{}-{}", std::process::id(), N.fetch_add(1, Ordering::Relaxed)));
+        let d = std::env::temp_dir().join(format!("decode-cad-logging-{tag}-{}-{}", std::process::id(), N.fetch_add(1, Ordering::Relaxed)));
         let _ = std::fs::remove_dir_all(&d);
         d
     }
