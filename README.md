@@ -16,23 +16,6 @@
 
 **Tecnologia:** [Rust](https://www.rust-lang.org/) · **Licença:** [MIT](https://github.com/Kaiqueaurelio/decodecad/blob/main/LICENSE-MIT) / [Apache 2.0](https://github.com/Kaiqueaurelio/decodecad/blob/main/LICENSE-APACHE) · **Desenvolvido por:** [Decode Analytics](https://github.com/Kaiqueaurelio/decodecad)
 
-<p align="center">
-  <img src="docs/images/ui-apartment.png" alt="Decode CAD com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
-  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — criada com comandos do Decode CAD.</sub>
-</p>
-
-<p align="center">
-  <a href="#capturas-de-tela">Capturas de tela</a> ·
-  <a href="#por-que-usar-o-decode-cad">Por que usar o Decode CAD</a> ·
-  <a href="#recursos-disponíveis-atualmente">Recursos disponíveis</a> ·
-  <a href="#início-rápido">Início rápido</a> ·
-  <a href="#controle-por-agentes-mcp-e-cli">Agentes, MCP e CLI</a> ·
-  <a href="#arquitetura">Arquitetura</a> ·
-  <a href="#plano-de-desenvolvimento">Plano de desenvolvimento</a> ·
-  <a href="#downloads">Downloads</a> ·
-  <a href="#licença-e-créditos">Licença e créditos</a>
-</p>
-
 ### Downloads
 
 A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x64** e **Linux x86_64**.
@@ -50,6 +33,24 @@ A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x6
 - **Linux Debian/Ubuntu:** abra o arquivo .deb com o instalador de pacotes da distribuição.
 
 Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.1](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1).
+
+
+<p align="center">
+  <img src="docs/images/ui-apartment.png" alt="Decode CAD com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
+  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — criada com comandos do Decode CAD.</sub>
+</p>
+
+<p align="center">
+  <a href="#capturas-de-tela">Capturas de tela</a> ·
+  <a href="#por-que-usar-o-decode-cad">Por que usar o Decode CAD</a> ·
+  <a href="#recursos-disponíveis-atualmente">Recursos disponíveis</a> ·
+  <a href="#início-rápido">Início rápido</a> ·
+  <a href="#controle-por-agentes-mcp-e-cli">Agentes, MCP e CLI</a> ·
+  <a href="#arquitetura">Arquitetura</a> ·
+  <a href="#plano-de-desenvolvimento">Plano de desenvolvimento</a> ·
+  <a href="#downloads">Downloads</a> ·
+  <a href="#licença-e-créditos">Licença e créditos</a>
+</p>
 
 ## Capturas de tela
 
