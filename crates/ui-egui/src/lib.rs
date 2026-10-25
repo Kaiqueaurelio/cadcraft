@@ -1,4 +1,4 @@
-//! The CADCraft egui front end.
+//! The Decode CAD egui front end.
 //!
 //! A thin shell over [`cadcraft_engine::Session`]: panels read engine state and act through
 //! commands (`app.run(id, params)`) or the command line (`app.cmdline(text)`). Nothing here owns
@@ -83,7 +83,7 @@ pub struct UiState {
     /// Keep the system cursor visible over the drawing area (a small crosshair at the centre of the
     /// drawn one) instead of hiding it. Screen magnifiers (Windows Magnifier "follow the mouse
     /// pointer"), screen readers, recorders and remote desktops track the system cursor and lose it
-    /// when it is hidden. Off by default; `CADCRAFT_SYSTEM_CURSOR=1` turns it on at startup.
+    /// when it is hidden. Off by default; `DECODE_CAD_SYSTEM_CURSOR=1` turns it on at startup.
     pub system_cursor: bool,
     /// "Drafting" or "Modeling".
     pub toolset_tab: String,
@@ -121,7 +121,7 @@ pub use cadcraft_engine::cmd::file::Version as SaveVersion;
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SaveFormat {
-    /// CADCraft's native format, and the default.
+    /// Decode CAD's native format, and the default.
     #[default]
     Dxf,
     Dwg,
@@ -168,7 +168,7 @@ impl Default for UiState {
             show_viewcube: true,
             show_ucs_icon: true,
             show_layer_list: false,
-            system_cursor: std::env::var("CADCRAFT_SYSTEM_CURSOR").is_ok_and(|v| !matches!(v.trim(), "" | "0" | "false" | "off")),
+            system_cursor: std::env::var("DECODE_CAD_SYSTEM_CURSOR").or_else(|_| std::env::var("CADCRAFT_SYSTEM_CURSOR")).is_ok_and(|v| !matches!(v.trim(), "" | "0" | "false" | "off")),
             toolset_tab: "Drafting".into(),
             collapsed_groups: Vec::new(),
             hidden_tools: Vec::new(),
@@ -487,7 +487,7 @@ impl CadApp {
     pub fn open_size_error(name: &str, len: u64) -> Option<String> {
         (len > Self::MAX_OPEN_BYTES).then(|| {
             format!(
-                "Open: {name} is {:.1} MB, larger than the {} MB CADCraft opens in the browser",
+                "Open: {name} is {:.1} MB, larger than the {} MB Decode CAD opens in the browser",
                 len as f64 / 1048576.0,
                 Self::MAX_OPEN_BYTES >> 20
             )
@@ -854,7 +854,7 @@ mod tests {
     #[test]
     fn default_save_format_persists_and_names_new_drawings() {
         let mut a = app();
-        assert_eq!(a.ui.save_format, SaveFormat::Dxf, "default keeps DXF, CADCraft's native format");
+        assert_eq!(a.ui.save_format, SaveFormat::Dxf, "default keeps DXF, Decode CAD's native format");
         assert!(a.run("ui.saveformat", json!({ "format": "pdf" })).is_err());
         assert_eq!(a.run("ui.saveformat", json!({ "format": "DWG" })).ok(), Some(json!({ "saveFormat": "dwg" })));
         assert_eq!(a.run("ui.saveformat", json!({})).ok(), Some(json!({ "saveFormat": "dwg" })), "no format: report it");
