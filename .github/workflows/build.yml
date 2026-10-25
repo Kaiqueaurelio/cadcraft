@@ -1,4 +1,4 @@
-name: Build CADCraft
+name: Build Decode CAD
 
 on:
   push:
@@ -41,13 +41,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact: cadcraft-linux-x86_64
+            artifact: decode-cad-linux-x86_64
             binary: target/release/cadcraft
+            output_binary: decode-cad
           - os: windows-latest
-            artifact: cadcraft-windows-x86_64
+            artifact: decode-cad-windows-x86_64
             binary: target/release/cadcraft.exe
+            output_binary: decode-cad.exe
           - os: macos-latest
-            artifact: cadcraft-macos
+            artifact: decode-cad-macos
             binary: target/release/cadcraft
 
     steps:
@@ -70,9 +72,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          cp "${{ matrix.binary }}" dist/
-          cp README.md dist/README-upstream.md
-          cp README-FORK.md dist/README-fork.md
+          cp "${{ matrix.binary }}" "dist/${{ matrix.output_binary }}"
+          cp README.md dist/README.md
+          cp README-FORK.md dist/README-decode-cad.md
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
