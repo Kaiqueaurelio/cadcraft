@@ -64,7 +64,7 @@ O Decode CAD está em desenvolvimento. Consulte [ROADMAP.md](ROADMAP.md) para ve
 | Parametria | Restrições geométricas e dimensionais, `AUTOCONSTRAIN`, parâmetros com expressões, detecção de conflitos e recálculo após edições |
 | Alças de edição | Alças interativas; use Espaço para alternar entre esticar, mover, girar, dimensionar e espelhar |
 | Idiomas da interface | Inglês, ucraniano, português brasileiro, alemão, espanhol, tcheco, russo, francês, chinês simplificado, italiano, coreano, sueco, árabe, húngaro, turco e grego, com troca em tempo real e seleção automática pelo idioma do sistema; [detalhes](docs/localization.md) |
-| Automação | Servidor MCP, canal de controle JSON e `cadcraft-cli` para informações, conversão, execução e comandos |
+| Automação | Servidor MCP, canal de controle JSON e `decode-cad-cli` para informações, conversão, execução e comandos |
 
 ## Início rápido
 
@@ -119,15 +119,15 @@ O Decode CAD oferece uma interface de linha de comando para automação, execuç
 
 ```sh
 # Servidor MCP sem interface gráfica, usando entrada e saída padrão:
-cadcraft-cli mcp
+decode-cad-cli mcp
 
 # Conectar ao aplicativo em execução (inicie-o com --control 7979):
-cadcraft-cli mcp --connect 127.0.0.1:7979
+decode-cad-cli mcp --connect 127.0.0.1:7979
 
 # Executar comandos e exportar um desenho:
-cadcraft-cli run --sample --script 'CIRCLE 22,3 1\n' --save out.dxf --export out.png
-cadcraft-cli info drawing.dxf
-cadcraft-cli convert drawing.dxf drawing.svg
+decode-cad-cli run --sample --script 'CIRCLE 22,3 1\n' --save out.dxf --export out.png
+decode-cad-cli info drawing.dxf
+decode-cad-cli convert drawing.dxf drawing.svg
 ```
 
 As ferramentas MCP incluem `command_line` (digitar na linha de comando), `execute` (executar comandos com JSON), `inspect_drawing`, `query_entities` e `render` (gerar PNG). Quando conectado ao aplicativo, também há `screenshot` e `ui_click`. O canal de controle JSON está descrito em [docs/control-protocol.md](docs/control-protocol.md).
@@ -145,7 +145,7 @@ fonts ┤ render                fonte vetorial, layout TEXT/MTEXT e renderizaç�
 io    ┤                       conversão DXF, exportação SVG/PNG
 engine┤                       sessões, comandos, linha de comando, captura, seleção e desfazer
 ui-egui · mcp                 interface egui substituível e servidor MCP
-apps: cadcraft · cadcraft-cli · cadcraft-web
+Pacotes de build: aplicativo desktop, ferramenta CLI e versão WebAssembly.
 ```
 
 Os nomes internos dos crates e das ferramentas de build permanecem como estão no código. O comando `cargo xtask ci` verifica formatação, Clippy, testes, atribuição de recursos, organização dos módulos e compilação para WebAssembly.
