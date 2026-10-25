@@ -35,35 +35,7 @@ A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x6
 Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.1](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1).
 
 
-<p align="center">
-  <img src="docs/images/ui-apartment.png" alt="Decode CAD com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
-  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — criada com comandos do Decode CAD.</sub>
-</p>
-
-<p align="center">
-  <a href="#capturas-de-tela">Capturas de tela</a> ·
-  <a href="#por-que-usar-o-decode-cad">Por que usar o Decode CAD</a> ·
-  <a href="#recursos-disponíveis-atualmente">Recursos disponíveis</a> ·
-  <a href="#início-rápido">Início rápido</a> ·
-  <a href="#controle-por-agentes-mcp-e-cli">Agentes, MCP e CLI</a> ·
-  <a href="#arquitetura">Arquitetura</a> ·
-  <a href="#plano-de-desenvolvimento">Plano de desenvolvimento</a> ·
-  <a href="#downloads">Downloads</a> ·
-  <a href="#licença-e-créditos">Licença e créditos</a>
-</p>
-
-## Capturas de tela
-
-<table>
-  <tr>
-    <td width="50%"><img src="docs/images/ui-layout.png" alt="Layout de impressão no Decode CAD: folha branca, área imprimível tracejada e janela de visualização com a planta em escala"></td>
-    <td width="50%"><img src="docs/images/ui-bracket.png" alt="Decode CAD com desenho técnico de um suporte de fixação, furos, linhas de centro, cotas, corte hachurado, anotações e legenda técnica"></td>
-  </tr>
-  <tr>
-    <td><sub><b>Layouts:</b> espaço do papel com janelas de visualização, configurações de página e impressão em PDF. Clique duas vezes em uma janela para trabalhar no espaço do modelo através dela.</sub></td>
-    <td><sub><b>Suporte de fixação:</b> desenho de uma peça em duas vistas, com linhas de centro, linhas ocultas, hachura de corte ANSI31 e legenda técnica.</sub></td>
-  </tr>
-</table>
+<p align="center"><i>As capturas de tela serão republicadas após a validação da versão reidentificada para desktop.</i></p>
 
 ## Por que usar o Decode CAD
 
@@ -188,7 +160,7 @@ O Decode CAD respeita a preferência do sistema para reduzir animações. A conf
 
 ## Plano de desenvolvimento
 
-Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos. A comparação do fork com o CADCraft original está em [docs/decodecad-parity.md](docs/decodecad-parity.md).
+Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos.
 
 ## Outras versões
 
