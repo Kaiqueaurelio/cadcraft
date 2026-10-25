@@ -52,8 +52,10 @@ $Dist = if ($env:DIST) { $env:DIST } else { Join-Path $Root 'dist\release' }
 $TargetDir = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } else { Join-Path $Root 'target' }
 New-Item -ItemType Directory -Force -Path $Dist | Out-Null
 
-if (-not $env:CADCRAFT_BUILD_SHA) { $env:CADCRAFT_BUILD_SHA = (git -C $Root rev-parse HEAD 2>$null) }
-if (-not $env:CADCRAFT_BUILD_DATE) { $env:CADCRAFT_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') }
+if (-not $env:DECODE_CAD_BUILD_SHA) { $env:DECODE_CAD_BUILD_SHA = if ($env:CADCRAFT_BUILD_SHA) { $env:CADCRAFT_BUILD_SHA } else { (git -C $Root rev-parse HEAD 2>$null) } }
+if (-not $env:DECODE_CAD_BUILD_DATE) { $env:DECODE_CAD_BUILD_DATE = if ($env:CADCRAFT_BUILD_DATE) { $env:CADCRAFT_BUILD_DATE } else { (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') } }
+$env:CADCRAFT_BUILD_SHA = $env:DECODE_CAD_BUILD_SHA
+$env:CADCRAFT_BUILD_DATE = $env:DECODE_CAD_BUILD_DATE
 
 Write-Output "Decode CAD $Version for Windows $Arch ($Target)"
 
@@ -63,6 +65,7 @@ if (-not $SkipBuild) {
   $flagVar = 'CARGO_TARGET_' + ($Target.ToUpper() -replace '-', '_') + '_RUSTFLAGS'
   [Environment]::SetEnvironmentVariable($flagVar, '-C target-feature=+crt-static')
   # Fail the build (rather than warn) if the icon/VERSIONINFO can't be embedded.
+  $env:DECODE_CAD_REQUIRE_WINRES = '1'
   $env:CADCRAFT_REQUIRE_WINRES = '1'
   Invoke-Native "cargo build ($Target)" { cargo build --release --locked -p cadcraft -p cadcraft-cli --target $Target }
 }
