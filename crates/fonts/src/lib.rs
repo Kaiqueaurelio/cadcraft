@@ -289,7 +289,7 @@ impl TextFont {
             return TextFont::Outline(f);
         }
         let n = name.trim();
-        if n.is_empty() || n.eq_ignore_ascii_case(BUILTIN_FONT) || n.eq_ignore_ascii_case("Decode CAD Stroke") {
+        if n.is_empty() || n.eq_ignore_ascii_case(BUILTIN_FONT) || n.eq_ignore_ascii_case("CADCraft Stroke") {
             return TextFont::Stroke;
         }
         ttf::find(&ttf::font_alt()).map(TextFont::Outline).unwrap_or(TextFont::Stroke)
