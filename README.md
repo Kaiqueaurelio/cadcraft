@@ -35,13 +35,12 @@
   <a href="#licença-e-créditos">Licença e créditos</a>
 </p>
 
-<p align="center">
-  <b>Baixe o Decode CAD</b><br>
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases"><img alt="Downloads para Windows" src="https://img.shields.io/badge/Download-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white"></a>
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases"><img alt="Downloads para Linux" src="https://img.shields.io/badge/Download-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"></a>
-</p>
+### Downloads
 
-> Os botões levam à página de lançamentos. Escolha o instalador correspondente ao seu sistema operacional; os downloads aparecem quando uma versão for publicada.
+**Os instaladores públicos ainda não foram publicados.** Para evitar botões que levem a uma página vazia, os links de download serão exibidos aqui quando os pacotes de Windows e Linux estiverem validados e anexados a uma versão oficial.
+
+- [Ver versões oficiais publicadas](https://github.com/Kaiqueaurelio/decodecad/releases)
+- [Acompanhar compilações e testes](https://github.com/Kaiqueaurelio/decodecad/actions)
 
 ## Capturas de tela
 
