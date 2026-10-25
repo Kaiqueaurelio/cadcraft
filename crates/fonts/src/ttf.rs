@@ -530,7 +530,10 @@ fn prefs() -> MutexGuard<'static, Prefs> {
         let env = |key: &str, legacy: &str| std::env::var(key).or_else(|_| std::env::var(legacy)).unwrap_or_default();
         #[cfg(target_arch = "wasm32")]
         let env = |_: &str, _: &str| String::new();
-        Mutex::new(Prefs { alt: clean_name(&env("DECODE_CAD_FONTALT", "CADCRAFT_FONTALT")), fallback: split_list(&env("DECODE_CAD_FONTFALLBACK", "CADCRAFT_FONTFALLBACK")) })
+        Mutex::new(Prefs {
+            alt: clean_name(&env("DECODE_CAD_FONTALT", "CADCRAFT_FONTALT")),
+            fallback: split_list(&env("DECODE_CAD_FONTFALLBACK", "CADCRAFT_FONTFALLBACK")),
+        })
     })
     .lock()
     .unwrap_or_else(PoisonError::into_inner)
