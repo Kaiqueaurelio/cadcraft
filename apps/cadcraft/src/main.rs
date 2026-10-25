@@ -333,7 +333,7 @@ fn draw_startup_splash(ui: &mut egui::Ui, elapsed: f32) {
 }
 
 fn version_string() -> String {
-    let sha = option_env!("CADCRAFT_BUILD_SHA").unwrap_or("dev");
+    let sha = option_env!("DECODE_CAD_BUILD_SHA").or(option_env!("CADCRAFT_BUILD_SHA")).unwrap_or("dev");
     format!("Decode CAD {} ({sha})", env!("CARGO_PKG_VERSION"))
 }
 
