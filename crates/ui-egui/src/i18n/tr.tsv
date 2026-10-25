@@ -49,7 +49,7 @@
 	A drawing opened from a file keeps that file's format.	Bir dosyadan açılan çizim o dosyanın biçimini korur.
 	A variable name starts with a letter and has only letters, digits and _	Değişken adı bir harfle başlar ve yalnızca harf, rakam ve _ içerir
 	About	Hakkında
-	About CADCraft	CADCraft Hakkında
+	About Decode CAD	Decode CAD Hakkında
 	Absolute	Mutlak
 	Accessibility	Erişilebilirlik
 	Add	Ekle
@@ -705,7 +705,7 @@
 	Offset	Öteleme
 	On	Açık
 	On/Off	Açık/Kapalı
-	One of the Crafting Apps by the ArtCraft team and community.	ArtCraft ekibi ve topluluğunun Crafting Apps uygulamalarından biri.
+	Developed and maintained by Decode Analytics.	Decode CAD, Decode Analytics tarafından geliştirilir ve sürdürülür.
 	Only in this drawing: {n}	Yalnızca bu çizimde: {n}
 	Only in {name}: {n}	Yalnızca {name} içinde: {n}
 	Open	Aç
