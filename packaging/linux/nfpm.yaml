@@ -3,7 +3,7 @@
 # exports VERSION and NFPM_ARCH.
 #
 #   nfpm package -f packaging/linux/nfpm.yaml -p deb -t dist/release/
-name: cadcraft
+name: decode-cad
 arch: ${NFPM_ARCH}
 platform: linux
 version: ${VERSION}
@@ -13,14 +13,13 @@ release: 1
 section: graphics
 priority: optional
 maintainer: ${CADCRAFT_MAINTAINER}
-vendor: Learning Machines LLC
-homepage: https://github.com/Kaiqueaurelio/cadcraft
+vendor: Decode Analytics
+homepage: https://github.com/Kaiqueaurelio/decodecad
 license: MIT OR Apache-2.0
 description: |-
-  Open-source computer-aided design and drafting: draft, dimension and plot 2D
-  drawings with a familiar command line, object snaps, layers, dimensions, hatches
-  and blocks. Opens and saves DXF and DWG; exports SVG and PNG.
-  Includes cadcraft-cli, a headless converter and command runner.
+  Decode CAD by Decode Analytics is an open-source computer-aided design and drafting app.
+  Create and edit 2D drawings with layers, dimensions, hatches and blocks. Opens and saves
+  DXF and DWG drawings, exports SVG and PNG, and includes the cadcraft-cli automation tool.
 
 # The binaries link only glibc and libgcc_s directly. Windowing (X11/Wayland, xkbcommon) and the
 # GPU (Vulkan, EGL/GL) are loaded at runtime, so they are dependencies/recommendations here
