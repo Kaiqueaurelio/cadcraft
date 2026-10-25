@@ -21,8 +21,8 @@
   <icon type="stock">ai.storyteller.cadcraft</icon>
   <!-- Only url types known to appstream 0.15 (Ubuntu 22.04, where CI validates): no vcs-browser. -->
   <url type="homepage">https://github.com/Kaiqueaurelio/decodecad</url>
-  <url type="bugtracker">https://github.com/Kaiqueaurelio/cadcraft/issues</url>
-  <url type="help">https://github.com/Kaiqueaurelio/cadcraft</url>
+  <url type="bugtracker">https://github.com/Kaiqueaurelio/decodecad/issues</url>
+  <url type="help">https://github.com/Kaiqueaurelio/decodecad</url>
   <categories>
     <category>Graphics</category>
     <category>Engineering</category>
