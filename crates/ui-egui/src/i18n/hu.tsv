@@ -50,7 +50,7 @@
 	A drawing opened from a file keeps that file's format.	A fájlból megnyitott rajz megtartja a fájl formátumát.
 	A variable name starts with a letter and has only letters, digits and _	A változónév betűvel kezdődik, és csak betűt, számjegyet és _ jelet tartalmazhat
 	About	Névjegy
-	About CADCraft	A CADCraft névjegye
+	About Decode CAD	A Decode CAD névjegye
 	Absolute	Abszolút
 	Accessibility	Akadálymentesség
 	Add	Hozzáad
@@ -138,8 +138,8 @@
 	ByBlock	Blokk szerint
 	ByColor	Szín szerint
 	ByLayer	Réteg szerint
-	CADCraft Help	A CADCraft súgója
-	CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	A CADCraft ezeket a beállításokat, objektumillesztési módokat és rajzolási kapcsolókat a felhasználói fiókodhoz menti, és indításkor visszaállítja.
+	Decode CAD Help	A Decode CAD súgója
+	Decode CAD keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	A Decode CAD ezeket a beállításokat, objektumillesztési módokat és rajzolási kapcsolókat a felhasználói fiókodhoz menti, és indításkor visszaállítja.
 	Calibrate	Kalibrálás
 	Calibrate 3D Mouse	3D egér kalibrálása
 	Cancel	Mégse
@@ -475,7 +475,7 @@
 	Hide All	Összes elrejtése
 	Hide All Constraint Bars	Összes kényszersáv elrejtése
 	Hide All Dynamic Dimensions	Összes dinamikus méret elrejtése
-	Hide CADCraft	A CADCraft elrejtése
+	Hide Decode CAD	A Decode CAD elrejtése
 	Hide Layer List	Réteglista elrejtése
 	Hide Objects	Objektumok elrejtése
 	Hide Others	Többi elrejtése
@@ -532,7 +532,7 @@
 	Jogged	Megtört sugárméret
 	Jogged Linear	Megtört lineáris méret
 	Join	Összekapcsolás
-	Join the ArtCraft Discord…	Csatlakozás az ArtCraft Discord-közösségéhez…
+	Get help with Decode CAD	Decode CAD támogatás
 	Join us on Discord	Csatlakozz hozzánk a Discordon
 	Justify	Sorkizárt
 	Keep an editable copy of this table in the drawing	A táblázat szerkeszthető másolatának megőrzése a rajzban
@@ -704,7 +704,7 @@
 	Offset	Eltolás
 	On	Be
 	On/Off	Be/ki
-	One of the Crafting Apps by the ArtCraft team and community.	Az ArtCraft csapata és közössége által készített Craft-alkalmazások egyike.
+	Developed and maintained by Decode Analytics.	A Decode Analytics fejleszti és tartja karban.
 	Only in this drawing: {n}	Csak ebben a rajzban: {n}
 	Only in {name}: {n}	Csak ebben: {name} – {n}
 	Open	Megnyitás
@@ -816,7 +816,7 @@
 	Quick Select...	Gyorskijelölés...
 	QuickCalc	Gyorsszámológép
 	QuickCalc Pick	Érték felvétele a gyorsszámológépbe
-	Quit CADCraft	Kilépés a CADCraftból
+	Quit Decode CAD	Kilépés a Decode CADból
 	Radius	Sugár
 	Raster Image	Raszterkép
 	Ray	Félegyenes
