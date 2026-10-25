@@ -1,6 +1,6 @@
 [package]
 name = "cadcraft"
-description = "CADCraft desktop app"
+description = "Decode CAD desktop app"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
