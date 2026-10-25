@@ -35,10 +35,21 @@
 
 ### Downloads
 
-**Os instaladores públicos ainda não foram publicados.** Para evitar botões que levem a uma página vazia, os links de download serão exibidos aqui quando os pacotes de Windows e Linux estiverem validados e anexados a uma versão oficial.
+A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x64** e **Linux x86_64**.
 
-- [Ver versões oficiais publicadas](https://github.com/Kaiqueaurelio/decodecad/releases)
-- [Acompanhar compilações e testes](https://github.com/Kaiqueaurelio/decodecad/actions)
+<p align="center">
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-windows-x64.msi"><strong>⬇ Baixar para Windows (MSI)</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-linux-x86_64.AppImage"><strong>⬇ Baixar para Linux (AppImage)</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-linux-x86_64.deb"><strong>⬇ Linux (Debian/Ubuntu .deb)</strong></a>
+</p>
+
+- **Windows:** baixe e abra o arquivo .msi para instalar. Há também uma [versão portátil ZIP](https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-windows-x64-portable.zip).
+- **Linux AppImage:** baixe o arquivo, marque-o como executável nas propriedades ou rode chmod +x decode-cad-0.12.1-linux-x86_64.AppImage e abra-o.
+- **Linux Debian/Ubuntu:** abra o arquivo .deb com o instalador de pacotes da distribuição.
+
+Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.1](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1).
 
 ## Capturas de tela
 
