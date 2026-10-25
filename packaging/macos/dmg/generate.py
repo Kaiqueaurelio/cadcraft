@@ -36,8 +36,7 @@ FIXED_DATE = datetime.datetime(2026, 10, 8, tzinfo=datetime.timezone.utc)
 
 
 def render(svg, width, out):
-    # The SVG's text is already outlined and no fonts are loaded, so every machine draws the
-    # same pixels.
+    # Render the original Decode CAD SVG using resvg and the available system sans-serif font.
     subprocess.run(
         ["resvg", "-w", str(width), svg, out],
         check=True,
