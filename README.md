@@ -109,7 +109,7 @@ O aplicativo para computador grava os registros no erro padrão e em `logs/decod
 | Variável | Efeito |
 |---|---|
 | `DECODE_CAD_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
-| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace`. |
+| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=debug`. |
 
 Na versão web, os registros são enviados ao console do navegador.
 
@@ -154,7 +154,7 @@ O aplicativo também oferece recursos de acessibilidade, como rótulos acessíve
 
 ## Acessibilidade
 
-Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx DECODE_CAD_SYSTEM_CURSOR 1`.
+Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `DECODE_CAD_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx DECODE_CAD_SYSTEM_CURSOR 1`.
 
 O Decode CAD respeita a preferência do sistema para reduzir animações. A configuração também pode ser ajustada no menu **View ▸ Accessibility ▸ Animation Effects**, escolhendo usar a configuração do sistema, ativar ou desativar os efeitos.
 
