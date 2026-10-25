@@ -50,7 +50,7 @@
 	> Greater than	> 초과
 	A variable name starts with a letter and has only letters, digits and _	변수 이름은 문자로 시작하며 문자, 숫자, _만 사용할 수 있습니다
 	About	정보
-	About CADCraft	CADCraft 정보
+	About Decode CAD	Decode CAD 정보
 	Absolute	절대
 	Add Leader	지시선 추가
 	Additional angles	추가 각도
@@ -577,7 +577,7 @@
 	Offset	간격띄우기
 	On	켜기
 	On/Off	켜기/끄기
-	One of the Crafting Apps by the ArtCraft team and community.	ArtCraft 팀과 커뮤니티가 만드는 Crafting Apps 제품군의 하나입니다.
+	Developed and maintained by Decode Analytics.	Decode Analytics에서 개발하고 유지 관리합니다.
 	Only in this drawing: {n}	이 도면에만 있음: {n}개
 	Only in {name}: {n}	{name}에만 있음: {n}개
 	Open (⌘O)	열기(⌘O)
