@@ -1,6 +1,6 @@
 [package]
 name = "cadcraft-cli"
-description = "CADCraft command-line tool: info, convert, run scripts, export, commands, MCP server"
+description = "Decode CAD command-line tool: info, convert, run scripts, export, commands, MCP server"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
