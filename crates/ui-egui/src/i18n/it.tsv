@@ -55,7 +55,7 @@ menu	Modify	Edita
 	> Greater than	> Maggiore di
 	A variable name starts with a letter and has only letters, digits and _	Un nome di variabile inizia con una lettera e contiene solo lettere, cifre e _
 	About	Informazioni
-	About CADCraft	Informazioni su CADCraft
+	About Decode CAD	Informazioni su Decode CAD
 	Absolute	Assoluto
 	Add Leader	Aggiungi direttrice
 	Additional angles	Angoli aggiuntivi
@@ -587,7 +587,7 @@ menu	Modify	Edita
 	Offset	Offset
 	On	Attivato
 	On/Off	Attiva/Disattiva
-	One of the Crafting Apps by the ArtCraft team and community.	Una delle Crafting App del team e della comunità ArtCraft.
+	Developed and maintained by Decode Analytics.	Sviluppato e mantenuto da Decode Analytics.
 	Only in this drawing: {n}	Solo in questo disegno: {n}
 	Only in {name}: {n}	Solo in {name}: {n}
 	Open (⌘O)	Apri (⌘O)
