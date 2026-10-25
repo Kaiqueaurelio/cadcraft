@@ -551,7 +551,15 @@ fn device_choices(ctx: &egui::Context) -> std::sync::Arc<Vec<cadcraft_doc::Plott
 
 /// A page setup's device, or `"None"` (plot to PDF on the page's paper).
 fn device_label(page: &cadcraft_doc::PageSetup) -> &str {
-    if page.device.trim().is_empty() { "None" } else { page.device.as_str() }
+    if page.device.trim().is_empty() {
+        return "None";
+    }
+    match page.device.trim().to_ascii_lowercase().as_str() {
+        "cadcraft pdf" => "Decode CAD PDF",
+        "cadcraft png" => "Decode CAD PNG",
+        "cadcraft svg" => "Decode CAD SVG",
+        _ => page.device.as_str(),
+    }
 }
 
 /// A page setup's plot style table, or `"None"`.
