@@ -116,14 +116,14 @@ impl Server {
                 call_tool(self.backend.as_mut(), name, args).map_err(|m| (INVALID_PARAMS, m))
             }
             "resources/list" => Ok(json!({"resources": [
-                {"uri": "cadcraft://drawing", "name": "Active drawing", "mimeType": "application/json"},
-                {"uri": "cadcraft://commands", "name": "Command catalog", "mimeType": "application/json"},
+                {"uri": "decode-cad://drawing", "name": "Active drawing", "mimeType": "application/json"},
+                {"uri": "decode-cad://commands", "name": "Command catalog", "mimeType": "application/json"},
             ]})),
             "resources/read" => {
                 let uri = params.get("uri").and_then(Value::as_str).unwrap_or("");
                 let v = match uri {
-                    "cadcraft://drawing" => self.backend.call("drawing.inspect", json!({})),
-                    "cadcraft://commands" => self.backend.call("engine.commands", json!({})),
+                    "decode-cad://drawing" | "cadcraft://drawing" => self.backend.call("drawing.inspect", json!({})),
+                    "decode-cad://commands" | "cadcraft://commands" => self.backend.call("engine.commands", json!({})),
                     _ => return Err((-32002, format!("unknown resource `{uri}`"))),
                 }
                 .map_err(|e| (-32603, e))?;
