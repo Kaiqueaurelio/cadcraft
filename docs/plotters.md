@@ -26,13 +26,9 @@ with the device `None` plots to PDF on the page setup's paper, as before.
 User devices are files in our own format, kept in the `plotters` folder of Decode CAD
 settings directory:
 
-| System | Folder |
-|---|---|
-| Linux and FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` or `~/.config/cadcraft/plotters` |
-| macOS | `~/Library/Application Support/CADCraft/plotters` |
-| Windows | `%APPDATA%\CADCraft\plotters` |
+Plotter configurations are stored in the established per-user settings folder for each operating system, preserving devices created by older versions. The exact folder name is an internal compatibility detail; set `DECODE_CAD_CONFIG_DIR` to use a custom location.
 
-`DECODE_CAD_CONFIG_DIR` (also accepted under the earlier variable name) replaces the settings directory. The default folder names are retained so existing saved plotter devices continue to work. On the web, devices last for the
+`DECODE_CAD_CONFIG_DIR` replaces the settings directory. Previous variable names remain accepted silently for compatibility. On the web, devices last for the
 session unless the host provides storage (`cmd::plotters::set_plotter_store`). Binary `.pc3`
 files are not read; we haven't found a public specification of that format.
 
