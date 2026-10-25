@@ -1,7 +1,7 @@
 > **Decode CAD — desenvolvido e mantido pela Decode Analytics.** Esta edição é construída a partir de código aberto e adaptada para distribuição sob a identidade Decode CAD. Os avisos e atribuições exigidos continuam disponíveis em [LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE), [NOTICE](NOTICE) e [ATTRIBUTION.md](ATTRIBUTION.md).
 
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="128" height="128" alt="Ícone do aplicativo Decode CAD">
+  <img src="assets/app-icon/decode-cad-logo.png" width="256" alt="Logo Decode CAD da Decode Analytics">
 </p>
 
 <h1 align="center">Decode CAD</h1>
