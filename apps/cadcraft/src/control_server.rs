@@ -1,5 +1,5 @@
 //! Loopback JSON-lines control server: one request per line, one reply per line.
-//! This is the transport the MCP server (`cadcraft-cli mcp --connect`) wraps.
+//! This is the transport the MCP server (`decode-cad-cli mcp --connect`) wraps.
 //!
 //! The server only reads requests: a line that is not a JSON object with a string `method` (an
 //! HTTP request line, a stray `nc`, binary data) gets one error reply and the connection is
