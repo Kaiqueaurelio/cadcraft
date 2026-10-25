@@ -15,9 +15,9 @@
 </p>
 
 <p align="center">
-  <img alt="Desenvolvido em Rust" src="https://img.shields.io/badge/desenvolvido%20em-Rust-0b6f88?style=flat-square&logo=rust&logoColor=white">
-  <img alt="Licença MIT ou Apache-2.0" src="https://img.shields.io/badge/licen%C3%A7a-MIT%20%2F%20Apache--2.0-0b6f88?style=flat-square">
-  <img alt="Desenvolvido pela Decode Analytics" src="https://img.shields.io/badge/desenvolvido%20por-Decode%20Analytics-1769aa?style=flat-square">
+  <a href="https://www.rust-lang.org/" title="Site oficial da linguagem Rust"><img alt="Desenvolvido em Rust" src="https://img.shields.io/badge/desenvolvido%20em-Rust-0b6f88?style=flat-square&logo=rust&logoColor=white"></a>
+  <a href="#licença-e-créditos" title="Consultar licenças e créditos"><img alt="Licença MIT ou Apache-2.0" src="https://img.shields.io/badge/licen%C3%A7a-MIT%20%2F%20Apache--2.0-0b6f88?style=flat-square"></a>
+  <a href="https://github.com/Kaiqueaurelio" title="Perfil do mantenedor no GitHub"><img alt="Desenvolvido pela Decode Analytics" src="https://img.shields.io/badge/desenvolvido%20por-Decode%20Analytics-1769aa?style=flat-square"></a>
 </p>
 
 <p align="center">
