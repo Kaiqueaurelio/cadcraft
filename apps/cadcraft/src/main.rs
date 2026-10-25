@@ -37,6 +37,8 @@ struct App {
     system_animations: system_animations::SystemAnimations,
     workspace: workspace::Workspace,
     workspace_error: Option<String>,
+    /// Brief branded first frame while the already-initialized workspace settles.
+    splash_started: std::time::Instant,
     #[cfg(target_os = "macos")]
     native_menu: Option<native_menu::NativeMenu>,
 }
@@ -89,6 +91,12 @@ impl eframe::App for App {
         cadcraft_ui_egui::cmdline::capture_tab(ctx, raw);
     }
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        let elapsed = self.splash_started.elapsed();
+        if elapsed < std::time::Duration::from_millis(1600) {
+            draw_startup_splash(ui, elapsed.as_secs_f32());
+            ui.ctx().request_repaint_after(std::time::Duration::from_millis(16));
+            return;
+        }
         self.cad.ui(ui);
         self.persist_workspace(false);
     }
@@ -194,13 +202,134 @@ const APP_ID: &str = "ai.storyteller.cadcraft";
 /// Stencil bits of the window's render pass (see `NativeOptions::stencil_buffer`).
 const STENCIL_BITS: u8 = 8;
 
-#[cfg(target_os = "macos")]
-const APP_ICON_PNG: &[u8] = include_bytes!("../../../assets/app-icon/cadcraft-macos-512.png");
-#[cfg(not(target_os = "macos"))]
-const APP_ICON_PNG: &[u8] = include_bytes!("../../../assets/app-icon/cadcraft-256.png");
-
+/// Create the app icon from Decode CAD's own vector geometry; do not load inherited artwork.
 fn app_icon() -> Option<egui::IconData> {
-    eframe::icon_data::from_png_bytes(APP_ICON_PNG).map_err(|e| log::warn!("app icon: {e}")).ok()
+    let size = 64usize;
+    let mut rgba = vec![0u8; size * size * 4];
+    let navy = [14, 24, 42, 255];
+    let border = [43, 65, 94, 255];
+    let blue = [56, 137, 255, 255];
+    let cyan = [43, 220, 220, 255];
+    let white = [244, 248, 255, 255];
+    let orange = [255, 166, 74, 255];
+
+    for y in 0..size {
+        for x in 0..size {
+            let dx = if x < 10 { 10 - x } else if x >= size - 10 { x - (size - 11) } else { 0 };
+            let dy = if y < 10 { 10 - y } else if y >= size - 10 { y - (size - 11) } else { 0 };
+            if dx == 0 || dy == 0 || (dx * dx + dy * dy) <= 100 {
+                icon_pixel(&mut rgba, size, x as i32, y as i32, navy);
+            }
+        }
+    }
+    for x in 10..54 {
+        icon_pixel(&mut rgba, size, x, 9, border);
+        icon_pixel(&mut rgba, size, x, 54, border);
+    }
+    for y in 10..54 {
+        icon_pixel(&mut rgba, size, 9, y, border);
+        icon_pixel(&mut rgba, size, 54, y, border);
+    }
+    let point = |x: f32, y: f32| ((32.0 + x * 58.0).round() as i32, (32.0 + y * 58.0).round() as i32);
+    let cube = [(-0.30,-0.14), (0.0,-0.31), (0.30,-0.14), (0.30,0.17), (0.0,0.34), (-0.30,0.17), (-0.30,-0.14)];
+    for seg in cube.windows(2) {
+        let a = point(seg[0].0, seg[0].1);
+        let b = point(seg[1].0, seg[1].1);
+        icon_line(&mut rgba, size, a, b, blue, 2);
+    }
+    for (a, b) in [
+        (point(0.0,-0.31), point(0.0,0.0)),
+        (point(-0.30,0.17), point(0.0,0.0)),
+        (point(0.30,0.17), point(0.0,0.0)),
+    ] {
+        icon_line(&mut rgba, size, a, b, cyan, 2);
+    }
+    let dpoints = [
+        point(-0.105,-0.155), point(-0.105,0.155), point(-0.01,0.155),
+        point(0.075,0.105), point(0.105,0.0), point(0.075,-0.105),
+        point(-0.01,-0.155), point(-0.105,-0.155),
+    ];
+    for seg in dpoints.windows(2) {
+        icon_line(&mut rgba, size, seg[0], seg[1], white, 2);
+    }
+    icon_line(&mut rgba, size, point(0.15,-0.22), point(0.23,-0.265), orange, 2);
+    let (ox, oy) = point(0.23,-0.265);
+    icon_disk(&mut rgba, size, ox, oy, 2, orange);
+    Some(egui::IconData { rgba, width: size as u32, height: size as u32 })
+}
+
+fn icon_pixel(rgba: &mut [u8], width: usize, x: i32, y: i32, color: [u8; 4]) {
+    if x < 0 || y < 0 || x >= width as i32 || y >= width as i32 {
+        return;
+    }
+    let i = (y as usize * width + x as usize) * 4;
+    rgba[i..i + 4].copy_from_slice(&color);
+}
+
+fn icon_disk(rgba: &mut [u8], width: usize, cx: i32, cy: i32, radius: i32, color: [u8; 4]) {
+    for y in -radius..=radius {
+        for x in -radius..=radius {
+            if x * x + y * y <= radius * radius {
+                icon_pixel(rgba, width, cx + x, cy + y, color);
+            }
+        }
+    }
+}
+
+fn icon_line(rgba: &mut [u8], width: usize, a: (i32, i32), b: (i32, i32), color: [u8; 4], thickness: i32) {
+    let steps = (b.0 - a.0).abs().max((b.1 - a.1).abs()).max(1);
+    for i in 0..=steps {
+        let x = a.0 + (b.0 - a.0) * i / steps;
+        let y = a.1 + (b.1 - a.1) * i / steps;
+        icon_disk(rgba, width, x, y, thickness, color);
+    }
+}
+
+/// The first visible desktop frame uses the same Decode CAD mark as the web loading screen.
+fn draw_startup_splash(ui: &mut egui::Ui, elapsed: f32) {
+    use egui::{Align2, Color32, FontId, Rect, Stroke, StrokeKind, pos2, vec2};
+    let rect = ui.max_rect();
+    let painter = ui.painter().clone();
+    painter.rect_filled(rect, 0.0, Color32::from_rgb(12, 20, 35));
+
+    let mark_size = 116.0;
+    let mark = Rect::from_center_size(pos2(rect.center().x, rect.center().y - 100.0), vec2(mark_size, mark_size));
+    painter.rect_filled(mark, 22.0, Color32::from_rgb(14, 24, 42));
+    painter.rect_stroke(mark, 22.0, Stroke::new(1.5, Color32::from_rgb(43, 65, 94)), StrokeKind::Inside);
+    let point = |x: f32, y: f32| pos2(mark.center().x + mark_size * x, mark.center().y + mark_size * y);
+    let blue = Stroke::new(3.2, Color32::from_rgb(56, 137, 255));
+    let cyan = Stroke::new(2.6, Color32::from_rgb(43, 220, 220));
+    let cube = [(-0.30,-0.14), (0.0,-0.31), (0.30,-0.14), (0.30,0.17), (0.0,0.34), (-0.30,0.17), (-0.30,-0.14)];
+    for seg in cube.windows(2) {
+        painter.line_segment([point(seg[0].0, seg[0].1), point(seg[1].0, seg[1].1)], blue);
+    }
+    for (a, b) in [
+        (point(0.0,-0.31), point(0.0,0.0)),
+        (point(-0.30,0.17), point(0.0,0.0)),
+        (point(0.30,0.17), point(0.0,0.0)),
+    ] {
+        painter.line_segment([a, b], cyan);
+    }
+    let white = Stroke::new(3.0, Color32::from_rgb(244, 248, 255));
+    let dpoints = [
+        point(-0.105,-0.155), point(-0.105,0.155), point(-0.01,0.155),
+        point(0.075,0.105), point(0.105,0.0), point(0.075,-0.105),
+        point(-0.01,-0.155), point(-0.105,-0.155),
+    ];
+    for seg in dpoints.windows(2) {
+        painter.line_segment([seg[0], seg[1]], white);
+    }
+    painter.line_segment([point(0.15,-0.22), point(0.23,-0.265)], Stroke::new(3.0, Color32::from_rgb(255, 166, 74)));
+    painter.circle_filled(point(0.23,-0.265), 3.3, Color32::from_rgb(255, 166, 74));
+
+    painter.text(pos2(rect.center().x, rect.center().y + 6.0), Align2::CENTER_CENTER, "Decode CAD", FontId::proportional(32.0), Color32::from_rgb(244, 248, 255));
+    painter.text(pos2(rect.center().x, rect.center().y + 39.0), Align2::CENTER_CENTER, "DECODE ANALYTICS", FontId::proportional(12.0), Color32::from_rgb(123, 155, 197));
+    let bar = Rect::from_center_size(pos2(rect.center().x, rect.center().y + 93.0), vec2(210.0, 4.0));
+    painter.rect_filled(bar, 2.0, Color32::from_rgb(43, 55, 73));
+    let progress = (elapsed / 1.6).clamp(0.08, 1.0);
+    let fill = Rect::from_min_max(bar.min, pos2(bar.left() + bar.width() * progress, bar.bottom()));
+    painter.rect_filled(fill, 2.0, Color32::from_rgb(56, 137, 255));
+    painter.text(pos2(rect.center().x, rect.center().y + 119.0), Align2::CENTER_CENTER, "Preparing workspace…", FontId::proportional(12.0), Color32::from_rgb(157, 173, 196));
 }
 
 fn version_string() -> String {
@@ -379,6 +508,7 @@ fn main() -> eframe::Result {
                 spacemouse: spacemouse::SpaceMouse::start(cc.egui_ctx.clone()),
                 workspace,
                 workspace_error,
+                splash_started: std::time::Instant::now(),
                 #[cfg(target_os = "macos")]
                 native_menu: None,
             }))
