@@ -61,7 +61,7 @@ single-form count templates. It covers the reference catalog and every marked UI
 including Options, prompts, dialogs, and tooltips; only **Méretezés / Méret** (Dimension) differs
 between the menu heading and the object label. The interface addresses the user informally, and
 a count takes one form because a Hungarian numeral is followed by the singular. The translation
-was written from the meaning of CADCraft's English strings; no other product's localization was
+was written from the meaning of Decode CAD's English strings; no other product's localization was
 used as a source. It has not yet been proofread by an independent native speaker.
 
 Turkish has **1,330 rows**: the union of the existing catalogs, four contextual menu headings
@@ -123,7 +123,7 @@ follow-up work.
 The implementation follows the display-time catalog pattern used by
 [VectorCraft #205](https://github.com/storytold/vectorcraft/pull/205),
 [PdfCraft #106](https://github.com/storytold/pdfcraft/pull/106), and
-[FilmCraft #238](https://github.com/storytold/filmcraft/pull/238). Its code is local to CADCraft.
+[FilmCraft #238](https://github.com/storytold/filmcraft/pull/238). Its code is local to Decode CAD.
 
 - `crates/ui-egui/src/i18n/*.tsv` are UTF-8 with three tab-separated columns:
   `context`, `English source`, and `translation`. Ordinary labels have an empty context.
@@ -153,4 +153,4 @@ The implementation follows the display-time catalog pattern used by
   `cargo xtask ci` runs the workspace quality gates.
 
 Translations are original work under `MIT OR Apache-2.0`, written from the meaning of
-CADCraft's English strings. Do not copy proprietary localization resources.
+Decode CAD's English strings. Do not copy proprietary localization resources.
