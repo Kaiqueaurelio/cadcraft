@@ -154,7 +154,7 @@ pub fn show(app: &mut CadApp, ctx: &egui::Context) {
         ui.set_width(460.0);
         ui.label(RichText::new("Drawing Recovery").strong());
         ui.add_space(4.0);
-        ui.label("CADCraft did not close normally. These drawings were autosaved:");
+        ui.label("Decode CAD did not close normally. These drawings were autosaved:");
         ui.add_space(6.0);
         egui::Grid::new("cc_recovery_list").num_columns(4).spacing(vec2(12.0, 6.0)).show(ui, |ui| {
             for (i, item) in app.recovery.items.iter().enumerate() {
@@ -211,10 +211,10 @@ pub fn gpu_notice(app: &mut CadApp, ctx: &egui::Context) {
         .show(ctx, |ui| {
             ui.set_width(440.0);
             if n.fault.lost {
-                ui.label("The graphics device stopped working (a driver reset or a GPU that stopped responding). CADCraft can't draw again until it restarts.");
+                ui.label("The graphics device stopped working (a driver reset or a GPU that stopped responding). Decode CAD can't draw again until it restarts.");
             } else {
                 let times = if n.fault.errors == 1 { String::new() } else { format!(" ({} times)", n.fault.errors) };
-                ui.label(format!("The graphics driver reported an error{times}. CADCraft kept running, but the drawing may not display correctly."));
+                ui.label(format!("The graphics driver reported an error{times}. Decode CAD kept running, but the drawing may not display correctly."));
             }
             ui.add_space(4.0);
             match n.autosaved {
@@ -222,7 +222,7 @@ pub fn gpu_notice(app: &mut CadApp, ctx: &egui::Context) {
                 1 => ui.label("A recovery copy of the open drawing with unsaved changes was autosaved."),
                 k => ui.label(format!("Recovery copies of {k} drawings with unsaved changes were autosaved.")),
             };
-            ui.label(RichText::new("Save your work and restart CADCraft. Recovery copies are offered at the next start if needed.").strong());
+            ui.label(RichText::new("Save your work and restart Decode CAD. Recovery copies are offered at the next start if needed.").strong());
             ui.add_space(4.0);
             ui.collapsing("Details", |ui| {
                 ui.label(RichText::new(&n.fault.message).color(t.text_dim).monospace());
