@@ -9,7 +9,7 @@
 //! `DECODE_CAD_VSYNC=1` presents with vsync on Linux/BSD, where the default is the low-latency
 //! present mode (`DECODE_CAD_VSYNC=0` selects that elsewhere); see `cadcraft_ui_egui::gpu::surface_config`.
 //!
-//! `log` records go to standard error and `<settings dir>/logs/cadcraft.log` (`RUST_LOG` sets the
+//! `log` records go to standard error and `<settings dir>/logs/decode-cad.log` (`RUST_LOG` sets the
 //! levels); see [`logging`] and [`config_dir`].
 #![cfg_attr(all(target_os = "windows", not(debug_assertions)), windows_subsystem = "windows")]
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
@@ -553,7 +553,7 @@ mod tests {
 
     #[test]
     fn control_without_a_port_keeps_the_environment_port() {
-        // `DECODE_CAD_CONTROL_PORT=47321 cadcraft --control` (#844)
+        // `DECODE_CAD_CONTROL_PORT=47321 decode-cad --control` (#844)
         assert_eq!(control_flag(Some(47321), None), Some(47321));
         assert_eq!(control_flag(None, None), None);
         // A port given on the command line still wins over the variable.
