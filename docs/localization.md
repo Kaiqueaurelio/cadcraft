@@ -3,7 +3,7 @@
 Choose **Edit → Interface Language** and select **Auto (system language)**, **English**,
 **Українська**, **Português (Brasil)**, **Deutsch**, **Español**, **Čeština** (Czech), **Русский**, **Français**, **简体中文**, **Italiano**, **한국어** (Korean), **Svenska** (Swedish), **العربية** (Arabic), **Magyar** (Hungarian), **Türkçe** (Turkish), or **Ελληνικά** (Greek).
 The interface updates without restarting, including the native macOS menus.
-The choice is saved with the other interface preferences (`cadcraft.prefs`, beside the theme):
+The choice is saved with the other interface preferences:
 eframe storage on the desktop, browser local storage on the web. Installations without a saved
 choice use Auto.
 
@@ -12,7 +12,7 @@ browser's `navigator.languages` on the web. BCP 47 and POSIX tags select their p
 `uk-UA` → `uk`, `de_AT.UTF-8` → `de`, `es-MX` → `es`, `pt_BR.UTF-8` → `pt-BR`,
 `cs-CZ` and `cs_CZ.UTF-8` → `cs`, `it-IT` and `it_CH.UTF-8` → `it`, `ko-KR` and `ko_KR.UTF-8` → `ko`,
 `sv-SE`, `sv-FI` and `sv_SE.UTF-8` → `sv`, `hu-HU` and `hu_HU.UTF-8` → `hu`, `tr-TR` and `tr_TR.UTF-8` → `tr`. Unsupported languages fall back to English.
-Set `CADCRAFT_LOCALE=cs-CZ` to override the desktop's locale for a launch.
+Set `DECODE_CAD_LOCALE=cs-CZ` to override the desktop locale for a launch. The former variable name remains accepted as a silent compatibility alias.
 An explicit saved language choice takes precedence over that override.
 
 Automation can select the language through the existing control channel:
