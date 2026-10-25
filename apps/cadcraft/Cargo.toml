@@ -1,6 +1,6 @@
 [package]
 name = "cadcraft"
-description = "CADCraft desktop app"
+description = "The Code Craft desktop app"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
