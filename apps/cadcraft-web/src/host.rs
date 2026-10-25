@@ -1,11 +1,11 @@
 //! The `postMessage` bridge to a same-origin parent page (`?host=parent`), for pages that embed
-//! CADCraft in an `<iframe>` (such as a Nextcloud app). Messages are plain objects with a `type`:
+//! Decode CAD in an `<iframe>` (such as a Nextcloud app). Messages are plain objects with a `type`:
 //!
 //! - `cadcraft:ready` (to the parent): `{ version }`, the app is listening; send a drawing now.
 //! - `cadcraft:open` (from the parent): `{ name, bytes }`, bytes an `ArrayBuffer` or
 //!   `Uint8Array`. It opens like a file picked with File › Open or dropped on the window.
 //! - `cadcraft:save` (to the parent): `{ name, bytes }` (a transferred `ArrayBuffer`) for every
-//!   file CADCraft would otherwise download (SAVE, SAVEAS, exports): it replaces the engine's
+//!   file Decode CAD would otherwise download (SAVE, SAVEAS, exports): it replaces the engine's
 //!   delivery hook. The parent stores the file and reports failures itself.
 //! - `cadcraft:dirty` (to the parent): `{ dirty }` whenever unsaved changes appear or go away.
 //! - `cadcraft:failed` (to the parent): `{ error }` when the app couldn't start.
@@ -121,7 +121,7 @@ impl Bridge {
 /// The engine's delivery hook in host mode ([`cadcraft_engine::cmd::file::set_deliver`]): hand
 /// the file to the parent page. `Ok` once it was posted; the engine then counts a drawing as saved.
 pub fn deliver(name: &str, _mime: &str, bytes: &[u8]) -> Result<(), String> {
-    let bridge = BRIDGE.with(|b| b.borrow().clone()).ok_or("the page that embeds CADCraft is gone")?;
+    let bridge = BRIDGE.with(|b| b.borrow().clone()).ok_or("the page that embeds Decode CAD is gone")?;
     bridge.post_save(name, bytes)
 }
 
