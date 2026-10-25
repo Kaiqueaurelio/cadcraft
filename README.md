@@ -177,34 +177,28 @@ Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de comp
 
 ## Downloads
 
-Consulte a seção [Releases do Decode CAD](https://github.com/Kaiqueaurelio/cadcraft/releases) para verificar os binários publicados por este fork. Se não houver uma versão publicada, use as instruções de compilação local acima ou confira as [execuções de CI](https://github.com/Kaiqueaurelio/cadcraft/actions). Não use builds de outro repositório como se fossem builds oficiais do Decode CAD.
+<p align="center">
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/latest"><img alt="Baixar para Windows" src="https://img.shields.io/badge/Download-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white"></a>
+  &nbsp;
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/latest"><img alt="Baixar para Linux" src="https://img.shields.io/badge/Download-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=111111"></a>
+</p>
 
-Os nomes de arquivos abaixo descrevem formatos de distribuição que podem ser gerados pelos workflows; confirme que o artefato existe na release antes de tentar baixá-lo.
+<p align="center">
+  <b>Escolha seu sistema e, na página de versões, baixe o arquivo correspondente.</b>
+</p>
+
+> **Atenção:** os botões levam à página oficial de versões do Decode CAD. Se ela ainda não mostrar arquivos anexados, significa que os instaladores públicos ainda não foram publicados — não baixe executáveis de outro projeto como se fossem desta edição.
 
 ### Windows
 
-| Arquitetura | Artefato possível |
-|---|---|
-| x64 (Intel/AMD de 64 bits) | `cadcraft-<ver>-windows-x64.msi` ou `cadcraft-windows-x86_64` |
-| arm64 (Windows ARM) | Consulte os workflows de Windows ARM64 antes de distribuir |
-| x86 (32 bits) | Não anunciado como build garantido desta edição |
-
-### macOS
-
-| Versão | Artefato possível |
-|---|---|
-| Aplicativo universal | Consulte as releases e execuções de CI desta edição antes de distribuir |
+Procure na versão mais recente um instalador para Windows x64 (Intel/AMD, 64 bits), quando estiver disponível. Depois de baixar, abra o instalador e siga as instruções na tela.
 
 ### Linux
 
-| Formato | Artefato possível |
-|---|---|
-| Executável x86_64 | `cadcraft-linux-x86_64` (quando publicado pela execução de build) |
-| Pacotes AppImage, Flatpak, DEB e RPM | Só indicar como disponíveis se forem publicados pelo workflow de release |
+Para Linux Mint e Ubuntu, prefira um pacote `.deb` quando estiver disponível. O `.AppImage` é uma alternativa portátil, se incluída na versão publicada. Em geral, para executar um AppImage, pode ser necessário permitir sua execução nas propriedades do arquivo ou usar `chmod +x arquivo.AppImage`.
 
-### FreeBSD e navegador
+**Importante:** a existência dos botões não significa que os binários já estejam prontos. Os links só terão downloads diretos quando uma versão publicada incluir os instaladores correspondentes.
 
-Consulte os workflows e as releases do fork para confirmar quais artefatos foram publicados. A presença de um workflow não significa, por si só, que exista um binário pronto para download.
 
 ## Desenvolvido pela Decode Analytics
 
