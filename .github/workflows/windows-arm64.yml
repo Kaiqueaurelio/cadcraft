@@ -10,7 +10,7 @@ on:
   schedule:
     - cron: "3 5 * * *"
   push:
-    branches: [release]
+    branches: [main, release]
   pull_request:
     paths:
       - .github/workflows/windows-arm64.yml
