@@ -8,14 +8,14 @@
   <style>
     @keyframes decode-progress { from { width: 12%; transform: translateX(0); } to { width: 72%; transform: translateX(38px); } }
     html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #22282f; }
-    #cadcraft_canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-    #cadcraft_loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    #decodecad_canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #decodecad_loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
       color: #b8b8b8; font: 14px system-ui, sans-serif; pointer-events: none; }
   </style>
 </head>
 <body>
-  <canvas id="cadcraft_canvas"></canvas>
-  <div id="cadcraft_loading">
+  <canvas id="decodecad_canvas"></canvas>
+  <div id="decodecad_loading">
     <svg viewBox="0 0 256 256" role="img" aria-label="Decode CAD" style="width:min(220px,50vw);height:auto;max-height:30vh;margin-bottom:28px">
       <rect x="8" y="8" width="240" height="240" rx="48" fill="#0e182a" stroke="#2b415e" stroke-width="3"/>
       <path d="M128 50 194 88V160L128 198 62 160V88Z" fill="none" stroke="#3889ff" stroke-width="8" stroke-linejoin="round"/>
