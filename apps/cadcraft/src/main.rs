@@ -173,9 +173,8 @@ fn filters_for_save(name: &str) -> [(&'static str, &'static str); 6] {
     filters
 }
 
-/// The per-user settings directory reuses the existing platform folder to preserve preferences; `DECODE_CAD_CONFIG_DIR` (or legacy `CADCRAFT_CONFIG_DIR`) overrides it; otherwise
-/// `$XDG_CONFIG_HOME/cadcraft` or `~/.config/cadcraft` on Linux and the BSDs,
-/// `~/Library/Application Support/Decode CAD` on macOS, `%APPDATA%\CADCraft` on Windows.
+/// The historical platform-specific folder is intentionally retained so existing preferences,
+/// workspace state and plotter settings load instead of silently starting with fresh settings.
 fn config_dir() -> Option<std::path::PathBuf> {
     config_dir_from(|k| std::env::var_os(k))
 }
