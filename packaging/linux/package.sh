@@ -103,7 +103,7 @@ fi
 if has appimage; then
   APPDIR="$WORK/DecodeCAD.AppDir"
   cp -R "$STAGE" "$APPDIR"
-  mv "$APPDIR/usr/share/doc" "$WORK/doc-unused"
+  # Keep the bundled legal notices and OFL font licences inside the AppImage.
   ln -s usr/bin/cadcraft "$APPDIR/AppRun"
   cp "$HERE/$APP_ID.desktop" "$APPDIR/$APP_ID.desktop"
   cp "$ROOT/assets/app-icon/hicolor/256x256/apps/$APP_ID.png" "$APPDIR/$APP_ID.png"

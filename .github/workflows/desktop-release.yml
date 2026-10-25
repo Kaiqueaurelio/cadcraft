@@ -49,18 +49,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Detect release version bump
+      - name: Detect release version bump or missing release
         id: inspect
         shell: bash
         env:
           PREVIOUS_SHA: ${{ github.event.before || '' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           CURRENT_VERSION="$(awk -F '"' '/^version = / {print $2; exit}' Cargo.toml)"
           SHOULD_PUBLISH=false
-          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" && -n "$PREVIOUS_SHA" && "$PREVIOUS_SHA" != "0000000000000000000000000000000000000000" ]]; then
-            PREVIOUS_VERSION="$(git show "${PREVIOUS_SHA}:Cargo.toml" | awk -F '"' '/^version = / {print $2; exit}')"
-            if [[ -n "$PREVIOUS_VERSION" && "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" ]]; then
+            if [[ -n "$PREVIOUS_SHA" && "$PREVIOUS_SHA" != "0000000000000000000000000000000000000000" ]]; then
+              PREVIOUS_VERSION="$(git show "${PREVIOUS_SHA}:Cargo.toml" | awk -F '"' '/^version = / {print $2; exit}')"
+              if [[ -n "$PREVIOUS_VERSION" && "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then
+                SHOULD_PUBLISH=true
+              fi
+            fi
+            # Recover a version bump whose first publishing run was cancelled or failed.
+            # Build and publish only while this exact version has no GitHub Release.
+            if ! gh release view "v$CURRENT_VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
               SHOULD_PUBLISH=true
             fi
           fi

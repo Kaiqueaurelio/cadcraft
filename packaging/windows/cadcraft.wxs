@@ -36,7 +36,9 @@
     <Property Id="ARPHELPLINK" Value="https://github.com/Kaiqueaurelio/decodecad/issues" />
 
     <StandardDirectory Id="ProgramFiles6432Folder">
-      <Directory Id="INSTALLFOLDER" Name="Decode CAD" />
+      <Directory Id="INSTALLFOLDER" Name="Decode CAD">
+        <Directory Id="LICENSESFOLDER" Name="licenses" />
+      </Directory>
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder" />
     <!-- Per-machine (ALLUSERS=1), so this is the all-users (Public) desktop, like the Start Menu above. -->
@@ -60,8 +62,15 @@
 
     <Feature Id="Main" Title="Decode CAD" Level="1">
       <ComponentGroupRef Id="CadcraftFiles" />
+      <ComponentGroupRef Id="LegalNotices" />
     </Feature>
   </Package>
+
+  <Fragment>
+    <ComponentGroup Id="LegalNotices" Directory="LICENSESFOLDER">
+      <Files Include="$(var.BinDir)\licenses\**" />
+    </ComponentGroup>
+  </Fragment>
 
   <Fragment>
     <ComponentGroup Id="CadcraftFiles" Directory="INSTALLFOLDER">

@@ -90,6 +90,23 @@ Remove-Item -Recurse -Force $Stage -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Stage | Out-Null
 Copy-Item (Join-Path $Bin 'cadcraft.exe'), (Join-Path $Bin 'cadcraft-cli.exe') $Stage
 
+# Install licence and attribution notices with the MSI as well as the portable ZIP.
+$LegalDir = Join-Path $Stage 'licenses'
+New-Item -ItemType Directory -Force -Path $LegalDir | Out-Null
+foreach ($f in 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'ATTRIBUTION.md') {
+  $p = Join-Path $Root $f
+  if (-not (Test-Path $p)) { throw "Required legal notice is missing: $f" }
+  Copy-Item $p $LegalDir
+}
+# Builds made with craft-fonts embed its fonts; retain every corresponding OFL text.
+if ($env:CRAFT_FONTS_DIR) {
+  $FontLicenses = @(Get-ChildItem -Path (Join-Path $env:CRAFT_FONTS_DIR 'fonts\*\OFL.txt') -ErrorAction SilentlyContinue)
+  if ($FontLicenses.Count -eq 0) { throw "CRAFT_FONTS_DIR is set but no OFL font licences were found" }
+  foreach ($ofl in $FontLicenses) {
+    Copy-Item $ofl.FullName (Join-Path $LegalDir "OFL-$($ofl.Directory.Name).txt")
+  }
+}
+
 & (Join-Path $PSScriptRoot 'sign.ps1') (Join-Path $Stage 'cadcraft.exe') (Join-Path $Stage 'cadcraft-cli.exe')
 
 # ---- MSI ---------------------------------------------------------------------------------------
@@ -108,7 +125,7 @@ $Portable = Join-Path $TargetDir "windows-package\decode-cad-$Version-windows-$A
 Remove-Item -Recurse -Force $Portable -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Portable | Out-Null
 Copy-Item (Join-Path $Stage '*.exe') $Portable
-foreach ($f in 'README.md', 'LICENSE', 'LICENSE-MIT', 'LICENSE-APACHE') {
+foreach ($f in 'README.md', 'LICENSE', 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'ATTRIBUTION.md') {
   $p = Join-Path $Root $f
   if (Test-Path $p) { Copy-Item $p $Portable }
 }
