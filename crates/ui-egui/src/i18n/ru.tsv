@@ -83,7 +83,7 @@
 	ByBlock	Поблоку
 	ByColor	ПоЦвету
 	ByLayer	Послою
-	CADCraft Help	Справка CADCraft
+	Decode CAD Help	Справка Decode CAD
 	Cancel	Отмена
 	Cartesian (x, y)	Декартовы (x, y)
 	Center	Центр
@@ -585,7 +585,7 @@
 	Quick Select Properties	Свойства быстрого выбора
 	Quick Select...	Быстрый выбор...
 	QuickCalc	Быстрокалькулятор
-	Quit CADCraft	Выйти из CADCraft
+	Quit Decode CAD	Выйти из Decode CAD
 	Radius	Радиус
 	Raster Image	Растровое изображение
 	Ray	Луч
@@ -994,7 +994,7 @@
 @plural	{n} contributor	{n} участник|{n} участника|{n} участников
 	Drawing as bytes	Чертеж как байты
 	Services	Службы
-	Hide CADCraft	Скрыть CADCraft
+	Hide Decode CAD	Скрыть Decode CAD
 	Hide Others	Скрыть остальные
 	Accessibility	Специальные возможности
 	Show System Cursor	Показывать системный курсор
