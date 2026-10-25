@@ -83,7 +83,7 @@
 	ByBlock	DuBloc
 	ByColor	Par couleur
 	ByLayer	DuCalque
-	CADCraft Help	Aide de CADCraft
+	Decode CAD Help	Aide de Decode CAD
 	Cancel	Annuler
 	Cartesian (x, y)	Cartésien (x, y)
 	Center	Centre
@@ -585,7 +585,7 @@
 	Quick Select Properties	Propriétés de la sélection rapide
 	Quick Select...	Sélection rapide...
 	QuickCalc	Calculatrice rapide
-	Quit CADCraft	Quitter CADCraft
+	Quit Decode CAD	Quitter Decode CAD
 	Radius	Rayon
 	Raster Image	Image raster
 	Ray	Rayon
@@ -994,7 +994,7 @@
 @plural	{n} contributor	{n} contributeur|{n} contributeurs
 	Drawing as bytes	Dessin sous forme d'octets
 	Services	Services
-	Hide CADCraft	Masquer CADCraft
+	Hide Decode CAD	Masquer Decode CAD
 	Hide Others	Masquer les autres
 	Accessibility	Accessibilité
 	Show System Cursor	Afficher le curseur système
