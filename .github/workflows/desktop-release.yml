@@ -186,7 +186,7 @@ jobs:
             CADCRAFT_BUILD_DATE="$(date -u +%Y-%m-%d)"
             export CADCRAFT_BUILD_DATE
           fi
-          packaging/linux/package.sh --formats "appimage deb tar"
+          bash packaging/linux/package.sh --formats "appimage deb tar"
           test -s dist/release/decode-cad-*-linux-x86_64.deb
           test -s dist/release/decode-cad-*-linux-x86_64.AppImage
           chmod +x dist/release/*.AppImage
