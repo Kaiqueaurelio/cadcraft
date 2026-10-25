@@ -14,7 +14,26 @@
   Ferramentas de desenho, camadas, cotas, hachuras, blocos, leitura e gravação DXF/DWG, exportação e automação — para desktop e navegador, conforme as plataformas disponíveis neste repositório.
 </p>
 
-**Tecnologia:** [Rust](https://www.rust-lang.org/) · **Licença:** [MIT](https://github.com/Kaiqueaurelio/decodecad/blob/main/LICENSE-MIT) / [Apache 2.0](https://github.com/Kaiqueaurelio/decodecad/blob/main/LICENSE-APACHE) · **Desenvolvido por:** [Decode Analytics](https://github.com/Kaiqueaurelio/decodecad)
+**Tecnologia:** [Rust](https://www.rust-lang.org/) · **Licença:** [MIT](LICENSE-MIT) / [Apache 2.0](LICENSE-APACHE) · **Desenvolvido por:** [Decode Analytics](#desenvolvido-pela-decode-analytics)
+
+## Downloads
+
+A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x64** e **Linux x86_64**.
+
+<p align="center">
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-windows-x64.msi"><strong>⬇ Baixar para Windows (MSI)</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-linux-x86_64.AppImage"><strong>⬇ Baixar para Linux (AppImage)</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-linux-x86_64.deb"><strong>⬇ Linux (Debian/Ubuntu .deb)</strong></a>
+</p>
+
+- **Windows:** baixe e abra o arquivo .msi para instalar. Há também uma [versão portátil ZIP](https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-windows-x64-portable.zip).
+- **Linux AppImage:** baixe o arquivo, marque-o como executável nas propriedades ou rode chmod +x decode-cad-0.12.1-linux-x86_64.AppImage e abra-o.
+- **Linux Debian/Ubuntu:** abra o arquivo .deb com o instalador de pacotes da distribuição.
+
+Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.1](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1).
+
 
 <p align="center">
   <img src="docs/images/ui-apartment.png" alt="Decode CAD com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
@@ -32,24 +51,6 @@
   <a href="#downloads">Downloads</a> ·
   <a href="#licença-e-créditos">Licença e créditos</a>
 </p>
-
-### Downloads
-
-A versão **Decode CAD 0.12.2** está disponível para computadores **Windows x64** e **Linux x86_64**.
-
-<p align="center">
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-windows-x64.msi"><strong>⬇ Baixar para Windows (MSI)</strong></a>
-  &nbsp; · &nbsp;
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-linux-x86_64.AppImage"><strong>⬇ Baixar para Linux (AppImage)</strong></a>
-  &nbsp; · &nbsp;
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-linux-x86_64.deb"><strong>⬇ Linux (Debian/Ubuntu .deb)</strong></a>
-</p>
-
-- **Windows:** baixe e abra o arquivo .msi para instalar. Há também uma [versão portátil ZIP](https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-windows-x64-portable.zip).
-- **Linux AppImage:** baixe o arquivo, marque-o como executável nas propriedades ou rode chmod +x decode-cad-0.12.2-linux-x86_64.AppImage e abra-o.
-- **Linux Debian/Ubuntu:** abra o arquivo .deb com o instalador de pacotes da distribuição.
-
-Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.2](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.2).
 
 ## Capturas de tela
 
@@ -189,36 +190,9 @@ O Decode CAD respeita a preferência do sistema para reduzir animações. A conf
 
 Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos. A comparação do fork com o CADCraft original está em [docs/decodecad-parity.md](docs/decodecad-parity.md).
 
-## Downloads
+## Outras versões
 
-Use os botões **Windows** e **Linux** no início desta página ou abra [Releases do Decode CAD](https://github.com/Kaiqueaurelio/decodecad/releases). Cada lançamento lista os instaladores disponíveis para cada sistema. Se ainda não houver uma versão publicada, os botões mostrarão a página de lançamentos sem arquivos; acompanhe as [execuções de CI](https://github.com/Kaiqueaurelio/decodecad/actions).
-
-Os nomes de arquivos abaixo descrevem formatos de distribuição que podem ser gerados pelos workflows; confirme que o artefato existe na release antes de tentar baixá-lo.
-
-### Windows
-
-| Arquitetura | Artefato possível |
-|---|---|
-| x64 (Intel/AMD de 64 bits) | `cadcraft-<ver>-windows-x64.msi` ou `cadcraft-windows-x86_64` |
-| arm64 (Windows ARM) | Consulte os workflows de Windows ARM64 antes de distribuir |
-| x86 (32 bits) | Não anunciado como build garantido desta edição |
-
-### macOS
-
-| Versão | Artefato possível |
-|---|---|
-| Aplicativo universal | Consulte as releases e execuções de CI desta edição antes de distribuir |
-
-### Linux
-
-| Formato | Artefato possível |
-|---|---|
-| Executável x86_64 | `cadcraft-linux-x86_64` (quando publicado pela execução de build) |
-| Pacotes AppImage, Flatpak, DEB e RPM | Só indicar como disponíveis se forem publicados pelo workflow de release |
-
-### FreeBSD e navegador
-
-Consulte os workflows e as releases do fork para confirmar quais artefatos foram publicados. A presença de um workflow não significa, por si só, que exista um binário pronto para download.
+Consulte a página de [Releases do Decode CAD](https://github.com/Kaiqueaurelio/decodecad/releases) para versões futuras e arquivos adicionais.
 
 ## Desenvolvido pela Decode Analytics
 
