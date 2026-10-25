@@ -136,7 +136,7 @@ pub(super) fn spawn(mut req: Request, key: super::ListKey, window: Option<Bounds
     let cancel = Arc::new(AtomicBool::new(false));
     req.opts.cancel = Some(cancel.clone());
     let ctx = ctx.clone();
-    let spawned = std::thread::Builder::new().name("cadcraft-regen".into()).spawn(move || {
+    let spawned = std::thread::Builder::new().name("decode-cad-regen".into()).spawn(move || {
         // A panic drops `tx` unsent: the canvas sees the job as lost and builds on its own. A
         // cancelled build sends nothing either, but its job is gone and nobody is listening.
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| run(req))) {
