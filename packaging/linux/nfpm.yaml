@@ -54,6 +54,12 @@ overrides:
       - xdg-desktop-portal
 
 contents:
+  - src: ${STAGE}/usr/bin/decode-cad
+    dst: /usr/bin/decode-cad
+    file_info: { mode: 0755 }
+  - src: ${STAGE}/usr/bin/decode-cad-cli
+    dst: /usr/bin/decode-cad-cli
+    file_info: { mode: 0755 }
   - src: ${STAGE}/usr/bin/cadcraft
     dst: /usr/bin/cadcraft
     file_info: { mode: 0755 }
