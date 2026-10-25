@@ -1,6 +1,6 @@
-# CADCraft Turkish interface catalog — original translations by the CADCraft contributors.
+# The Code Craft Turkish interface catalog — original translations by the The Code Craft contributors.
 # License: MIT OR Apache-2.0 (the repository LICENSE-MIT and LICENSE-APACHE).
-# Written from CADCraft's English strings; no proprietary translations were copied.
+# Written from The Code Craft's English strings; no proprietary translations were copied.
 # Clean room: every entry is written from the plain meaning of the English label in ordinary
 # Turkish computing and technical-drawing vocabulary (Katman, Ölçülendirme, Tarama, Yuvarlatma,
 # Pah, Öteleme, Kırp, Uzat, Nesne Kenetleme, Görünüm Penceresi, Yerleşim). No other product's
@@ -49,7 +49,7 @@
 	A drawing opened from a file keeps that file's format.	Bir dosyadan açılan çizim o dosyanın biçimini korur.
 	A variable name starts with a letter and has only letters, digits and _	Değişken adı bir harfle başlar ve yalnızca harf, rakam ve _ içerir
 	About	Hakkında
-	About CADCraft	CADCraft Hakkında
+	About The Code Craft	The Code Craft Hakkında
 	Absolute	Mutlak
 	Accessibility	Erişilebilirlik
 	Add	Ekle
@@ -138,9 +138,9 @@
 	ByBlock	BloğaGöre
 	ByColor	RengeGöre
 	ByLayer	KatmanaGöre
-	CADCraft	CADCraft
-	CADCraft Help	CADCraft Yardımı
-	CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	CADCraft bu tercihleri, nesne kenetleme kiplerini ve çizim seçeneklerini kullanıcı hesabınız için saklar ve açılışta geri yükler.
+	The Code Craft	The Code Craft
+	The Code Craft Help	The Code Craft Yardımı
+	The Code Craft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	The Code Craft bu tercihleri, nesne kenetleme kiplerini ve çizim seçeneklerini kullanıcı hesabınız için saklar ve açılışta geri yükler.
 	Calibrate	Kalibre Et
 	Calibrate 3D Mouse	3B Fareyi Kalibre Et
 	Cancel	İptal
@@ -476,7 +476,7 @@
 	Hide All	Tümünü Gizle
 	Hide All Constraint Bars	Tüm Kısıtlama Çubuklarını Gizle
 	Hide All Dynamic Dimensions	Tüm Dinamik Ölçüleri Gizle
-	Hide CADCraft	CADCraft'ı Gizle
+	Hide The Code Craft	The Code Craft'ı Gizle
 	Hide Layer List	Katman Listesini Gizle
 	Hide Objects	Nesneleri Gizle
 	Hide Others	Diğerlerini Gizle
@@ -533,7 +533,7 @@
 	Jogged	Kırık
 	Jogged Linear	Kırık Doğrusal
 	Join	Birleştir
-	Join the ArtCraft Discord…	ArtCraft Discord'una katılın…
+	Join the Decode Analytics Discord…	Decode Analytics Discord'una katılın…
 	Join us on Discord	Discord'da bize katılın
 	Justify	Yasla
 	Keep an editable copy of this table in the drawing	Bu tablonun düzenlenebilir bir kopyasını çizimde tut
@@ -705,7 +705,7 @@
 	Offset	Öteleme
 	On	Açık
 	On/Off	Açık/Kapalı
-	One of the Crafting Apps by the ArtCraft team and community.	ArtCraft ekibi ve topluluğunun Crafting Apps uygulamalarından biri.
+	One of the Crafting Apps by the Decode Analytics team and community.	Decode Analytics ekibi ve topluluğunun Crafting Apps uygulamalarından biri.
 	Only in this drawing: {n}	Yalnızca bu çizimde: {n}
 	Only in {name}: {n}	Yalnızca {name} içinde: {n}
 	Open	Aç
@@ -817,7 +817,7 @@
 	Quick Select...	Hızlı Seçim...
 	QuickCalc	Hızlı Hesap
 	QuickCalc Pick	Hızlı Hesap Seçimi
-	Quit CADCraft	CADCraft'tan Çık
+	Quit The Code Craft	The Code Craft'tan Çık
 	Radius	Yarıçap
 	Raster Image	Raster Görüntü
 	Ray	Işın
