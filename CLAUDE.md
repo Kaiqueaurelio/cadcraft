@@ -40,8 +40,8 @@ People trust Decode CAD with their drawings; a crash loses their work. **This ou
   - `{"id":2,"method":"engine.execute","params":{"command":"line","params":{"points":[[0,0],[10,0]]}}}` — JSON form.
   - `{"id":3,"method":"ui.screenshot","params":{"path":"/tmp/shot.png"}}` then read the PNG.
   - Methods: `crates/ui-egui/src/control.rs`; protocol doc: `docs/control-protocol.md`.
-- **For UI work, look at the result** (screenshot, read the PNG) and compare with `plan/autocad/screenshots/`. If no frame is presented (screen locked) use `ui.render` or `cadcraft-cli`.
-- Headless: `cadcraft-cli run --sample --script 'LINE 0,0 10,10\n' --export out.png`; `cadcraft-cli info file.dxf`; `cadcraft-cli mcp`.
+- **For UI work, look at the result** (screenshot, read the PNG) and compare with `plan/autocad/screenshots/`. If no frame is presented (screen locked) use `ui.render` or `decode-cad-cli`.
+- Headless: `decode-cad-cli run --sample --script 'LINE 0,0 10,10\n' --export out.png`; `decode-cad-cli info file.dxf`; `decode-cad-cli mcp`.
 - Shell gotcha: `mv`/`cp` may be aliased interactive — use `/bin/mv -f` / `/bin/cp -f`.
 - Parallel agents: separate `CARGO_TARGET_DIR` per agent; edit only the crates you own; delete your target dir when done (disk).
 
