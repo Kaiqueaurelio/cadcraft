@@ -100,7 +100,7 @@ fn decode_icon_pixels(size: usize) -> Vec<u8> {
 }
 
 fn write_decode_ico(path: &Path) -> std::io::Result<()> {
-    let size = 256usize;
+    let size = 64usize;
     let pixels = decode_icon_pixels(size);
     let xor_len = pixels.len();
     let mask_row = size.div_ceil(32) * 4;
@@ -110,7 +110,7 @@ fn write_decode_ico(path: &Path) -> std::io::Result<()> {
     ico.extend_from_slice(&0u16.to_le_bytes());
     ico.extend_from_slice(&1u16.to_le_bytes());
     ico.extend_from_slice(&1u16.to_le_bytes());
-    ico.extend_from_slice(&[0, 0, 0, 0]); // Width/height zero denote 256x256.
+    ico.extend_from_slice(&[size as u8, size as u8, 0, 0]); // Explicit 64x64 DIB, supported by Windows resource compilers.
     ico.extend_from_slice(&[0, 0]); // Palette and reserved.
     ico.extend_from_slice(&1u16.to_le_bytes());
     ico.extend_from_slice(&32u16.to_le_bytes());
