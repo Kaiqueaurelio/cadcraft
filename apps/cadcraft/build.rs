@@ -15,7 +15,7 @@ fn main() {
     res.set("ProductName", "Decode CAD")
         .set("FileDescription", "Decode CAD — computer-aided design")
         .set("CompanyName", "Decode Analytics")
-        .set("LegalCopyright", "Copyright (c) 2026 Decode Analytics and contributors; upstream CADCraft notices retained. MIT OR Apache-2.0.")
+        .set("LegalCopyright", "Copyright (c) 2026 Decode Analytics and contributors. MIT OR Apache-2.0.")
         .set("OriginalFilename", "cadcraft.exe")
         .set("InternalName", "cadcraft");
     if let Err(e) = res.compile() {
