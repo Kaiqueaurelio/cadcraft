@@ -29,8 +29,8 @@
         DowngradeErrorMessage="A newer version of Decode CAD is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
-    <Icon Id="CadcraftIcon.ico" SourceFile="$(var.IconPath)" />
-    <Property Id="ARPPRODUCTICON" Value="CadcraftIcon.ico" />
+    <Icon Id="DecodeCadIcon.ico" SourceFile="$(var.IconPath)" />
+    <Property Id="ARPPRODUCTICON" Value="DecodeCadIcon.ico" />
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/Kaiqueaurelio/decodecad" />
     <Property Id="ARPURLUPDATEINFO" Value="https://github.com/Kaiqueaurelio/decodecad" />
     <Property Id="ARPHELPLINK" Value="https://github.com/Kaiqueaurelio/decodecad/issues" />
@@ -78,7 +78,7 @@
         <File Id="CadcraftExe" Source="$(var.BinDir)\cadcraft.exe" KeyPath="yes">
           <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="Decode CAD"
               Description="Decode CAD computer-aided design" WorkingDirectory="INSTALLFOLDER" Advertise="yes"
-              Icon="CadcraftIcon.ico" IconIndex="0" />
+              Icon="DecodeCadIcon.ico" IconIndex="0" />
         </File>
 
         <RegistryValue Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\cadcraft.exe" Value="[#CadcraftExe]" Type="string" />
@@ -98,7 +98,7 @@
       <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="1CB82EE7-B6B7-4D4F-B63B-E6818492528A"
           Condition="DESKTOPSHORTCUT = &quot;1&quot;">
         <Shortcut Id="DesktopShortcut" Name="Decode CAD" Description="Decode CAD computer-aided design"
-            Target="[INSTALLFOLDER]cadcraft.exe" WorkingDirectory="INSTALLFOLDER" Icon="CadcraftIcon.ico" IconIndex="0" />
+            Target="[INSTALLFOLDER]cadcraft.exe" WorkingDirectory="INSTALLFOLDER" Icon="DecodeCadIcon.ico" IconIndex="0" />
         <RegistryValue Root="HKCU" Key="Software\Decode Analytics\Decode CAD" Name="DesktopShortcut"
             Value="1" Type="string" KeyPath="yes" />
       </Component>
