@@ -6,14 +6,14 @@ O **Decode CAD** é uma edição de CAD mantida pela **Decode Analytics**. Este 
 
 A compilação multiplataforma e a estabilidade devem ser avaliadas pelas execuções de CI e pelos testes correspondentes. Uma compilação bem-sucedida, por si só, não equivale a uma versão estável nem garante testes manuais em todos os sistemas operacionais.
 
-Consulte [GitHub Actions](https://github.com/Kaiqueaurelio/cadcraft/actions) para acompanhar builds e testes recentes. Artefatos podem ser temporários; confira a execução e o commit antes de usar qualquer binário.
+Consulte [GitHub Actions](https://github.com/Kaiqueaurelio/decodecad/actions) para acompanhar builds e testes recentes. Artefatos podem ser temporários; confira a execução e o commit antes de usar qualquer binário.
 
 ## Compilar localmente
 
 Requer Rust/Cargo compatíveis com a versão declarada em `Cargo.toml`, além das dependências de sistema necessárias à plataforma.
 
 ```bash
-git clone https://github.com/Kaiqueaurelio/cadcraft.git
+git clone https://github.com/Kaiqueaurelio/decodecad.git
 cd cadcraft
 cargo build --locked --release -p cadcraft
 ```

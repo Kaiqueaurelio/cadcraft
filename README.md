@@ -84,7 +84,7 @@ O Decode CAD está em desenvolvimento. Consulte [ROADMAP.md](ROADMAP.md) para ve
 As versões para computador e navegador exigem Rust 1.95 ou posterior. A versão mínima declarada para o núcleo do projeto continua sendo Rust 1.90.
 
 ```sh
-git clone https://github.com/Kaiqueaurelio/cadcraft.git
+git clone https://github.com/Kaiqueaurelio/decodecad.git
 cd cadcraft
 cargo run --release -p cadcraft -- --sample
 ```
@@ -177,7 +177,7 @@ Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de comp
 
 ## Downloads
 
-Consulte a seção [Releases do Decode CAD](https://github.com/Kaiqueaurelio/cadcraft/releases) para verificar os binários publicados por este fork. Se não houver uma versão publicada, use as instruções de compilação local acima ou confira as [execuções de CI](https://github.com/Kaiqueaurelio/cadcraft/actions). Não use builds de outro repositório como se fossem builds oficiais do Decode CAD.
+Consulte a seção [Releases do Decode CAD](https://github.com/Kaiqueaurelio/decodecad/releases) para verificar os binários publicados por este fork. Se não houver uma versão publicada, use as instruções de compilação local acima ou confira as [execuções de CI](https://github.com/Kaiqueaurelio/decodecad/actions). Não use builds de outro repositório como se fossem builds oficiais do Decode CAD.
 
 Os nomes de arquivos abaixo descrevem formatos de distribuição que podem ser gerados pelos workflows; confirme que o artefato existe na release antes de tentar baixá-lo.
 
