@@ -12,7 +12,7 @@
   </developer>
   <description>
     <p>
-      Decode CAD is an open-source computer-aided design and drafting application maintained by
+      Decode CAD is an open-source computer-aided design and drafting application developed and maintained by
       Decode Analytics. It provides a familiar command line, object snaps, layers, dimensions,
       hatches and blocks. It opens and saves DXF and DWG drawings, exports SVG and PNG, and supports
       automation through its command-line and MCP interfaces.
