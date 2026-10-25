@@ -144,25 +144,15 @@ const BUILTIN: [(&str, PlotOutput, &str); 3] = [
 
 /// Historical names remain accepted when opening drawings or saved page setups made by earlier
 /// versions, but the current UI only displays Decode CAD names.
-const LEGACY_BUILTIN_NAMES: [(&str, PlotOutput); 3] = [
-    ("Decode CAD PDF", PlotOutput::Pdf),
-    ("Decode CAD PNG", PlotOutput::Png),
-    ("Decode CAD SVG", PlotOutput::Svg),
-];
+const LEGACY_BUILTIN_NAMES: [(&str, PlotOutput); 3] =
+    [("CADCraft PDF", PlotOutput::Pdf), ("CADCraft PNG", PlotOutput::Png), ("CADCraft SVG", PlotOutput::Svg)];
 
 fn builtin_spec(name: &str) -> Option<(&'static str, PlotOutput, &'static str)> {
     let name = name.trim();
-    BUILTIN
-        .iter()
-        .find(|(n, _, _)| n.eq_ignore_ascii_case(name))
-        .copied()
-        .or_else(|| {
-            let output = LEGACY_BUILTIN_NAMES
-                .iter()
-                .find(|(n, _)| n.eq_ignore_ascii_case(name))
-                .map(|(_, output)| *output)?;
-            BUILTIN.iter().find(|(_, o, _)| *o == output).copied()
-        })
+    BUILTIN.iter().find(|(n, _, _)| n.eq_ignore_ascii_case(name)).copied().or_else(|| {
+        let output = LEGACY_BUILTIN_NAMES.iter().find(|(n, _)| n.eq_ignore_ascii_case(name)).map(|(_, output)| *output)?;
+        BUILTIN.iter().find(|(_, o, _)| *o == output).copied()
+    })
 }
 
 /// A page setup's "no device" name.
