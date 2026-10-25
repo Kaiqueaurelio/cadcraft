@@ -24,7 +24,7 @@ Generated-in-code assets are original and have no file to list:
 | Asset | Author | Source | Licence | Notes |
 |---|---|---|---|---|
 | `assets/app-icon/decode-cad.svg` | Decode Analytics | Original vector mark created for the Decode CAD rebrand (2026-10-25) | MIT OR Apache-2.0 | Used by the About dialog, web loading screen, Linux packages and generated platform icons |
-| `packaging/macos/dmg/background.svg` | @XusBadia | original work for this repository (2026-10-08), "Decode CAD macOS DMG window background"; references the original Decode CAD mark (`assets/app-icon/decode-cad.svg`); text is outlined Inter / JetBrains Mono glyph paths (OFL fonts the project already uses); no third-party material modified | MIT OR Apache-2.0 (same as the code: `LICENSE-MIT`, `LICENSE-APACHE`) | Finder window background of the macOS DMG; `packaging/macos/dmg/generate.py` renders it to `background.tiff` (see `packaging/macos/dmg/README.md`) |
+| `packaging/macos/dmg/background.svg` | Decode Analytics | Original Decode CAD installer background created for the rebrand (2026-10-25) | MIT OR Apache-2.0 | Source artwork rendered by `packaging/macos/dmg/generate.py` for the macOS installer |
 | `examples/apartment.dxf` | CADCraft contributors | sample drawing made with cadcraft-cli commands | MIT OR Apache-2.0 | Original |
 | `docs/brand/artcraft-logo-white.png` | ArtCraft Team | storytold/craftrules `assets/brand/` | ArtCraft brand terms (`docs/brand/LICENSE-brand.txt`) | Trademark, not open source |
 | `docs/brand/artcraft-logo-white.svg` | ArtCraft Team | storytold/craftrules `assets/brand/` | ArtCraft brand terms (`docs/brand/LICENSE-brand.txt`) | Trademark, not open source |
