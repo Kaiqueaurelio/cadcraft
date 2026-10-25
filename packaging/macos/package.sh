@@ -144,6 +144,8 @@ fi
 echo "==> building $DMG"
 STAGE="$WORK/dmg"
 mkdir -p "$STAGE"
+# Never ship a stale disk image background from the upstream product identity.
+python3 "$HERE/dmg/generate.py"
 ditto "$APP" "$STAGE/Decode CAD.app"
 ln -s /Applications "$STAGE/Applications"
 # Finder window layout: background, icon size and positions (packaging/macos/dmg/README.md).
