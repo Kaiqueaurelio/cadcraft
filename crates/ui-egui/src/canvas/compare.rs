@@ -26,7 +26,7 @@ struct Cache {
 }
 
 fn id() -> egui::Id {
-    egui::Id::new("cadcraft-compare-overlay")
+    egui::Id::new("decode-cad-compare-overlay")
 }
 
 /// Draw the comparison over the canvas when it was made for the drawing and tab shown.
