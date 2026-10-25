@@ -30,7 +30,7 @@ Generated-in-code assets are original and have no file to list:
 | Asset | Author | Source | Licence | Notes |
 |---|---|---|---|---|
 | `crates/ui-egui/src/i18n/uk.tsv` | @dmatviichuk | Original Ukrainian translations of Decode CAD interface strings | MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`) | No proprietary localization resources copied |
-| `crates/ui-egui/src/i18n/de.tsv` | the CADCraft contributors | Original German translations of Decode CAD interface strings | MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`) | No proprietary localization resources copied |
+| `crates/ui-egui/src/i18n/de.tsv` | Original project contributors | Original German translations of Decode CAD interface strings | MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`) | No proprietary localization resources copied |
 | `crates/ui-egui/src/i18n/es.tsv` | @PedroGuille | Original Spanish translations of Decode CAD interface strings | MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`) | No proprietary localization resources copied |
 | `crates/ui-egui/src/i18n/pt_br.tsv` | @WladmirJunior | Original Brazilian Portuguese translations of Decode CAD interface strings | MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`) | No proprietary localization resources copied |
 | `crates/ui-egui/src/i18n/cs.tsv` | @Losminek (AI-assisted) | Original Czech translations of Decode CAD interface strings | MIT OR Apache-2.0 (`LICENSE-MIT`, `LICENSE-APACHE`) | No proprietary localization resources copied |
