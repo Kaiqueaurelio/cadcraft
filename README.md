@@ -35,21 +35,21 @@
 
 ### Downloads
 
-A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x64** e **Linux x86_64**.
+A versão **Decode CAD 0.12.2** está disponível para computadores **Windows x64** e **Linux x86_64**.
 
 <p align="center">
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-windows-x64.msi"><strong>⬇ Baixar para Windows (MSI)</strong></a>
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-windows-x64.msi"><strong>⬇ Baixar para Windows (MSI)</strong></a>
   &nbsp; · &nbsp;
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-linux-x86_64.AppImage"><strong>⬇ Baixar para Linux (AppImage)</strong></a>
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-linux-x86_64.AppImage"><strong>⬇ Baixar para Linux (AppImage)</strong></a>
   &nbsp; · &nbsp;
-  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-linux-x86_64.deb"><strong>⬇ Linux (Debian/Ubuntu .deb)</strong></a>
+  <a href="https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-linux-x86_64.deb"><strong>⬇ Linux (Debian/Ubuntu .deb)</strong></a>
 </p>
 
-- **Windows:** baixe e abra o arquivo .msi para instalar. Há também uma [versão portátil ZIP](https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.1/decode-cad-0.12.1-windows-x64-portable.zip).
-- **Linux AppImage:** baixe o arquivo, marque-o como executável nas propriedades ou rode chmod +x decode-cad-0.12.1-linux-x86_64.AppImage e abra-o.
+- **Windows:** baixe e abra o arquivo .msi para instalar. Há também uma [versão portátil ZIP](https://github.com/Kaiqueaurelio/decodecad/releases/download/v0.12.2/decode-cad-0.12.2-windows-x64-portable.zip).
+- **Linux AppImage:** baixe o arquivo, marque-o como executável nas propriedades ou rode chmod +x decode-cad-0.12.2-linux-x86_64.AppImage e abra-o.
 - **Linux Debian/Ubuntu:** abra o arquivo .deb com o instalador de pacotes da distribuição.
 
-Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.1](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1).
+Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.2](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.2).
 
 ## Capturas de tela
 
