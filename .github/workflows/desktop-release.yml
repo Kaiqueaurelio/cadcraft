@@ -180,7 +180,15 @@ jobs:
           test -n "$(find release-assets/windows -type f -name '*.msi' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.deb' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.AppImage' -print -quit)"
-          gh release create "$TAG" release-assets/windows/* release-assets/linux/* \
-            --repo "$REPOSITORY" \
-            --title "Decode CAD ${TAG#v}" \
-            --generate-notes
+          TITLE="Decode CAD ${TAG#v}"
+          ASSETS=(release-assets/windows/* release-assets/linux/*)
+          if gh release view "$TAG" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            # A release created in the GitHub UI already created the tag; attach the build outputs.
+            gh release upload "$TAG" "${ASSETS[@]}" --repo "$REPOSITORY" --clobber
+            gh release edit "$TAG" --repo "$REPOSITORY" --title "$TITLE"
+          else
+            gh release create "$TAG" "${ASSETS[@]}" \
+              --repo "$REPOSITORY" \
+              --title "$TITLE" \
+              --generate-notes
+          fi
