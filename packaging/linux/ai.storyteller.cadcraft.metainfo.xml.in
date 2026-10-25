@@ -7,22 +7,23 @@
   <project_license>MIT OR Apache-2.0</project_license>
   <name>Decode CAD</name>
   <summary>Draft, dimension and plot 2D drawings</summary>
-  <developer id="ai.storyteller">
-    <name>Learning Machines LLC</name>
+  <developer id="io.github.kaiqueaurelio">
+    <name>Decode Analytics</name>
   </developer>
   <description>
     <p>
-      CADCraft is an open-source computer-aided design and drafting application with a familiar
-      command line, object snaps, layers, dimensions, hatches and blocks. It opens and saves DXF
-      and DWG drawings, exports SVG and PNG, and can be driven by AI agents over MCP.
+      Decode CAD is an open-source computer-aided design and drafting application maintained by
+      Decode Analytics. It provides a familiar command line, object snaps, layers, dimensions,
+      hatches and blocks. It opens and saves DXF and DWG drawings, exports SVG and PNG, and supports
+      automation through its command-line and MCP interfaces.
     </p>
   </description>
   <launchable type="desktop-id">ai.storyteller.cadcraft.desktop</launchable>
   <icon type="stock">ai.storyteller.cadcraft</icon>
   <!-- Only url types known to appstream 0.15 (Ubuntu 22.04, where CI validates): no vcs-browser. -->
-  <url type="homepage">https://github.com/Kaiqueaurelio/cadcraft</url>
-  <url type="bugtracker">https://github.com/Kaiqueaurelio/cadcraft/issues</url>
-  <url type="help">https://github.com/Kaiqueaurelio/cadcraft</url>
+  <url type="homepage">https://github.com/Kaiqueaurelio/decodecad</url>
+  <url type="bugtracker">https://github.com/Kaiqueaurelio/decodecad/issues</url>
+  <url type="help">https://github.com/Kaiqueaurelio/decodecad</url>
   <categories>
     <category>Graphics</category>
     <category>Engineering</category>
@@ -36,7 +37,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>A mechanical part drawing with dimensions, hatching and layers</caption>
-      <image>https://raw.githubusercontent.com/storytold/cadcraft/main/docs/images/ui-bracket.png</image>
+      <image>https://raw.githubusercontent.com/Kaiqueaurelio/decodecad/main/docs/images/ui-bracket.png</image>
     </screenshot>
   </screenshots>
   <branding>

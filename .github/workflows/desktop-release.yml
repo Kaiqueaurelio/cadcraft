@@ -8,7 +8,14 @@ on:
         required: false
         type: string
         default: ""
+      publish_release:
+        description: "Publish a public GitHub Release after both package builds succeed"
+        required: false
+        type: boolean
+        default: false
   push:
+    branches:
+      - main
     tags:
       - "v*"
   pull_request:
@@ -26,11 +33,45 @@ permissions:
 
 concurrency:
   group: desktop-release-${{ github.ref }}
-  cancel-in-progress: false
+  # New commits supersede stale package builds on the same branch/tag.
+  cancel-in-progress: true
 
 jobs:
+  release_preflight:
+    name: Check release version
+    runs-on: ubuntu-latest
+    outputs:
+      should_publish: ${{ steps.inspect.outputs.should_publish }}
+      version: ${{ steps.inspect.outputs.version }}
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect release version bump
+        id: inspect
+        shell: bash
+        env:
+          PREVIOUS_SHA: ${{ github.event.before || '' }}
+        run: |
+          set -euo pipefail
+          CURRENT_VERSION="$(awk -F '"' '/^version = / {print $2; exit}' Cargo.toml)"
+          SHOULD_PUBLISH=false
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" && -n "$PREVIOUS_SHA" && "$PREVIOUS_SHA" != "0000000000000000000000000000000000000000" ]]; then
+            PREVIOUS_VERSION="$(git show "${PREVIOUS_SHA}:Cargo.toml" | awk -F '"' '/^version = / {print $2; exit}')"
+            if [[ -n "$PREVIOUS_VERSION" && "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then
+              SHOULD_PUBLISH=true
+            fi
+          fi
+          [[ -n "$CURRENT_VERSION" ]] || { echo 'Could not determine package version' >&2; exit 1; }
+          echo "version=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "should_publish=$SHOULD_PUBLISH" >> "$GITHUB_OUTPUT"
+
   windows:
     name: Windows x64 installer
+    if: github.event_name == 'pull_request' || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.release_preflight.outputs.should_publish == 'true')
+    needs: [release_preflight]
     runs-on: windows-latest
     timeout-minutes: 90
     steps:
@@ -87,6 +128,8 @@ jobs:
 
   linux:
     name: Linux x86_64 packages
+    if: github.event_name == 'pull_request' || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.release_preflight.outputs.should_publish == 'true')
+    needs: [release_preflight]
     runs-on: ubuntu-22.04
     timeout-minutes: 90
     steps:
@@ -136,10 +179,11 @@ jobs:
             export CADCRAFT_BUILD_DATE
           fi
           packaging/linux/package.sh --formats "appimage deb tar"
-          test -s dist/release/cadcraft-*-linux-x86_64.deb
-          test -s dist/release/cadcraft-*-linux-x86_64.AppImage
+          test -s dist/release/decode-cad-*-linux-x86_64.deb
+          test -s dist/release/decode-cad-*-linux-x86_64.AppImage
           chmod +x dist/release/*.AppImage
-          sha256sum dist/release/* > dist/release/SHA256SUMS
+          rm -f dist/release/SHA256SUMS
+          (cd dist/release && sha256sum -- * > SHA256SUMS)
 
       - name: Upload Linux packages
         uses: actions/upload-artifact@v4
@@ -151,12 +195,15 @@ jobs:
 
   publish:
     name: Publish GitHub Release
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: [windows, linux]
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish_release == true) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.release_preflight.outputs.should_publish == 'true')
+    needs: [windows, linux, release_preflight]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - name: Check out source to resolve release version
+        uses: actions/checkout@v4
+
       - name: Download Windows packages
         uses: actions/download-artifact@v4
         with:
@@ -172,15 +219,38 @@ jobs:
       - name: Create release with installers
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          REQUESTED_VERSION: ${{ inputs.version }}
+          PUSHED_VERSION: ${{ needs.release_preflight.outputs.version }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
+          TAG="$RELEASE_TAG"
+          if [[ -z "$TAG" ]]; then
+            VERSION="$REQUESTED_VERSION"
+            if [[ -z "$VERSION" ]]; then
+              VERSION="$PUSHED_VERSION"
+            fi
+            if [[ -z "$VERSION" ]]; then
+              VERSION="$(awk -F '\"' '/^version = / {print $2; exit}' Cargo.toml)"
+            fi
+            [[ -n "$VERSION" ]] || { echo 'Could not determine release version' >&2; exit 1; }
+            TAG="v$VERSION"
+          fi
           find release-assets -maxdepth 3 -type f -print
           test -n "$(find release-assets/windows -type f -name '*.msi' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.deb' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.AppImage' -print -quit)"
-          gh release create "$TAG" release-assets/windows/* release-assets/linux/* \
-            --repo "$REPOSITORY" \
-            --title "Decode CAD ${TAG#v}" \
-            --generate-notes
+          TITLE="Decode CAD ${TAG#v}"
+          ASSETS=(release-assets/windows/* release-assets/linux/*)
+          if gh release view "$TAG" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            # A release created in the GitHub UI already created the tag; attach the build outputs.
+            gh release upload "$TAG" "${ASSETS[@]}" --repo "$REPOSITORY" --clobber
+            gh release edit "$TAG" --repo "$REPOSITORY" --title "$TITLE"
+          else
+            gh release create "$TAG" "${ASSETS[@]}" \
+              --repo "$REPOSITORY" \
+              --title "$TITLE" \
+              --target "$GITHUB_SHA" \
+              --generate-notes
+          fi
