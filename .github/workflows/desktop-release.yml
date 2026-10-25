@@ -51,12 +51,14 @@ jobs:
       - name: Detect release version bump
         id: inspect
         shell: bash
+        env:
+          PREVIOUS_SHA: ${{ github.event.before || '' }}
         run: |
           set -euo pipefail
           CURRENT_VERSION="$(awk -F '"' '/^version = / {print $2; exit}' Cargo.toml)"
           SHOULD_PUBLISH=false
-          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" && "$GITHUB_EVENT_BEFORE" != "0000000000000000000000000000000000000000" ]]; then
-            PREVIOUS_VERSION="$(git show "${GITHUB_EVENT_BEFORE}:Cargo.toml" | awk -F '"' '/^version = / {print $2; exit}')"
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" && -n "$PREVIOUS_SHA" && "$PREVIOUS_SHA" != "0000000000000000000000000000000000000000" ]]; then
+            PREVIOUS_VERSION="$(git show "${PREVIOUS_SHA}:Cargo.toml" | awk -F '"' '/^version = / {print $2; exit}')"
             if [[ -n "$PREVIOUS_VERSION" && "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then
               SHOULD_PUBLISH=true
             fi
