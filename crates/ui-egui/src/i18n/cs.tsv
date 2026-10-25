@@ -111,7 +111,7 @@
 	ByBlock	Dle bloku
 	ByColor	Dle barvy
 	ByLayer	Dle hladiny
-	CADCraft Help	Nápověda CADCraft
+	Decode CAD Help	Nápověda Decode CAD
 	Cancel	Zrušit
 	Cartesian (x, y)	Kartézské (x, y)
 	Center	Střed
@@ -693,7 +693,7 @@
 	Quick Select...	Rychlý výběr...
 	QuickCalc	Rychlá kalkulačka
 	QuickCalc Pick	Výběr pro rychlou kalkulačku
-	Quit CADCraft	Ukončit CADCraft
+	Quit Decode CAD	Ukončit Decode CAD
 	Radius	Poloměr
 	Raster Image	Rastrový obrázek
 	Ray	Polopřímka
@@ -925,7 +925,7 @@
 	Specify insertion point	Určete bod vložení
 	A drawing opened from a file keeps that file's format.	Výkres otevřený ze souboru si zachová formát tohoto souboru.
 	An array that would create more objects than this is refused.	Pole překračující tento počet objektů bude odmítnuto.
-	CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	CADCraft ukládá tyto předvolby, režimy uchopení objektu a přepínače kreslení pro váš uživatelský účet a obnovuje je při spuštění.
+	Decode CAD keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	Decode CAD ukládá tyto předvolby, režimy uchopení objektu a přepínače kreslení pro váš uživatelský účet a obnovuje je při spuštění.
 	Changes apply at once and are kept for next time.	Změny se projeví okamžitě a uloží se pro příště.
 	Command line history	Historie příkazového řádku
 	Copy as JSON	Kopírovat jako JSON
@@ -1173,7 +1173,7 @@
 @plural	{n} contributor	{n} přispěvatel|{n} přispěvatelé|{n} přispěvatelů
 	Drawing as bytes	Výkres jako bajty
 	Services	Služby
-	Hide CADCraft	Skrýt CADCraft
+	Hide Decode CAD	Skrýt Decode CAD
 	Hide Others	Skrýt ostatní
 	Accessibility	Zpřístupnění
 	Show System Cursor	Zobrazit systémový kurzor
@@ -1207,7 +1207,7 @@
 	X	X
 	Y	Y
 	B	B
-	CADCraft	CADCraft
+	Decode CAD	Decode CAD
 	More toolbar commands	Další příkazy panelu nástrojů
 menu	View	Zobrazení
 menu	Draw	Kreslení
