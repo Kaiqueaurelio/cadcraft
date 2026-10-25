@@ -39,7 +39,7 @@ case "$ARCH" in
   aarch64 | arm64) ARCH=aarch64; DEB_ARCH=arm64 ;;
   *) echo "unsupported architecture $ARCH" >&2; exit 2 ;;
 esac
-export CADCRAFT_MAINTAINER="${CADCRAFT_MAINTAINER:-CADCraft maintainers <cadcraft@storyteller.ai>}"
+export CADCRAFT_MAINTAINER="${CADCRAFT_MAINTAINER:-Decode Analytics <decoanalytics@outlook.com.br>}"
 BASENAME="cadcraft-$VERSION-linux-$ARCH"
 
 echo "==> CADCraft $VERSION for Linux $ARCH ($FORMATS)"
