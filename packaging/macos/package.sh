@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build, sign and (optionally) notarize the macOS release artifacts:
 #
-#   $DIST/cadcraft-<version>-macos-<arch>.dmg          CADCraft.app on a drag-to-Applications DMG
+#   $DIST/cadcraft-<version>-macos-<arch>.dmg          Decode CAD.app on a drag-to-Applications DMG
 #   $DIST/cadcraft-cli-<version>-macos-<arch>.zip      the headless CLI
 #
 # Usage: packaging/macos/package.sh [--arch universal|aarch64|x86_64] [--skip-build]
@@ -39,9 +39,9 @@ export MACOSX_DEPLOYMENT_TARGET=11.0
 IDENTITY="${MACOS_SIGN_IDENTITY:--}"
 SHORT_VERSION="${VERSION%%-*}"
 WORK="$CARGO_TARGET_DIR/macos-package"
-APP="$WORK/CADCraft.app"
-DMG="$DIST/cadcraft-$VERSION-macos-$ARCH.dmg"
-CLI_ZIP="$DIST/cadcraft-cli-$VERSION-macos-$ARCH.zip"
+APP="$WORK/Decode CAD.app"
+DMG="$DIST/decode-cad-$VERSION-macos-$ARCH.dmg"
+CLI_ZIP="$DIST/decode-cad-cli-$VERSION-macos-$ARCH.zip"
 
 NOTARIZE=0
 if [[ "$IDENTITY" = "-" ]]; then
@@ -102,7 +102,7 @@ echo "==> assembling $APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 # Executable and icon carry the display name (CFBundleExecutable / CFBundleIconFile).
 cp "$WORK/bin/cadcraft" "$APP/Contents/MacOS/CADCraft"
-cp "$ROOT/assets/app-icon/cadcraft.icns" "$APP/Contents/Resources/CADCraft.icns"
+cp "$ROOT/assets/app-icon/cadcraft.icns" "$APP/Contents/Resources/DecodeCAD.icns"
 # Licences of the embedded craft-fonts fonts (only when built with CRAFT_FONTS_DIR).
 copy_font_licences "$APP/Contents/Resources"
 sed -e "s/@VERSION@/$VERSION/g" -e "s/@SHORT_VERSION@/$SHORT_VERSION/g" \
@@ -118,7 +118,7 @@ sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP"
 codesign --verify --strict --deep --verbose=2 "$APP"
 
 if [[ "$NOTARIZE" = 1 ]]; then
-  ditto -c -k --keepParent "$APP" "$WORK/CADCraft-notarize.zip"
+  ditto -c -k --keepParent "$APP" "$WORK/DecodeCAD-notarize.zip"
   notarize "$WORK/CADCraft-notarize.zip"
   xcrun stapler staple "$APP"
   xcrun stapler validate "$APP"
@@ -153,11 +153,11 @@ fi
 
 # ---- CLI ---------------------------------------------------------------------------------------
 echo "==> building $CLI_ZIP"
-CLI_DIR="$WORK/cadcraft-cli-$VERSION-macos-$ARCH"
+CLI_DIR="$WORK/decode-cad-cli-$VERSION-macos-$ARCH"
 mkdir -p "$CLI_DIR"
-cp "$WORK/bin/cadcraft-cli" "$CLI_DIR/"
+cp "$WORK/bin/cadcraft-cli" "$CLI_DIR/decode-cad-cli"
 copy_docs "$CLI_DIR"
-sign --options runtime "$CLI_DIR/cadcraft-cli"
+sign --options runtime "$CLI_DIR/decode-cad-cli"
 codesign --verify --strict --verbose=2 "$CLI_DIR/cadcraft-cli"
 rm -f "$CLI_ZIP"
 ditto -c -k --keepParent "$CLI_DIR" "$CLI_ZIP"
