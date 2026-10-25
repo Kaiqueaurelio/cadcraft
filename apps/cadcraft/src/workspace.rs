@@ -25,9 +25,9 @@ fn config_dir_from(platform: &str, get: impl Fn(&str) -> Option<OsString>) -> Op
     }
     let nonempty = |key| get(key).filter(|value| !value.is_empty()).map(PathBuf::from);
     match platform {
-        "macos" => nonempty("HOME").map(|home| home.join("Library/Application Support/Decode CAD")),
-        "windows" => nonempty("APPDATA").map(|root| root.join("Decode CAD")),
-        _ => nonempty("XDG_CONFIG_HOME").map(|root| root.join("decode-cad")).or_else(|| nonempty("HOME").map(|home| home.join(".config/decode-cad"))),
+        "macos" => nonempty("HOME").map(|home| home.join("Library/Application Support/CADCraft")),
+        "windows" => nonempty("APPDATA").map(|root| root.join("CADCraft")),
+        _ => nonempty("XDG_CONFIG_HOME").map(|root| root.join("cadcraft")).or_else(|| nonempty("HOME").map(|home| home.join(".config/cadcraft"))),
     }
 }
 
