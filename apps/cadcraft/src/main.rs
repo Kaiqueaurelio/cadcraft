@@ -173,7 +173,7 @@ fn filters_for_save(name: &str) -> [(&'static str, &'static str); 6] {
     filters
 }
 
-/// The per-user settings directory (it holds `logs/` and `autosave/`): `DECODE_CAD_CONFIG_DIR` if set, else
+/// The per-user settings directory reuses the existing platform folder to preserve preferences; `DECODE_CAD_CONFIG_DIR` (or legacy `CADCRAFT_CONFIG_DIR`) overrides it; otherwise
 /// `$XDG_CONFIG_HOME/cadcraft` or `~/.config/cadcraft` on Linux and the BSDs,
 /// `~/Library/Application Support/Decode CAD` on macOS, `%APPDATA%\CADCraft` on Windows.
 fn config_dir() -> Option<std::path::PathBuf> {
@@ -188,12 +188,12 @@ fn config_dir_from(var: impl Fn(&str) -> Option<std::ffi::OsString>) -> Option<s
         return Some(dir);
     }
     if cfg!(target_os = "macos") {
-        set("HOME").map(|h| h.join("Library/Application Support/Decode CAD"))
+        set("HOME").map(|h| h.join("Library/Application Support/CADCraft"))
     } else if cfg!(windows) {
-        set("APPDATA").map(|a| a.join("Decode CAD"))
+        set("APPDATA").map(|a| a.join("CADCraft"))
     } else {
         // The XDG spec ignores a relative XDG_CONFIG_HOME.
-        set("XDG_CONFIG_HOME").filter(|p| p.is_absolute()).or_else(|| set("HOME").map(|h| h.join(".config"))).map(|c| c.join("decode-cad"))
+        set("XDG_CONFIG_HOME").filter(|p| p.is_absolute()).or_else(|| set("HOME").map(|h| h.join(".config"))).map(|c| c.join("cadcraft"))
     }
 }
 
@@ -583,7 +583,7 @@ mod tests {
     #[cfg(target_os = "macos")]
     #[test]
     fn macos_uses_application_support() {
-        assert_eq!(config_dir_from(env(&[("HOME", "/Users/u")])), Some(PathBuf::from("/Users/u/Library/Application Support/Decode CAD")));
+        assert_eq!(config_dir_from(env(&[("HOME", "/Users/u")])), Some(PathBuf::from("/Users/u/Library/Application Support/CADCraft")));
     }
 
     #[cfg(windows)]
@@ -591,7 +591,7 @@ mod tests {
     fn windows_uses_appdata() {
         assert_eq!(
             config_dir_from(env(&[("APPDATA", "C:\\Users\\u\\AppData\\Roaming")])),
-            Some(PathBuf::from("C:\\Users\\u\\AppData\\Roaming").join("Decode CAD"))
+            Some(PathBuf::from("C:\\Users\\u\\AppData\\Roaming").join("CADCraft"))
         );
     }
 
