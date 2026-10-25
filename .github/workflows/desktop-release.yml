@@ -111,7 +111,8 @@ jobs:
       - name: Install nfpm
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version: "1.26.4"
+
       - name: Install nfpm package builder
         run: |
           go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.47.0
@@ -132,6 +133,7 @@ jobs:
           fi
           if [[ -z "$CADCRAFT_BUILD_DATE" || "$CADCRAFT_BUILD_DATE" == "null" ]]; then
             CADCRAFT_BUILD_DATE="$(date -u +%Y-%m-%d)"
+            export CADCRAFT_BUILD_DATE
           fi
           packaging/linux/package.sh --formats "appimage deb tar"
           test -s dist/release/cadcraft-*-linux-x86_64.deb
@@ -174,7 +176,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          find release-assets -type f -maxdepth 3 -print
+          find release-assets -maxdepth 3 -type f -print
           test -n "$(find release-assets/windows -type f -name '*.msi' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.deb' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.AppImage' -print -quit)"
