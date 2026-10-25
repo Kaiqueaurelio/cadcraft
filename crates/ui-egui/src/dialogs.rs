@@ -8,8 +8,6 @@ use serde_json::json;
 use crate::CadApp;
 use crate::theme::Tokens;
 
-const ABOUT_LOGO_PNG: &[u8] = include_bytes!("../../../assets/app-icon/decode-cad-logo.png");
-
 pub fn show(app: &mut CadApp, ctx: &egui::Context) {
     crate::mtext_editor::show(app, ctx);
     crate::quick::quick_properties(app, ctx);
@@ -339,22 +337,8 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 1 => crate::credits::contributors_ui(ui),
                 2 => crate::credits::models_ui(ui),
                 _ => {
-                    let logo_id = egui::Id::new("decode_cad_about_logo");
-                    let mut logo = ctx.data_mut(|data| data.get_temp::<egui::TextureHandle>(logo_id));
-                    if logo.is_none()
-                        && let Ok(decoded) = image::load_from_memory(ABOUT_LOGO_PNG)
-                    {
-                        let rgba = decoded.to_rgba8();
-                        let size = [rgba.width() as usize, rgba.height() as usize];
-                        let texture = ctx.load_texture(
-                            "decode-cad-about-logo",
-                            egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw()),
-                            egui::TextureOptions::LINEAR,
-                        );
-                        ctx.data_mut(|data| data.insert_temp(logo_id, texture.clone()));
-                        logo = Some(texture);
-                    }
                     ui.horizontal(|ui| {
+                        paint_decode_logo(ui, 104.0);
                         if let Some(logo) = &logo {
                             ui.add(egui::Image::new(logo).fit_to_exact_size(vec2(104.0, 104.0)));
                         }
@@ -375,6 +359,33 @@ fn about(ctx: &egui::Context, open: &mut bool) {
         });
 }
 
+fn paint_decode_logo(ui: &mut egui::Ui, size: f32) {
+    use egui::{Color32, Pos2, Rect, Stroke, StrokeKind, pos2, vec2};
+    let (rect, _) = ui.allocate_exact_size(vec2(size, size), egui::Sense::hover());
+    let painter = ui.painter();
+    painter.rect_filled(rect, size * 0.18, Color32::from_rgb(14, 24, 42));
+    painter.rect_stroke(rect, size * 0.18, Stroke::new(size * 0.018, Color32::from_rgb(43, 65, 94)), StrokeKind::Inside);
+    let point = |x: f32, y: f32| pos2(rect.center().x + size * x, rect.center().y + size * y);
+    let blue = Stroke::new(size * 0.035, Color32::from_rgb(56, 137, 255));
+    let cyan = Stroke::new(size * 0.025, Color32::from_rgb(43, 220, 220));
+    let cube = [(-0.30,-0.14), (0.0,-0.31), (0.30,-0.14), (0.30,0.17), (0.0,0.34), (-0.30,0.17), (-0.30,-0.14)];
+    for segment in cube.windows(2) {
+        painter.line_segment([point(segment[0].0, segment[0].1), point(segment[1].0, segment[1].1)], blue);
+    }
+    painter.line_segment([point(0.0,-0.31), point(0.0,0.0)], cyan);
+    painter.line_segment([point(-0.30,0.17), point(0.0,0.0)], cyan);
+    painter.line_segment([point(0.30,0.17), point(0.0,0.0)], cyan);
+    let white = Stroke::new(size * 0.034, Color32::from_rgb(244, 248, 255));
+    painter.line_segment([point(-0.105,-0.155), point(-0.105,0.155)], white);
+    let arc = [
+      point(-0.105,-0.155), point(-0.01,-0.155), point(0.075,-0.105),
+      point(0.105,0.0), point(0.075,0.105), point(-0.01,0.155), point(-0.105,0.155)
+    ];
+    for segment in arc.windows(2) { painter.line_segment([segment[0], segment[1]], white); }
+    painter.line_segment([point(0.15,-0.22), point(0.23,-0.265)], Stroke::new(size * 0.028, Color32::from_rgb(255, 166, 74)));
+    let _ = Pos2::ZERO;
+  }
+  
 fn commands(app: &mut CadApp, ctx: &egui::Context, open: &mut bool) {
     let mut start = None;
     egui::Window::new(crate::tl!("Command Reference")).id(egui::Id::new("Command Reference")).open(open).default_size(vec2(640.0, 480.0)).show(
