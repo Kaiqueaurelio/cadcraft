@@ -1,7 +1,7 @@
 # Flatpak manifest for the single-file bundle attached to every GitHub release
 # (decode-cad-<version>-linux-<arch>.flatpak). Build it with packaging/linux/flatpak-bundle.sh.
 #
-# It repackages the release's own Linux tarball (cadcraft-<version>-linux-<arch>.tar.gz, built
+# It repackages the release's own Linux tarball (decode-cad-<version>-linux-<arch>.tar.gz, built
 # on Ubuntu 22.04 by package.sh) instead of compiling Rust inside flatpak-builder: no network and
 # no vendored crate sources during the build, a few seconds instead of many minutes, and
 # byte-for-byte the same binaries as the AppImage/deb/rpm. The script unpacks the tarball into
