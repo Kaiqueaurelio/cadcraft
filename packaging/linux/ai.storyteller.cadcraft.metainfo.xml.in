@@ -7,7 +7,7 @@
   <project_license>MIT OR Apache-2.0</project_license>
   <name>Decode CAD</name>
   <summary>Draft, dimension and plot 2D drawings</summary>
-  <developer>
+  <developer id="io.github.Kaiqueaurelio">
     <name>Decode Analytics</name>
   </developer>
   <description>
