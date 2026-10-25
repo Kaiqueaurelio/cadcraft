@@ -34,7 +34,7 @@
 	A drawing opened from a file keeps that file's format.	En ritning som öppnats från en fil behåller filens format.
 	A variable name starts with a letter and has only letters, digits and _	Ett variabelnamn börjar med en bokstav och innehåller bara bokstäver, siffror och _
 	About	Om
-	About CADCraft	Om CADCraft
+	About Decode CAD	Om Decode CAD
 	Absolute	Absolut
 	Add Current Scale	Lägg till aktuell skala
 	Add Leader	Lägg till hänvisningslinje
@@ -612,7 +612,7 @@
 	Offset	Förskjut
 	On	På
 	On/Off	På/av
-	One of the Crafting Apps by the ArtCraft team and community.	En av Crafting Apps, gjord av ArtCraft-teamet och dess community.
+	Developed and maintained by Decode Analytics.	Utvecklat och underhållet av Decode Analytics.
 	Only in this drawing: {n}	Bara i den här ritningen: {n}
 	Only in {name}: {n}	Bara i {name}: {n}
 	Open	Öppna
