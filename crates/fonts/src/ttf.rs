@@ -11,8 +11,8 @@
 //! - [`fallback_fonts`] (`FONTFALLBACK`): fonts tried first for characters the text's font
 //!   lacks (CJK in an SHX big font, for example), before the automatic system font search.
 //!
-//! On native builds both start from the `CADCRAFT_FONTALT` / `CADCRAFT_FONTFALLBACK`
-//! environment variables.
+//! On native builds these settings use `DECODE_CAD_FONTALT` / `DECODE_CAD_FONTFALLBACK`;
+//! the earlier variable names are accepted as silent compatibility aliases.
 
 use std::collections::HashMap;
 use std::path::PathBuf;
