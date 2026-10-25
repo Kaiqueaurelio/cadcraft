@@ -13,8 +13,8 @@ release: 1
 section: graphics
 priority: optional
 maintainer: ${CADCRAFT_MAINTAINER}
-vendor: Learning Machines LLC
-homepage: https://github.com/Kaiqueaurelio/cadcraft
+vendor: Decode Analytics
+homepage: https://github.com/Kaiqueaurelio/decodecad
 license: MIT OR Apache-2.0
 description: |-
   Open-source computer-aided design and drafting: draft, dimension and plot 2D
