@@ -1169,6 +1169,7 @@ mod plot_dialog_tests {
         let mut st = state("Model");
         apply_page_change(&mut st.page, "device", &json!("CADCraft PNG"));
         assert_eq!(st.page.device, "CADCraft PNG");
+        assert_eq!(device_label(&st.page), "Decode CAD PNG");
         let dev = cadcraft_engine::cmd::plotters::find_device("CADCraft PNG").unwrap();
         assert!(dev.papers.iter().any(|p| p.name == st.page.paper), "a paper of the device: {}", st.page.paper);
         assert!(st.page.margins_mm.iter().any(|m| *m > 0.0), "the paper's printable area");
