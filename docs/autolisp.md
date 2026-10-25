@@ -1,6 +1,6 @@
 # AutoLISP
 
-CADCraft runs AutoLISP routines (`.lsp` files). What is here and what is not yet:
+Decode CAD runs AutoLISP routines (`.lsp` files). What is here and what is not yet:
 [gaps.md](gaps.md) (E1).
 
 ## Loading and running
@@ -27,8 +27,8 @@ CADCraft runs AutoLISP routines (`.lsp` files). What is here and what is not yet
 
 ### At startup
 
-CADCraft loads LISP from its **support folder**, `support` in the settings folder (on Windows
-`%APPDATA%\CADCraft\support`, on macOS `~/Library/Application Support/CADCraft/support`, on
+Decode CAD loads LISP from its **support folder**, `support` in the settings folder (on Windows
+`%APPDATA%\Decode CAD\support`, on macOS `~/Library/Application Support/Decode CAD/support`, on
 Linux `~/.config/cadcraft/support`; created at first start):
 
 - `acad.lsp` once per session, into the first drawing; with `ACADLSPASDOC` set to 1, into every
@@ -83,7 +83,7 @@ reached", malformed source is a reader error, and every built-in checks its argu
 - **Units:** `rtos angtos distof angtof`
 - **No-ops:** `vl-load-com gc redraw`; `ver`
 
-Entity lists use the DXF group codes of CADCraft's DXF files: what `entget` returns is what a
+Entity lists use the DXF group codes of Decode CAD's DXF files: what `entget` returns is what a
 DXF file holds for the object, plus `-1` (its name) and `410` (its layout). Angles (groups 50–58)
 are in radians, as in AutoCAD, where the file holds degrees; `entmake`, `entmod` and `ssget`
 filters take radians too.

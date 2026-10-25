@@ -1,12 +1,12 @@
-# DecodeCAD functional parity with CADCraft
+# Decode CAD source-parity audit
 
 **Audit date:** 2026-10-24  
-**DecodeCAD revision audited:** `fb3781f84e73ebb517681d35f2cf64ff9f4eb5a4`  
-**CADCraft upstream revision:** `b90165666917ec3ac6c308c2ea1c55bb6ea8317d`
+**Decode CAD revision audited:** `fb3781f84e73ebb517681d35f2cf64ff9f4eb5a4`  
+**Upstream source revision:** `b90165666917ec3ac6c308c2ea1c55bb6ea8317d`
 
 ## Result
 
-The DecodeCAD application code was compared with the upstream CADCraft main branch. The fork was three upstream commits behind at the start of this audit. Those changes have been ported to the distribution pull request:
+The Decode CAD application code was compared with the upstream project's main branch. The fork was three upstream commits behind at the start of this audit. Those changes have been ported to the distribution pull request:
 
 | Upstream change | DecodeCAD implementation | Evidence |
 |---|---|---|
@@ -14,7 +14,7 @@ The DecodeCAD application code was compared with the upstream CADCraft main bran
 | Regression coverage for STRETCH window behavior | Ported | `crates/engine/tests/stretch_window_ortho.rs` |
 | Use craft-ui shared docking panels and updated docking workflows | Ported | `apps/cadcraft/src/workspace.rs`, `crates/ui-egui/src/docking.rs`, `crates/ui-egui/tests/it/docking_workflows.rs` |
 
-The source comparison after these ports leaves only branding/metadata and language-default changes in the compared application code. DecodeCAD keeps the CADCraft engine, command implementation, file handling, and editing paths. The UI'\''s initial language preference is English in DecodeCAD; upstream defaults to automatic locale selection. Users can still choose a supported language in settings.
+The source comparison after these ports leaves only branding/metadata and language-default changes in the compared application code. DecodeCAD keeps the upstream project engine, command implementation, file handling, and editing paths. The UI'\''s initial language preference is English in DecodeCAD; upstream defaults to automatic locale selection. Users can still choose a supported language in settings.
 
 ## Deliberate product differences
 
@@ -27,9 +27,9 @@ These are product/distribution changes and are not intended to remove CAD functi
 
 ## Remaining functional limitations
 
-DecodeCAD inherits the limitations that exist in CADCraft itself. The project’s detailed evidence-backed limitation inventory is maintained in [gaps.md](gaps.md), with deeper references for [file format parity](file-format-parity.md), [geometry parity](geometry-parity.md), and [target application parity](target-app-parity.md). These documents include known gaps such as incomplete preservation of some DWG custom data, the lack of a real-file corpus validated in AutoCAD, tessellated ellipse/spline operations, and incomplete dynamic-block/xref editing.
+DecodeCAD inherits the limitations that exist in upstream project itself. The project’s detailed evidence-backed limitation inventory is maintained in [gaps.md](gaps.md), with deeper references for [file format parity](file-format-parity.md), [geometry parity](geometry-parity.md), and [target application parity](target-app-parity.md). These documents include known gaps such as incomplete preservation of some DWG custom data, the lack of a real-file corpus validated in AutoCAD, tessellated ellipse/spline operations, and incomplete dynamic-block/xref editing.
 
-Therefore this audit establishes source-level synchronization with the inspected CADCraft revision for the application code, plus the specific DecodeCAD product differences above. It does **not** establish equivalence with AutoCAD or claim that every behavior has been validated against real customer drawings.
+Therefore this audit establishes source-level synchronization with the inspected upstream project revision for the application code, plus the specific DecodeCAD product differences above. It does **not** establish equivalence with AutoCAD or claim that every behavior has been validated against real customer drawings.
 
 ## Verification
 

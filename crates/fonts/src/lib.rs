@@ -1,7 +1,7 @@
-//! CADCraft text layout.
+//! Decode CAD text layout.
 //!
 //! Turns TEXT and MTEXT into stroke polylines with the built-in single-stroke font
-//! ("CADCraft Stroke") or glyph outlines of installed TrueType fonts ([`ttf`]), with a
+//! ("Decode CAD Stroke") or glyph outlines of installed TrueType fonts ([`ttf`]), with a
 //! per-character fallback to installed fonts for characters the chosen font lacks. Handles the
 //! `%%` control codes, alignment modes, width factor, obliquing, MTEXT inline formatting
 //! (paragraphs, stacking, height changes), word wrap and attachment points.
@@ -29,7 +29,7 @@ mod craft_fonts;
 pub use craft_fonts::{CRAFT_FONTS, CraftFont};
 
 /// Name of the built-in font.
-pub const BUILTIN_FONT: &str = "CADCraft Stroke";
+pub const BUILTIN_FONT: &str = "Decode CAD Stroke";
 
 /// One laid-out run of text: strokes in local coordinates (baseline at y = 0, x from 0).
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -289,7 +289,7 @@ impl TextFont {
             return TextFont::Outline(f);
         }
         let n = name.trim();
-        if n.is_empty() || n.eq_ignore_ascii_case(BUILTIN_FONT) {
+        if n.is_empty() || n.eq_ignore_ascii_case(BUILTIN_FONT) || n.eq_ignore_ascii_case("CADCraft Stroke") {
             return TextFont::Stroke;
         }
         ttf::find(&ttf::font_alt()).map(TextFont::Outline).unwrap_or(TextFont::Stroke)

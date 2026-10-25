@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Build, sign and (optionally) notarize the macOS release artifacts:
 #
-#   $DIST/cadcraft-<version>-macos-<arch>.dmg          CADCraft.app on a drag-to-Applications DMG
-#   $DIST/cadcraft-cli-<version>-macos-<arch>.zip      the headless CLI
+#   $DIST/decode-cad-<version>-macos-<arch>.dmg          Decode CAD.app on a drag-to-Applications DMG
+#   $DIST/decode-cad-cli-<version>-macos-<arch>.zip      the headless CLI
 #
 # Usage: packaging/macos/package.sh [--arch universal|aarch64|x86_64] [--skip-build]
 #
@@ -39,9 +39,9 @@ export MACOSX_DEPLOYMENT_TARGET=11.0
 IDENTITY="${MACOS_SIGN_IDENTITY:--}"
 SHORT_VERSION="${VERSION%%-*}"
 WORK="$CARGO_TARGET_DIR/macos-package"
-APP="$WORK/CADCraft.app"
-DMG="$DIST/cadcraft-$VERSION-macos-$ARCH.dmg"
-CLI_ZIP="$DIST/cadcraft-cli-$VERSION-macos-$ARCH.zip"
+APP="$WORK/Decode CAD.app"
+DMG="$DIST/decode-cad-$VERSION-macos-$ARCH.dmg"
+CLI_ZIP="$DIST/decode-cad-cli-$VERSION-macos-$ARCH.zip"
 
 NOTARIZE=0
 if [[ "$IDENTITY" = "-" ]]; then
@@ -52,7 +52,7 @@ else
   warn "macOS: APPLE_ID / APPLE_PASSWORD / APPLE_TEAM_ID incomplete; signed but not notarized"
 fi
 
-echo "==> CADCraft $VERSION for macOS ($ARCH), identity: $IDENTITY, notarize: $NOTARIZE"
+echo "==> Decode CAD $VERSION for macOS ($ARCH), identity: $IDENTITY, notarize: $NOTARIZE"
 
 # ---- build -------------------------------------------------------------------------------------
 if [[ "$SKIP_BUILD" = 0 ]]; then
@@ -97,29 +97,44 @@ notarize() {
   fi
 }
 
-# ---- CADCraft.app ----------------------------------------------------------------------------
+# ---- Decode CAD.app ----------------------------------------------------------------------------
 echo "==> assembling $APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-# Executable and icon carry the display name (CFBundleExecutable / CFBundleIconFile).
-cp "$WORK/bin/cadcraft" "$APP/Contents/MacOS/CADCraft"
-cp "$ROOT/assets/app-icon/cadcraft.icns" "$APP/Contents/Resources/CADCraft.icns"
+# Generate the original Decode CAD mark and the full macOS iconset; never ship inherited icon art.
+ICONSET="$WORK/DecodeCAD.iconset"
+mkdir -p "$ICONSET"
+swift "$HERE/make_icon.swift" "$WORK/decode-cad-icon.png"
+make_icon() { sips -z "$1" "$1" "$WORK/decode-cad-icon.png" --out "$ICONSET/$2" >/dev/null; }
+make_icon 16 icon_16x16.png
+make_icon 32 icon_16x16@2x.png
+make_icon 32 icon_32x32.png
+make_icon 64 icon_32x32@2x.png
+make_icon 128 icon_128x128.png
+make_icon 256 icon_128x128@2x.png
+make_icon 256 icon_256x256.png
+make_icon 512 icon_256x256@2x.png
+make_icon 512 icon_512x512.png
+make_icon 1024 icon_512x512@2x.png
+iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/DecodeCAD.icns"
+cp "$WORK/bin/cadcraft" "$APP/Contents/MacOS/DecodeCAD"
+
 # Licences of the embedded craft-fonts fonts (only when built with CRAFT_FONTS_DIR).
 copy_font_licences "$APP/Contents/Resources"
 sed -e "s/@VERSION@/$VERSION/g" -e "s/@SHORT_VERSION@/$SHORT_VERSION/g" \
-  -e "s/@BUILD_SHA@/${CADCRAFT_BUILD_SHA:-unknown}/g" \
+  -e "s/@BUILD_SHA@/${DECODE_CAD_BUILD_SHA:-${CADCRAFT_BUILD_SHA:-unknown}}/g" \
   "$HERE/Info.plist.in" >"$APP/Contents/Info.plist"
 plutil -lint "$APP/Contents/Info.plist"
 printf 'APPL????' >"$APP/Contents/PkgInfo"
 
 # Sign inside-out: nested code first, then the bundle itself (no --deep on the final signature).
 # Today the only nested code is the main executable; frameworks/helpers would be signed here too.
-sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP/Contents/MacOS/CADCraft"
+sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP/Contents/MacOS/DecodeCAD"
 sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP"
 codesign --verify --strict --deep --verbose=2 "$APP"
 
 if [[ "$NOTARIZE" = 1 ]]; then
-  ditto -c -k --keepParent "$APP" "$WORK/CADCraft-notarize.zip"
-  notarize "$WORK/CADCraft-notarize.zip"
+  ditto -c -k --keepParent "$APP" "$WORK/DecodeCAD-notarize.zip"
+  notarize "$WORK/DecodeCAD-notarize.zip"
   xcrun stapler staple "$APP"
   xcrun stapler validate "$APP"
   spctl --assess --type execute -vvv "$APP"
@@ -129,7 +144,22 @@ fi
 echo "==> building $DMG"
 STAGE="$WORK/dmg"
 mkdir -p "$STAGE"
-ditto "$APP" "$STAGE/CADCraft.app"
+
+# Generate a fresh Decode CAD Finder background and disk layout. The script uses isolated Python
+# dependencies so it works on clean CI runners and doesn't modify the runner's system Python.
+if ! command -v resvg >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    brew install resvg
+  else
+    echo "error: resvg is required to render the Decode CAD installer artwork" >&2
+    exit 1
+  fi
+fi
+DMG_PYTHON="$WORK/dmg-venv"
+python3 -m venv "$DMG_PYTHON"
+"$DMG_PYTHON/bin/python" -m pip install --disable-pip-version-check 'pillow>=12' 'ds_store==1.3.3' 'mac_alias==2.2.3'
+"$DMG_PYTHON/bin/python" "$HERE/dmg/generate.py"
+ditto "$APP" "$STAGE/Decode CAD.app"
 ln -s /Applications "$STAGE/Applications"
 # Finder window layout: background, icon size and positions (packaging/macos/dmg/README.md).
 mkdir -p "$STAGE/.background"
@@ -139,7 +169,7 @@ rm -f "$DMG" "$WORK/raw.dmg"
 # makehybrid + convert builds the image without attaching a device, unlike `create -srcfolder`,
 # which is flaky on CI runners ("Resource busy") and hangs in sandboxed sessions.
 # The volume name has no version: .DS_Store finds the background through an alias that includes it.
-hdiutil makehybrid -hfs -hfs-volume-name "CADCraft" -hfs-openfolder "$STAGE" -o "$WORK/raw.dmg" "$STAGE"
+hdiutil makehybrid -hfs -hfs-volume-name "Decode CAD" -hfs-openfolder "$STAGE" -o "$WORK/raw.dmg" "$STAGE"
 hdiutil convert "$WORK/raw.dmg" -format UDZO -imagekey zlib-level=9 -o "$DMG"
 rm -f "$WORK/raw.dmg"
 sign "$DMG"
@@ -153,12 +183,12 @@ fi
 
 # ---- CLI ---------------------------------------------------------------------------------------
 echo "==> building $CLI_ZIP"
-CLI_DIR="$WORK/cadcraft-cli-$VERSION-macos-$ARCH"
+CLI_DIR="$WORK/decode-cad-cli-$VERSION-macos-$ARCH"
 mkdir -p "$CLI_DIR"
-cp "$WORK/bin/cadcraft-cli" "$CLI_DIR/"
+cp "$WORK/bin/cadcraft-cli" "$CLI_DIR/decode-cad-cli"
 copy_docs "$CLI_DIR"
-sign --options runtime "$CLI_DIR/cadcraft-cli"
-codesign --verify --strict --verbose=2 "$CLI_DIR/cadcraft-cli"
+sign --options runtime "$CLI_DIR/decode-cad-cli"
+codesign --verify --strict --verbose=2 "$CLI_DIR/decode-cad-cli"
 rm -f "$CLI_ZIP"
 ditto -c -k --keepParent "$CLI_DIR" "$CLI_ZIP"
 # A bare Mach-O can't carry a stapled ticket; Gatekeeper looks the notarization up online.

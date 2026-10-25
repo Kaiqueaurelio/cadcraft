@@ -60,7 +60,7 @@ fn split(axis: SplitAxis, size: SplitSize, first: Node<Panel>, second: Node<Pane
     Node::Split { axis, size, first: Box::new(first), second: Box::new(second) }
 }
 
-/// The saved panel arrangement: craft-ui's workspace over CADCraft's panels.
+/// The saved panel arrangement: craft-ui's workspace over Decode CAD panels.
 pub type Workspace = craft_ui::docking::Workspace<Panel>;
 
 /// Tool Sets on the left, the drawing, and the Layers and Properties accordion on the right.
@@ -237,7 +237,7 @@ pub fn show(app: &mut crate::CadApp, ui: &mut egui::Ui) {
     // Panels arrange in a split tree around the drawing; floating title bars only move windows.
     style.new_dock_zones = false;
     style.title_bar_docks = false;
-    let output = DockArea::new(egui::Id::new("cadcraft-docking")).show_with_limits(
+    let output = DockArea::new(egui::Id::new("decode-cad-docking")).show_with_limits(
         ui,
         &workspace.layout,
         &style,
@@ -273,7 +273,7 @@ pub fn show(app: &mut crate::CadApp, ui: &mut egui::Ui) {
     let _ = sync(&mut workspace, app);
     let stale = workspace != rendered;
     if stale {
-        craft_ui::docking::cancel_drag::<Panel>(ui.ctx(), egui::Id::new("cadcraft-docking"));
+        craft_ui::docking::cancel_drag::<Panel>(ui.ctx(), egui::Id::new("decode-cad-docking"));
     }
     publish_visibility(app, &workspace);
     app.ui.docking = workspace;

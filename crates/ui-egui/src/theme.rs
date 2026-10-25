@@ -1,5 +1,5 @@
 //! Design tokens. Colours were measured from the reference look (dark slate chrome, near-black
-//! navy model space) and are CADCraft's own values; every widget reads them from here.
+//! navy model space) and are Decode CAD's own values; every widget reads them from here.
 //!
 //! Two palettes: [`Tokens::DARK`] (the original look) and [`Tokens::LIGHT`]. The interface theme
 //! changes the chrome (title and tool bar, menus, palettes, tabs, command line, status bar,
@@ -19,7 +19,7 @@ pub enum ThemePref {
     /// Follow the operating system's light/dark appearance, live.
     System,
     Light,
-    /// The default: CADCraft's original look.
+    /// The default: Decode CAD's original look.
     #[default]
     Dark,
 }

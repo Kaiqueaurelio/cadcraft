@@ -110,16 +110,16 @@ jobs:
         env:
           CRAFT_FONTS_DIR: ${{ github.workspace }}\craft-fonts
           CRAFT_FONTS_REQUIRED: "1"
-          CADCRAFT_BUILD_SHA: ${{ github.sha }}
-          CADCRAFT_BUILD_DATE: ""
-          CADCRAFT_VERSION: ${{ inputs.version }}
+          DECODE_CAD_BUILD_SHA: ${{ github.sha }}
+          DECODE_CAD_BUILD_DATE: ""
+          DECODE_CAD_VERSION: ${{ inputs.version }}
           DIST: ${{ github.workspace }}\dist\release
         run: |
-          if (-not $env:CADCRAFT_VERSION -and $env:GITHUB_REF -like 'refs/tags/v*') {
-            $env:CADCRAFT_VERSION = $env:GITHUB_REF -replace '^refs/tags/v', ''
+          if (-not $env:DECODE_CAD_VERSION -and $env:GITHUB_REF -like 'refs/tags/v*') {
+            $env:DECODE_CAD_VERSION = $env:GITHUB_REF -replace '^refs/tags/v', ''
           }
-          if (-not $env:CADCRAFT_BUILD_DATE -or $env:CADCRAFT_BUILD_DATE -eq 'null') {
-            $env:CADCRAFT_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+          if (-not $env:DECODE_CAD_BUILD_DATE -or $env:DECODE_CAD_BUILD_DATE -eq 'null') {
+            $env:DECODE_CAD_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
           }
           ./packaging/windows/package.ps1 -Arch x64
           Get-ChildItem dist/release
@@ -173,18 +173,18 @@ jobs:
         env:
           CRAFT_FONTS_DIR: ${{ github.workspace }}/craft-fonts
           CRAFT_FONTS_REQUIRED: "1"
-          CADCRAFT_BUILD_SHA: ${{ github.sha }}
-          CADCRAFT_BUILD_DATE: ""
-          CADCRAFT_VERSION: ${{ inputs.version }}
+          DECODE_CAD_BUILD_SHA: ${{ github.sha }}
+          DECODE_CAD_BUILD_DATE: ""
+          DECODE_CAD_VERSION: ${{ inputs.version }}
           DIST: ${{ github.workspace }}/dist/release
         run: |
           set -euo pipefail
-          if [[ -z "$CADCRAFT_VERSION" && "$GITHUB_REF" == refs/tags/v* ]]; then
-            export CADCRAFT_VERSION="${GITHUB_REF#refs/tags/v}"
+          if [[ -z "$DECODE_CAD_VERSION" && "$GITHUB_REF" == refs/tags/v* ]]; then
+            export DECODE_CAD_VERSION="${GITHUB_REF#refs/tags/v}"
           fi
-          if [[ -z "$CADCRAFT_BUILD_DATE" || "$CADCRAFT_BUILD_DATE" == "null" ]]; then
-            CADCRAFT_BUILD_DATE="$(date -u +%Y-%m-%d)"
-            export CADCRAFT_BUILD_DATE
+          if [[ -z "$DECODE_CAD_BUILD_DATE" || "$DECODE_CAD_BUILD_DATE" == "null" ]]; then
+            DECODE_CAD_BUILD_DATE="$(date -u +%Y-%m-%d)"
+            export DECODE_CAD_BUILD_DATE
           fi
           bash packaging/linux/package.sh --formats "appimage deb tar"
           test -s dist/release/decode-cad-*-linux-x86_64.deb

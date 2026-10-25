@@ -1,7 +1,7 @@
 > **Decode CAD — desenvolvido e mantido pela [Decode Analytics](https://www.instagram.com/decode.analytics/).** Esta edição é construída a partir de código aberto e adaptada para distribuição sob a identidade Decode CAD. Os avisos e atribuições exigidos continuam disponíveis em [LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE), [NOTICE](NOTICE) e [ATTRIBUTION.md](ATTRIBUTION.md).
 
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="256" alt="Logo Decode CAD da Decode Analytics">
+  <img src="assets/app-icon/decode-cad.svg" width="256" alt="Logo Decode CAD da Decode Analytics">
 </p>
 
 <h1 align="center">Decode CAD</h1>
@@ -35,35 +35,7 @@ A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x6
 Estes pacotes são para processadores x64/x86_64. Consulte as [notas e todos os arquivos da versão 0.12.1](https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1).
 
 
-<p align="center">
-  <img src="docs/images/ui-apartment.png" alt="Decode CAD com uma planta de apartamento aberta: paredes hachuradas, janelas, portas, contornos de móveis, nomes dos cômodos, tabela de áreas, anotação e cotas arquitetônicas" width="100%">
-  <br><sub><b>Planta de apartamento</b> (<a href="examples/apartment.dxf">examples/apartment.dxf</a>): paredes com hachura por ponto selecionado, rótulos MTEXT com fontes TrueType, tabela, chamada múltipla e cotas arquitetônicas — criada com comandos do Decode CAD.</sub>
-</p>
-
-<p align="center">
-  <a href="#capturas-de-tela">Capturas de tela</a> ·
-  <a href="#por-que-usar-o-decode-cad">Por que usar o Decode CAD</a> ·
-  <a href="#recursos-disponíveis-atualmente">Recursos disponíveis</a> ·
-  <a href="#início-rápido">Início rápido</a> ·
-  <a href="#controle-por-agentes-mcp-e-cli">Agentes, MCP e CLI</a> ·
-  <a href="#arquitetura">Arquitetura</a> ·
-  <a href="#plano-de-desenvolvimento">Plano de desenvolvimento</a> ·
-  <a href="#downloads">Downloads</a> ·
-  <a href="#licença-e-créditos">Licença e créditos</a>
-</p>
-
-## Capturas de tela
-
-<table>
-  <tr>
-    <td width="50%"><img src="docs/images/ui-layout.png" alt="Layout de impressão no Decode CAD: folha branca, área imprimível tracejada e janela de visualização com a planta em escala"></td>
-    <td width="50%"><img src="docs/images/ui-bracket.png" alt="Decode CAD com desenho técnico de um suporte de fixação, furos, linhas de centro, cotas, corte hachurado, anotações e legenda técnica"></td>
-  </tr>
-  <tr>
-    <td><sub><b>Layouts:</b> espaço do papel com janelas de visualização, configurações de página e impressão em PDF. Clique duas vezes em uma janela para trabalhar no espaço do modelo através dela.</sub></td>
-    <td><sub><b>Suporte de fixação:</b> desenho de uma peça em duas vistas, com linhas de centro, linhas ocultas, hachura de corte ANSI31 e legenda técnica.</sub></td>
-  </tr>
-</table>
+<p align="center"><i>As capturas de tela serão republicadas após a validação da versão reidentificada para desktop.</i></p>
 
 ## Por que usar o Decode CAD
 
@@ -92,7 +64,7 @@ O Decode CAD está em desenvolvimento. Consulte [ROADMAP.md](ROADMAP.md) para ve
 | Parametria | Restrições geométricas e dimensionais, `AUTOCONSTRAIN`, parâmetros com expressões, detecção de conflitos e recálculo após edições |
 | Alças de edição | Alças interativas; use Espaço para alternar entre esticar, mover, girar, dimensionar e espelhar |
 | Idiomas da interface | Inglês, ucraniano, português brasileiro, alemão, espanhol, tcheco, russo, francês, chinês simplificado, italiano, coreano, sueco, árabe, húngaro, turco e grego, com troca em tempo real e seleção automática pelo idioma do sistema; [detalhes](docs/localization.md) |
-| Automação | Servidor MCP, canal de controle JSON e `cadcraft-cli` para informações, conversão, execução e comandos |
+| Automação | Servidor MCP, canal de controle JSON e `decode-cad-cli` para informações, conversão, execução e comandos |
 
 ## Início rápido
 
@@ -121,8 +93,8 @@ O Decode CAD pode usar fontes TrueType/OpenType instaladas no sistema. Compilaç
 
 | Variável | Variável de ambiente | Finalidade |
 |---|---|---|
-| `FONTALT` | `CADCRAFT_FONTALT` | Fonte alternativa quando a fonte definida no estilo não é encontrada. Pode ser indicada pelo nome do arquivo ou da família. Vazia (padrão): usa a fonte vetorial interna. |
-| `FONTFALLBACK` | `CADCRAFT_FONTFALLBACK` | Lista de fontes separadas por vírgula para caracteres ausentes na fonte principal. |
+| `FONTALT` | `DECODE_CAD_FONTALT` | Fonte alternativa quando a fonte definida no estilo não é encontrada. Pode ser indicada pelo nome do arquivo ou da família. Vazia (padrão): usa a fonte vetorial interna. |
+| `FONTFALLBACK` | `DECODE_CAD_FONTFALLBACK` | Lista de fontes separadas por vírgula para caracteres ausentes na fonte principal. |
 
 O ponto (`.`) limpa qualquer uma dessas configurações.
 
@@ -132,12 +104,12 @@ O ponto (`.`) limpa qualquer uma dessas configurações.
 
 ### Registros de execução
 
-O aplicativo para computador grava os registros no erro padrão e em `logs/cadcraft.log`, dentro da pasta de configurações do sistema. O caminho depende da plataforma: Linux/BSD (`~/.config/cadcraft/logs/`), macOS (`~/Library/Application Support/CADCraft/logs/`) e Windows (`%APPDATA%\CADCraft\logs\`), ou a pasta definida em `CADCRAFT_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. Os nomes internos dos arquivos e variáveis de ambiente permanecem inalterados por compatibilidade.
+O aplicativo para computador grava os registros no erro padrão e em `logs/decode-cad.log`, dentro da pasta de configurações da plataforma, ou na pasta definida em `DECODE_CAD_CONFIG_DIR`. Esse arquivo é útil para anexar a relatos de falhas. A cada inicialização, os registros anteriores são rotacionados; o arquivo atual tem limite de 16 MiB. O parâmetro `--version` não cria arquivo de registro. As variáveis com prefixo `DECODE_CAD_` são preferenciais; nomes de configuração anteriores continuam aceitos em modo de compatibilidade para preservar os dados existentes.
 
 | Variável | Efeito |
 |---|---|
-| `CADCRAFT_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
-| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=warn,cadcraft_io=trace`. |
+| `DECODE_CAD_CONFIG_DIR` | Usa uma pasta personalizada para as configurações e os registros. |
+| `RUST_LOG` | Define o nível de detalhamento dos registros. O padrão é `info` para os módulos do aplicativo e `warn` para os demais. Exemplos: `RUST_LOG=debug`, `RUST_LOG=info`. |
 
 Na versão web, os registros são enviados ao console do navegador.
 
@@ -147,15 +119,15 @@ O Decode CAD oferece uma interface de linha de comando para automação, execuç
 
 ```sh
 # Servidor MCP sem interface gráfica, usando entrada e saída padrão:
-cadcraft-cli mcp
+decode-cad-cli mcp
 
 # Conectar ao aplicativo em execução (inicie-o com --control 7979):
-cadcraft-cli mcp --connect 127.0.0.1:7979
+decode-cad-cli mcp --connect 127.0.0.1:7979
 
 # Executar comandos e exportar um desenho:
-cadcraft-cli run --sample --script 'CIRCLE 22,3 1\n' --save out.dxf --export out.png
-cadcraft-cli info drawing.dxf
-cadcraft-cli convert drawing.dxf drawing.svg
+decode-cad-cli run --sample --script 'CIRCLE 22,3 1\n' --save out.dxf --export out.png
+decode-cad-cli info drawing.dxf
+decode-cad-cli convert drawing.dxf drawing.svg
 ```
 
 As ferramentas MCP incluem `command_line` (digitar na linha de comando), `execute` (executar comandos com JSON), `inspect_drawing`, `query_entities` e `render` (gerar PNG). Quando conectado ao aplicativo, também há `screenshot` e `ui_click`. O canal de controle JSON está descrito em [docs/control-protocol.md](docs/control-protocol.md).
@@ -173,7 +145,7 @@ fonts ┤ render                fonte vetorial, layout TEXT/MTEXT e renderizaç�
 io    ┤                       conversão DXF, exportação SVG/PNG
 engine┤                       sessões, comandos, linha de comando, captura, seleção e desfazer
 ui-egui · mcp                 interface egui substituível e servidor MCP
-apps: cadcraft · cadcraft-cli · cadcraft-web
+Pacotes de build: aplicativo desktop, ferramenta CLI e versão WebAssembly.
 ```
 
 Os nomes internos dos crates e das ferramentas de build permanecem como estão no código. O comando `cargo xtask ci` verifica formatação, Clippy, testes, atribuição de recursos, organização dos módulos e compilação para WebAssembly.
@@ -182,13 +154,13 @@ O aplicativo também oferece recursos de acessibilidade, como rótulos acessíve
 
 ## Acessibilidade
 
-Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `CADCRAFT_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx CADCRAFT_SYSTEM_CURSOR 1`.
+Na área de desenho, o Decode CAD oculta o cursor do sistema e desenha sua própria mira. Isso pode dificultar o acompanhamento por lupas de tela, gravadores e áreas de trabalho remotas. Ative **View ▸ Accessibility ▸ Show system cursor** ou inicie o aplicativo com a variável de ambiente `DECODE_CAD_SYSTEM_CURSOR=1`. No Windows, é possível configurar essa variável com `setx DECODE_CAD_SYSTEM_CURSOR 1`.
 
 O Decode CAD respeita a preferência do sistema para reduzir animações. A configuração também pode ser ajustada no menu **View ▸ Accessibility ▸ Animation Effects**, escolhendo usar a configuração do sistema, ativar ou desativar os efeitos.
 
 ## Plano de desenvolvimento
 
-Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos. A comparação do fork com o CADCraft original está em [docs/decodecad-parity.md](docs/decodecad-parity.md).
+Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos.
 
 ## Outras versões
 

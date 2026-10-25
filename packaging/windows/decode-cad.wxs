@@ -3,7 +3,7 @@
   Decode CAD MSI (WiX Toolset v5: `dotnet tool install -g wix`, plus the WixUI extension:
   `wix extension add -g WixToolset.UI.wixext/5.0.2`). Built by package.ps1:
 
-    wix build cadcraft.wxs -arch x64 -ext WixToolset.UI.wixext -d Version=1.2.3 -d BinDir=... -d IconPath=... -o out.msi
+    wix build decode-cad.wxs -arch x64 -ext WixToolset.UI.wixext -d Version=1.2.3 -d BinDir=... -d IconPath=... -o out.msi
 
   Per-machine install into Program Files, a Start Menu shortcut, an optional desktop shortcut, and
   Decode CAD offered under "Open with" for .dxf and .dwg drawings (without taking over the user's
@@ -29,8 +29,8 @@
         DowngradeErrorMessage="A newer version of Decode CAD is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
-    <Icon Id="CadcraftIcon.ico" SourceFile="$(var.IconPath)" />
-    <Property Id="ARPPRODUCTICON" Value="CadcraftIcon.ico" />
+    <Icon Id="DecodeCadIcon.ico" SourceFile="$(var.IconPath)" />
+    <Property Id="ARPPRODUCTICON" Value="DecodeCadIcon.ico" />
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/Kaiqueaurelio/decodecad" />
     <Property Id="ARPURLUPDATEINFO" Value="https://github.com/Kaiqueaurelio/decodecad" />
     <Property Id="ARPHELPLINK" Value="https://github.com/Kaiqueaurelio/decodecad/issues" />
@@ -58,10 +58,10 @@
     <SetProperty Id="DESKTOPSHORTCUT" Value="1" After="AppSearch" Sequence="first"
         Condition="NOT DESKTOPSHORTCUT AND PREVIOUSDESKTOPSHORTCUT = &quot;1&quot;" />
 
-    <UIRef Id="CadcraftUI" />
+    <UIRef Id="DecodeCadUI" />
 
     <Feature Id="Main" Title="Decode CAD" Level="1">
-      <ComponentGroupRef Id="CadcraftFiles" />
+      <ComponentGroupRef Id="DecodeCadFiles" />
       <ComponentGroupRef Id="LegalNotices" />
     </Feature>
   </Package>
@@ -73,23 +73,23 @@
   </Fragment>
 
   <Fragment>
-    <ComponentGroup Id="CadcraftFiles" Directory="INSTALLFOLDER">
-      <Component Id="CadcraftApp" Guid="B07433B1-3B7A-4F43-B8AD-DDE43C79FC92">
-        <File Id="CadcraftExe" Source="$(var.BinDir)\cadcraft.exe" KeyPath="yes">
+    <ComponentGroup Id="DecodeCadFiles" Directory="INSTALLFOLDER">
+      <Component Id="DecodeCadApp" Guid="B07433B1-3B7A-4F43-B8AD-DDE43C79FC92">
+        <File Id="DecodeCadExe" Source="$(var.BinDir)\decode-cad.exe" KeyPath="yes">
           <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="Decode CAD"
               Description="Decode CAD computer-aided design" WorkingDirectory="INSTALLFOLDER" Advertise="yes"
-              Icon="CadcraftIcon.ico" IconIndex="0" />
+              Icon="DecodeCadIcon.ico" IconIndex="0" />
         </File>
 
-        <RegistryValue Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\cadcraft.exe" Value="[#CadcraftExe]" Type="string" />
-        <RegistryValue Root="HKLM" Key="Software\Classes\Applications\cadcraft.exe\shell\open\command" Value="&quot;[#CadcraftExe]&quot; &quot;%1&quot;" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\decode-cad.exe" Value="[#DecodeCadExe]" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\Applications\decode-cad.exe\shell\open\command" Value="&quot;[#DecodeCadExe]&quot; &quot;%1&quot;" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\Classes\.dxf\OpenWithProgids" Name="DecodeCAD.Drawing" Value="" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\Classes\.dwg\OpenWithProgids" Name="DecodeCAD.Drawing" Value="" Type="string" />
-        <RegistryValue Root="HKLM" Key="Software\Classes\DecodeCAD.Drawing\shell\open\command" Value="&quot;[#CadcraftExe]&quot; &quot;%1&quot;" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\DecodeCAD.Drawing\shell\open\command" Value="&quot;[#DecodeCadExe]&quot; &quot;%1&quot;" Type="string" />
       </Component>
 
-      <Component Id="CadcraftCli">
-        <File Id="CadcraftCliExe" Source="$(var.BinDir)\cadcraft-cli.exe" KeyPath="yes" />
+      <Component Id="DecodeCadCli">
+        <File Id="DecodeCadCliExe" Source="$(var.BinDir)\decode-cad-cli.exe" KeyPath="yes" />
       </Component>
 
       <!-- Optional desktop shortcut, removed on uninstall. A non-advertised shortcut needs a registry
@@ -98,7 +98,7 @@
       <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="1CB82EE7-B6B7-4D4F-B63B-E6818492528A"
           Condition="DESKTOPSHORTCUT = &quot;1&quot;">
         <Shortcut Id="DesktopShortcut" Name="Decode CAD" Description="Decode CAD computer-aided design"
-            Target="[INSTALLFOLDER]cadcraft.exe" WorkingDirectory="INSTALLFOLDER" Icon="CadcraftIcon.ico" IconIndex="0" />
+            Target="[INSTALLFOLDER]decode-cad.exe" WorkingDirectory="INSTALLFOLDER" Icon="DecodeCadIcon.ico" IconIndex="0" />
         <RegistryValue Root="HKCU" Key="Software\Decode Analytics\Decode CAD" Name="DesktopShortcut"
             Value="1" Type="string" KeyPath="yes" />
       </Component>
@@ -112,7 +112,7 @@
       maintenance: Maintenance welcome > Repair/Remove > Ready > Progress > Finish
   -->
   <Fragment>
-    <UI Id="CadcraftUI">
+    <UI Id="DecodeCadUI">
       <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
       <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
       <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />

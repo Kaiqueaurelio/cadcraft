@@ -19,7 +19,7 @@
     </p>
   </description>
   <launchable type="desktop-id">ai.storyteller.cadcraft.desktop</launchable>
-  <icon type="stock">ai.storyteller.cadcraft</icon>
+  <icon type="stock">decode-cad</icon>
   <!-- Only url types known to appstream 0.15 (Ubuntu 22.04, where CI validates): no vcs-browser. -->
   <url type="homepage">https://github.com/Kaiqueaurelio/decodecad</url>
   <url type="bugtracker">https://github.com/Kaiqueaurelio/decodecad/issues</url>
@@ -34,12 +34,6 @@
     <keyword>DXF</keyword>
     <keyword>DWG</keyword>
   </keywords>
-  <screenshots>
-    <screenshot type="default">
-      <caption>A mechanical part drawing with dimensions, hatching and layers</caption>
-      <image>https://raw.githubusercontent.com/Kaiqueaurelio/decodecad/main/docs/images/ui-bracket.png</image>
-    </screenshot>
-  </screenshots>
   <branding>
     <color type="primary" scheme_preference="light">#9ee3f2</color>
     <color type="primary" scheme_preference="dark">#0b6f88</color>
@@ -53,7 +47,7 @@
     <control>tablet</control>
   </supports>
   <provides>
-    <binary>cadcraft</binary>
+    <binary>decode-cad</binary>
   </provides>
   <content_rating type="oars-1.1"/>
   <releases>

@@ -14,7 +14,7 @@
 use std::sync::mpsc::{Receiver, TryRecvError, channel};
 use std::time::{Duration, Instant};
 
-/// How often the OS is asked again, so a change to its setting is followed while CADCraft runs.
+/// How often the OS is asked again, so a change to its setting is followed while Decode CAD runs.
 const POLL: Duration = Duration::from_secs(3);
 
 /// Watches the OS setting.
@@ -37,7 +37,7 @@ impl SystemAnimations {
             return Self::default();
         }
         let (tx, rx) = channel();
-        let started = std::thread::Builder::new().name("cadcraft-system-animations".into()).spawn(move || {
+        let started = std::thread::Builder::new().name("decode-cad-system-animations".into()).spawn(move || {
             let mut last = read();
             if tx.send(last).is_err() {
                 return;

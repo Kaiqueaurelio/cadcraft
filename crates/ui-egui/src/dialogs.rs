@@ -317,8 +317,8 @@ fn units(app: &mut CadApp, ctx: &egui::Context, open: &mut bool) {
 fn about(ctx: &egui::Context, open: &mut bool) {
     let t = Tokens::get();
     let tab_id = egui::Id::new("about_tab");
-    egui::Window::new(crate::tl!("About CADCraft"))
-        .id(egui::Id::new("About CADCraft"))
+    egui::Window::new(crate::tl!("About Decode CAD"))
+        .id(egui::Id::new("About Decode CAD"))
         .open(open)
         .default_size(vec2(640.0, 420.0))
         .collapsible(false)
@@ -337,13 +337,18 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 1 => crate::credits::contributors_ui(ui),
                 2 => crate::credits::models_ui(ui),
                 _ => {
-                    ui.heading(crate::tl!("CADCraft"));
-                    ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
-                    ui.label(crate::tl!("Computer-aided design and drafting: an open-source, clean-room CAD application written in pure Rust."));
+                    ui.horizontal(|ui| {
+                        paint_decode_logo(ui, 104.0);
+                        ui.vertical(|ui| {
+                            ui.heading("Decode CAD");
+                            ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
+                            ui.label(crate::tl!("Computer-aided design and drafting: an open-source, clean-room CAD application written in pure Rust."));
+                        });
+                    });
                     ui.add_space(6.0);
-                    ui.label(RichText::new(crate::tl!("One of the Crafting Apps by the ArtCraft team and community.")).color(t.text_dim));
-                    ui.hyperlink_to("getartcraft.com/apps/cadcraft", "https://getartcraft.com/apps/cadcraft");
-                    ui.hyperlink_to(crate::tl!("Join us on Discord"), "https://discord.gg/artcraft");
+                    ui.label(RichText::new(crate::tl!("Developed and maintained by Decode Analytics.")).color(t.text_dim));
+                    ui.hyperlink_to("Decode Analytics on Instagram", "https://www.instagram.com/decode.analytics/");
+                    ui.hyperlink_to("Decode CAD on GitHub", "https://github.com/Kaiqueaurelio/decodecad");
                     ui.add_space(6.0);
                     ui.label(RichText::new(crate::tl!("MIT OR Apache-2.0. Not affiliated with Autodesk, Inc.")).small().color(t.text_faint));
                 }
@@ -351,6 +356,32 @@ fn about(ctx: &egui::Context, open: &mut bool) {
         });
 }
 
+fn paint_decode_logo(ui: &mut egui::Ui, size: f32) {
+    use egui::{Color32, Rect, Stroke, StrokeKind, pos2, vec2};
+    let (rect, _) = ui.allocate_exact_size(vec2(size, size), egui::Sense::hover());
+    let painter = ui.painter();
+    painter.rect_filled(rect, size * 0.18, Color32::from_rgb(14, 24, 42));
+    painter.rect_stroke(rect, size * 0.18, Stroke::new(size * 0.018, Color32::from_rgb(43, 65, 94)), StrokeKind::Inside);
+    let point = |x: f32, y: f32| pos2(rect.center().x + size * x, rect.center().y + size * y);
+    let blue = Stroke::new(size * 0.035, Color32::from_rgb(56, 137, 255));
+    let cyan = Stroke::new(size * 0.025, Color32::from_rgb(43, 220, 220));
+    let cube = [(-0.30,-0.14), (0.0,-0.31), (0.30,-0.14), (0.30,0.17), (0.0,0.34), (-0.30,0.17), (-0.30,-0.14)];
+    for segment in cube.windows(2) {
+        painter.line_segment([point(segment[0].0, segment[0].1), point(segment[1].0, segment[1].1)], blue);
+    }
+    painter.line_segment([point(0.0,-0.31), point(0.0,0.0)], cyan);
+    painter.line_segment([point(-0.30,0.17), point(0.0,0.0)], cyan);
+    painter.line_segment([point(0.30,0.17), point(0.0,0.0)], cyan);
+    let white = Stroke::new(size * 0.034, Color32::from_rgb(244, 248, 255));
+    painter.line_segment([point(-0.105,-0.155), point(-0.105,0.155)], white);
+    let arc = [
+      point(-0.105,-0.155), point(-0.01,-0.155), point(0.075,-0.105),
+      point(0.105,0.0), point(0.075,0.105), point(-0.01,0.155), point(-0.105,0.155)
+    ];
+    for segment in arc.windows(2) { painter.line_segment([segment[0], segment[1]], white); }
+    painter.line_segment([point(0.15,-0.22), point(0.23,-0.265)], Stroke::new(size * 0.028, Color32::from_rgb(255, 166, 74)));
+  }
+  
 fn commands(app: &mut CadApp, ctx: &egui::Context, open: &mut bool) {
     let mut start = None;
     egui::Window::new(crate::tl!("Command Reference")).id(egui::Id::new("Command Reference")).open(open).default_size(vec2(640.0, 480.0)).show(

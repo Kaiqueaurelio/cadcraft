@@ -69,7 +69,7 @@ pub fn run(root: &Path) -> Result<(), String> {
         .current_dir(root)
         .args(["run", "-q", "-p", "cadcraft-cli", "--", "commands"])
         .output()
-        .map_err(|e| format!("cadcraft-cli: {e}"))?;
+        .map_err(|e| format!("Decode CAD CLI: {e}"))?;
     let cmds: serde_json::Value = serde_json::from_slice(&out.stdout).map_err(|e| format!("commands JSON: {e}"))?;
     let paths: Vec<String> = cmds
         .as_array()
@@ -106,7 +106,7 @@ pub fn run(root: &Path) -> Result<(), String> {
     }
     let pct = |a: usize, b: usize| if b == 0 { 0.0 } else { 100.0 * a as f64 / b as f64 };
     let mut md = format!(
-        "# Parity checklist\n\n> **Generated:** {} by `cargo xtask parity`. Do not edit by hand.\n\nMenu-breadth parity: a reference menu item counts as covered when a CADCraft command is registered under the same menu label. It measures breadth, not depth; see [target-app-parity.md](target-app-parity.md) for the weighted assessment.\n\n**Menu breadth: {hit} / {} items ({:.0}%)** · {} registered commands.\n\n| Menu | Items | Covered | % |\n|---|---|---|---|\n",
+        "# Parity checklist\n\n> **Generated:** {} by `cargo xtask parity`. Do not edit by hand.\n\nMenu-breadth parity: a reference menu item counts as covered when a Decode CAD command is registered under the same menu label. It measures breadth, not depth; see [target-app-parity.md](target-app-parity.md) for the weighted assessment.\n\n**Menu breadth: {hit} / {} items ({:.0}%)** · {} registered commands.\n\n| Menu | Items | Covered | % |\n|---|---|---|---|\n",
         today(),
         ls.len(),
         pct(hit, ls.len()),

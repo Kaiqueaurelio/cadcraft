@@ -1,4 +1,4 @@
-//! Sample drawings generated in code (original CADCraft content, used for demos and tests).
+//! Sample drawings generated in code (original Decode CAD content, used for demos and tests).
 
 use cadcraft_color::Color;
 use cadcraft_doc::{Common, DimKind, Dimension, Drawing, EntityKind, Hatch, HatchLoop, Layer, Lineweight, MText, Space, Text};
@@ -219,7 +219,7 @@ pub fn bracket() -> Drawing {
     add(on("Title"), line(tb0 + Vec2::new(0.0, 0.6), tb0 + Vec2::new(4.0, 0.6)));
     add(on("Title"), line(tb0 + Vec2::new(2.0, 0.0), tb0 + Vec2::new(2.0, 0.6)));
     add(on("Title"), text(tb0 + Vec2::new(0.15, 1.5), 0.22, "MOUNTING BRACKET"));
-    add(on("Title"), text(tb0 + Vec2::new(0.15, 0.82), 0.12, "CADCRAFT SAMPLE  DWG NO. CC-0001"));
+    add(on("Title"), text(tb0 + Vec2::new(0.15, 0.82), 0.12, "DECODE CAD SAMPLE  DWG NO. DC-0001"));
     add(on("Title"), text(tb0 + Vec2::new(0.15, 0.22), 0.12, "SCALE 1:1"));
     add(on("Title"), text(tb0 + Vec2::new(2.15, 0.22), 0.12, "SHEET 1 OF 1"));
     // Drawing border.

@@ -57,16 +57,19 @@ STAGE="$WORK/root"
 rm -rf "$WORK"
 
 # ---- stage an FHS tree (shared by every format) -------------------------------------------------
-install -Dm755 "$BIN/cadcraft" "$STAGE/usr/bin/cadcraft"
-install -Dm755 "$BIN/cadcraft-cli" "$STAGE/usr/bin/cadcraft-cli"
-"${CROSS_COMPILE:-}strip" "$STAGE/usr/bin/cadcraft" "$STAGE/usr/bin/cadcraft-cli" 2>/dev/null || true
+install -Dm755 "$BIN/cadcraft" "$STAGE/usr/bin/decode-cad"
+install -Dm755 "$BIN/cadcraft-cli" "$STAGE/usr/bin/decode-cad-cli"
+# Keep legacy command names as aliases; desktop launchers and packaged docs use Decode CAD.
+ln -s decode-cad "$STAGE/usr/bin/cadcraft"
+ln -s decode-cad-cli "$STAGE/usr/bin/cadcraft-cli"
+"${CROSS_COMPILE:-}strip" "$STAGE/usr/bin/decode-cad" "$STAGE/usr/bin/decode-cad-cli" 2>/dev/null || true
 install -Dm644 "$HERE/$APP_ID.desktop" "$STAGE/usr/share/applications/$APP_ID.desktop"
 install -Dm644 "$HERE/$APP_ID.mime.xml" "$STAGE/usr/share/mime/packages/$APP_ID.xml"
 mkdir -p "$STAGE/usr/share/metainfo"
 sed -e "s/@VERSION@/$VERSION/g" -e "s/@DATE@/$CADCRAFT_BUILD_DATE/g" \
   "$HERE/$APP_ID.metainfo.xml.in" >"$STAGE/usr/share/metainfo/$APP_ID.metainfo.xml"
 mkdir -p "$STAGE/usr/share/icons"
-cp -R "$ROOT/assets/app-icon/hicolor" "$STAGE/usr/share/icons/"
+install -Dm644 "$ROOT/assets/app-icon/decode-cad.svg" "$STAGE/usr/share/icons/hicolor/scalable/apps/decode-cad.svg"
 mkdir -p "$STAGE/usr/share/doc/cadcraft"
 copy_docs "$STAGE/usr/share/doc/cadcraft"
 
@@ -104,10 +107,10 @@ if has appimage; then
   APPDIR="$WORK/DecodeCAD.AppDir"
   cp -R "$STAGE" "$APPDIR"
   # Keep the bundled legal notices and OFL font licences inside the AppImage.
-  ln -s usr/bin/cadcraft "$APPDIR/AppRun"
+  ln -s usr/bin/decode-cad "$APPDIR/AppRun"
   cp "$HERE/$APP_ID.desktop" "$APPDIR/$APP_ID.desktop"
-  cp "$ROOT/assets/app-icon/hicolor/256x256/apps/$APP_ID.png" "$APPDIR/$APP_ID.png"
-  ln -s "$APP_ID.png" "$APPDIR/.DirIcon"
+  cp "$ROOT/assets/app-icon/decode-cad.svg" "$APPDIR/decode-cad.svg"
+  ln -s "decode-cad.svg" "$APPDIR/.DirIcon"
 
   TOOL="${APPIMAGETOOL:-$(command -v appimagetool || true)}"
   if [[ -z "$TOOL" ]]; then
@@ -143,7 +146,7 @@ if has appimage; then
 fi
 
 if [[ -z "${CROSS_TARGET:-}" ]]; then
-  "$STAGE/usr/bin/cadcraft-cli" --version
+  "$STAGE/usr/bin/decode-cad-cli" --version
 elif [[ -n "${EMULATOR:-}" ]]; then
   "$EMULATOR" "$STAGE/usr/bin/cadcraft-cli" --version
 fi

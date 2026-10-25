@@ -19,7 +19,7 @@ license: MIT OR Apache-2.0
 description: |-
   Decode CAD by Decode Analytics is an open-source computer-aided design and drafting app.
   Create and edit 2D drawings with layers, dimensions, hatches and blocks. Opens and saves
-  DXF and DWG drawings, exports SVG and PNG, and includes the cadcraft-cli automation tool.
+  DXF and DWG drawings, exports SVG and PNG, and includes the decode-cad-cli automation tool.
 
 # The binaries link only glibc and libgcc_s directly. Windowing (X11/Wayland, xkbcommon) and the
 # GPU (Vulkan, EGL/GL) are loaded at runtime, so they are dependencies/recommendations here
@@ -54,6 +54,12 @@ overrides:
       - xdg-desktop-portal
 
 contents:
+  - src: ${STAGE}/usr/bin/decode-cad
+    dst: /usr/bin/decode-cad
+    file_info: { mode: 0755 }
+  - src: ${STAGE}/usr/bin/decode-cad-cli
+    dst: /usr/bin/decode-cad-cli
+    file_info: { mode: 0755 }
   - src: ${STAGE}/usr/bin/cadcraft
     dst: /usr/bin/cadcraft
     file_info: { mode: 0755 }

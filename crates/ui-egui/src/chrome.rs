@@ -70,8 +70,8 @@ pub fn title_and_toolbar(app: &mut CadApp, ui: &mut egui::Ui) {
         let r = ui.max_rect();
         if title_h > 0.0 {
             let title = match app.session.state() {
-                Ok(st) if !app.ui.start_tab => format!("CADCraft      {}{}", st.title, if st.title.contains('.') { "" } else { ".dwg" }),
-                _ => format!("CADCraft      {}", crate::tl!("Start")),
+                Ok(st) if !app.ui.start_tab => format!("Decode CAD      {}{}", st.title, if st.title.contains('.') { "" } else { ".dwg" }),
+                _ => format!("Decode CAD      {}", crate::tl!("Start")),
             };
             // Centred on the traffic lights' centre line (the row's middle): with the system font
             // the capitals' middle is the text box's middle, so no optical nudge.
@@ -529,7 +529,13 @@ pub fn start_page(app: &mut CadApp, ui: &mut egui::Ui) {
     let left = Rect::from_min_size(r.min, vec2(300.0, r.height()));
     p.rect_filled(left, 0.0, t.chrome_dark);
     p.rect_filled(Rect::from_min_max(pos2(left.right(), r.top()), r.max), 0.0, t.chrome);
-    p.text(pos2(left.left() + 34.0, left.top() + 70.0), egui::Align2::LEFT_CENTER, crate::tl!("CADCraft"), egui::FontId::proportional(28.0), t.text);
+    p.text(
+        pos2(left.left() + 34.0, left.top() + 70.0),
+        egui::Align2::LEFT_CENTER,
+        crate::tl!("Decode CAD"),
+        egui::FontId::proportional(28.0),
+        t.text,
+    );
     p.text(
         pos2(left.left() + 34.0, left.top() + 98.0),
         egui::Align2::LEFT_CENTER,
@@ -548,6 +554,22 @@ pub fn start_page(app: &mut CadApp, ui: &mut egui::Ui) {
             action = Some(cmd);
         }
         y += 44.0;
+    }
+    // Direct link to Decode Analytics on the Start page, as requested.
+    let brand_rect = Rect::from_min_size(pos2(left.left() + 30.0, left.bottom() - 38.0), vec2(236.0, 26.0));
+    let brand_resp = ui.interact(brand_rect, ui.id().with("decode_analytics_instagram"), Sense::click());
+    if brand_resp.hovered() {
+        p.rect_filled(brand_rect, 3.0, t.control_hover.gamma_multiply(0.5));
+    }
+    p.text(
+        pos2(brand_rect.left() + 4.0, brand_rect.center().y),
+        egui::Align2::LEFT_CENTER,
+        "Technology developed by Decode Analytics",
+        crate::theme::small(),
+        if brand_resp.hovered() { t.toggle_on } else { t.text_faint },
+    );
+    if brand_resp.on_hover_text("Open Decode Analytics on Instagram").clicked() {
+        ui.ctx().open_url(egui::OpenUrl::new_tab("https://www.instagram.com/decode.analytics/"));
     }
     let main = Rect::from_min_max(pos2(left.right() + 36.0, r.top() + 40.0), r.max);
     p.text(main.min, egui::Align2::LEFT_TOP, crate::tl!("Recent"), egui::FontId::proportional(22.0), t.text);

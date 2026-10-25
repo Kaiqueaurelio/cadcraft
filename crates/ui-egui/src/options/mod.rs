@@ -1,6 +1,6 @@
 //! OPTIONS: the user's preferences, in one dialog and one JSON form.
 //!
-//! Typed (OPTIONS, OP), chosen from Tools ▸ Options… or, on macOS, CADCraft ▸ Settings… (⌘,),
+//! Typed (OPTIONS, OP), chosen from Tools ▸ Options… or, on macOS, Decode CAD ▸ Settings… (⌘,),
 //! OPTIONS opens the Options dialog ([`dialog`]). A JSON call never opens it: `options {}` reports
 //! every preference and `options {"PICKBOX": 5, "modelBackground": "#ffffff"}` changes some (all
 //! or nothing; `"reset": true` restores the defaults first). Upper-case names are the engine's
@@ -353,7 +353,7 @@ impl CadApp {
                 let _ = parse_ui(key, value, &mut c);
             }
         }
-        // CADCRAFT_SYSTEM_CURSOR=1 turns the system cursor on whatever was saved.
+        // DECODE_CAD_SYSTEM_CURSOR=1 turns the system cursor on whatever was saved.
         if c.system_cursor == Some(true) {
             self.ui.system_cursor = true;
         }

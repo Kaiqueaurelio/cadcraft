@@ -214,7 +214,7 @@ fn text_from(t: &T) -> Text {
 }
 
 /// TEXT / ATTRIB / ATTDEF with extrusion (0,0,-1): the points are OCS and the text runs from its
-/// insertion point towards -x in the WCS, with mirrored glyphs. CADCraft draws text readable
+/// insertion point towards -x in the WCS, with mirrored glyphs. Decode CAD draws text readable
 /// (MIRRTEXT = 0), so it keeps the mirrored footprint: the direction turns to -rotation and
 /// left/right justification swap ends (start ↔ end point).
 fn mirror_text(t: &mut Text, align: Option<Vec3>, insert: Vec3) {
@@ -338,7 +338,7 @@ fn entity_with_table_budget(kind: &str, tags: &[Tag], table_cells_left: &mut usi
                 elevation: t.fd(38, 0.0),
                 plinegen: flags & 128 != 0,
             };
-            // A region CADCraft wrote as polylines (`dxf_region`).
+            // A region Decode CAD wrote as polylines (`dxf_region`).
             crate::dxf_region::from_polyline(tags, pl)?
         }
         "SPLINE" => {
@@ -528,7 +528,7 @@ fn entity_with_table_budget(kind: &str, tags: &[Tag], table_cells_left: &mut usi
     Some((c, k))
 }
 
-/// An ACAD_TABLE entity: sizes, cell texts and merges (DXF Reference), plus CADCraft's
+/// An ACAD_TABLE entity: sizes, cell texts and merges (DXF Reference), plus Decode CAD's
 /// title/header flags, text height and style name from xdata when present.
 fn acad_table(tags: &[Tag], table_cells_left: &mut usize) -> Table {
     const MAX_CELLS: usize = 1_000_000;
@@ -577,7 +577,7 @@ fn acad_table(tags: &[Tag], table_cells_left: &mut usize) -> Table {
         text.push_str(&c.s(1).unwrap_or_default());
         let span = |code: i32| c.i(code).and_then(|v| u32::try_from(v).ok());
         // A merge starts at the cell whose span (rows 176, columns 175) is more than one cell.
-        // Its own merged flag (173) varies by writer: CADCraft sets it, while AutoCAD-style
+        // Its own merged flag (173) varies by writer: Decode CAD sets it, while AutoCAD-style
         // writers (acadrust 0.6.4) set it only on the cells the merge covers, whose span is 0.
         let merged = match (span(176), span(175)) {
             (Some(rs), Some(cs)) if rs >= 1 && cs >= 1 && (rs, cs) != (1, 1) => Some((rs, cs)),
@@ -909,7 +909,7 @@ fn default_gradient() -> Gradient {
 }
 
 /// A hatch's gradient fill: the native groups when present (another program may have edited
-/// them), otherwise CADCraft's `GRADIENT` xdata (kept by R2000 files and DWG conversions).
+/// them), otherwise Decode CAD's `GRADIENT` xdata (kept by R2000 files and DWG conversions).
 fn gradient(tags: &[Tag]) -> Option<Gradient> {
     if tags.iter().any(|x| x.code == 450) { native_gradient(tags) } else { xdata_gradient(tags) }
 }
@@ -1094,7 +1094,7 @@ fn entity_extras(kind: &str, tags: &[Tag], h: Handle, k: &mut EntityKind, rx: &m
             }
             rx.mleader_fix.push((h, pending));
         }
-        // CADCraft's VPFROZEN xdata wins; otherwise AutoCAD's group 341 layer handles.
+        // Decode CAD's VPFROZEN xdata wins; otherwise AutoCAD's group 341 layer handles.
         ("VIEWPORT", EntityKind::Viewport(v)) if v.frozen_layers.is_empty() => {
             v.frozen_layers = tags
                 .iter()
@@ -1376,16 +1376,19 @@ fn annotative(tags: &[Tag]) -> bool {
     list.iter().filter(|t| t.code == 1070).nth(1).is_some_and(|t| t.i64() != 0)
 }
 
-/// A text style's font: CADCraft's own font name from `CADCRAFT` xdata (`1000 FONT`, name)
+/// A text style's font: the application's built-in font name from legacy `CADCRAFT` xdata (`1000 FONT`, name).
 /// while the font file is still the `txt` written for other readers; the TrueType family of the
 /// style's `ACAD` xdata (`1000` typeface) when it has no font file (how AutoCAD stores TrueType
 /// styles); otherwise the file.
 fn style_font(tags: &[Tag], file: String) -> String {
+    let present = |name: String| {
+        if name.trim().eq_ignore_ascii_case("CADCraft Stroke") { cadcraft_fonts::BUILTIN_FONT.to_string() } else { name }
+    };
     if file.trim().is_empty()
         && let Some(face) =
             crate::dxf_ext::xdata(tags, "ACAD").iter().find(|t| t.code == 1000).map(|t| t.str().trim().to_string()).filter(|f| !f.is_empty())
     {
-        return face;
+        return present(face);
     }
     let x = crate::dxf_ext::xdata(tags, crate::dxf_ext::APP);
     let own = x.windows(2).find_map(|w| match w {
@@ -1394,8 +1397,8 @@ fn style_font(tags: &[Tag], file: String) -> String {
     });
     let stem = file.trim().to_ascii_lowercase();
     match own {
-        Some(name) if !name.trim().is_empty() && (stem == "txt" || stem == "txt.shx") => name,
-        _ => file,
+        Some(name) if !name.trim().is_empty() && (stem == "txt" || stem == "txt.shx") => present(name),
+        _ => present(file),
     }
 }
 
@@ -1557,7 +1560,7 @@ fn tables(tags: &[Tag], d: &mut Drawing, rx: &mut Rx) {
                 let field = |key: &str| {
                     x.iter().position(|t| t.code == 1000 && t.str() == key).and_then(|i| x.get(i + 1)).filter(|t| t.code == 1000).map(Tag::str)
                 };
-                // 70 bit 1: a paper space view; its layout is CADCraft xdata.
+                // 70 bit 1: a paper space view; its layout is Decode CAD xdata.
                 let layout = (t.i(70).unwrap_or(0) & 1 != 0).then(|| field("LAYOUT").unwrap_or_default());
                 let twist = t.f(50).filter(|a| a.is_finite()).map_or(0.0, |a| a.rem_euclid(360.0).to_radians());
                 let v = NamedView { name: name.clone(), center, height: h, width: w, layer_state: field("LAYERSTATE"), twist, layout };
@@ -1702,7 +1705,7 @@ fn read_budgeted(bytes: &[u8], mut table_cells_left: usize) -> Result<Drawing> {
     // Every handle another program's file already uses is taken before anything gets a new one:
     // its $HANDSEED can be lower than its handles, and entities made while reading (the faces of
     // a polyface mesh) would otherwise get handles that records further on still have. A file
-    // CADCraft wrote names its own next handle, above which its rebuilt records are numbered
+    // Decode CAD wrote names its own next handle, above which its rebuilt records are numbered
     // (#495), so it is left to that.
     let ours = secs.iter().any(|s| s.name == "OBJECTS" && s.tags.iter().any(|t| t.code == 3 && t.str() == crate::dxf_ext::HANDSEED_KEY));
     for t in secs.iter().filter(|_| !ours).flat_map(|s| s.tags.iter()).filter(|t| t.code == 5 || t.code == 105) {
@@ -1776,7 +1779,7 @@ fn read_budgeted(bytes: &[u8], mut table_cells_left: usize) -> Result<Drawing> {
             _ => {}
         }
     }
-    // A file CADCraft wrote names its own next handle (#495): its table records and objects
+    // A file Decode CAD wrote names its own next handle (#495): its table records and objects
     // are numbered above it and rebuilt on save, so following $HANDSEED would drift every save.
     let own_seed = objs.xrecord_text(crate::dxf_ext::HANDSEED_KEY).and_then(|t| Handle::parse_hex(t.trim()));
     // Layouts.
@@ -1821,7 +1824,7 @@ fn read_budgeted(bytes: &[u8], mut table_cells_left: usize) -> Result<Drawing> {
             continue;
         }
         // Generated geometry we rebuild on save: table blocks, and standard arrowhead blocks
-        // nothing inserts whose content is the one CADCraft writes. An arrowhead block with other
+        // nothing inserts whose content is the one Decode CAD writes. An arrowhead block with other
         // content (AutoCAD's `_Dot`, a user's redefinition) is kept, so dimensions keep it.
         let generated_arrow = || {
             let own: Vec<&Entity> = ents.iter().map(|(_, _, e)| e).collect();
@@ -2032,7 +2035,7 @@ impl Objects {
         }
     }
 
-    /// The text of the CADCraft XRECORD stored under `key` in a dictionary (its 1/3 strings).
+    /// The text of the Decode CAD XRECORD stored under `key` in a dictionary (its 1/3 strings).
     fn xrecord_text(&self, key: &str) -> Option<String> {
         let h = self.names.iter().find(|(_, n)| n.as_str() == key).map(|(h, _)| h)?;
         let tags = self.xrecords.get(h)?;
@@ -2085,7 +2088,7 @@ impl Objects {
             d.parametric = p;
         }
         // The annotation scale list (a metric drawing without one gets the metric defaults),
-        // then CADCraft's annotative scaling record.
+        // then Decode CAD's annotative scaling record.
         if !self.scales.is_empty() {
             d.scales = self.scales.clone();
         } else if d.header.i64("MEASUREMENT", 0) == 1 {
@@ -2146,7 +2149,7 @@ impl Objects {
                 None => d.groups.push(g),
             }
         }
-        // Standard associativity, for dimensions without CADCraft's exact links.
+        // Standard associativity, for dimensions without Decode CAD's exact links.
         for tags in &self.dimassocs {
             dimassoc(d, tags);
         }
@@ -2158,7 +2161,7 @@ impl Objects {
 /// for linear, aligned and arc-length dimensions, both ends of both lines (`p13`..`p16`) for
 /// angular dimensions, the three points of an angular-3-point dimension, `p13` for ordinate
 /// dimensions, and for radial or diametric dimensions the single circle reference
-/// ([`radial_links`]). CADCraft's own xdata links, when present, win.
+/// ([`radial_links`]). Decode CAD's own xdata links, when present, win.
 fn dimassoc(d: &mut Drawing, tags: &[Tag]) {
     let start = tags.iter().position(|x| x.code == 100 && x.str() == "AcDbDimAssoc").unwrap_or(0);
     let tail = tags.get(start..).unwrap_or(&[]);
@@ -2253,7 +2256,7 @@ fn circle_centre(d: &Drawing, h: Handle) -> Option<Vec2> {
     }
 }
 
-/// A CADCraft snap from a DIMASSOC object snap type and point, and for a polyline the segment
+/// A Decode CAD snap from a DIMASSOC object snap type and point, and for a polyline the segment
 /// the point is an end of: AutoCAD writes no usable point there (10/20 are 0, #1049), the segment
 /// and the osnap (1 its end, 13 its start) name the vertex. For a line or arc the osnap alone
 /// says which end: 13 is the start and 1 the end, whatever the stored point (the point is
@@ -2320,7 +2323,7 @@ fn page_setup(t: &T) -> PageSetup {
         p.height_mm = w.max(h);
     }
     p.margins_mm = [mm(40, p.margins_mm[0]), mm(41, p.margins_mm[1]), mm(42, p.margins_mm[2]), mm(43, p.margins_mm[3])];
-    // Plot paper units 1: millimetres. 0 (inches) is left to MEASUREMENT: earlier CADCraft
+    // Plot paper units 1: millimetres. 0 (inches) is left to MEASUREMENT: earlier Decode CAD
     // versions wrote 0 for every layout.
     p.paper_mm = t.i(72) == Some(1);
     // Plot rotation 1 or 3 turns the media a quarter turn; media defined wider than tall is
@@ -2364,7 +2367,7 @@ fn page_setup(t: &T) -> PageSetup {
     p
 }
 
-/// A layout's saved paper-space view (centre, height) from CADCraft xdata.
+/// A layout's saved paper-space view (centre, height) from Decode CAD xdata.
 fn layout_view(tags: &[Tag]) -> Option<(Vec2, f64)> {
     let list = crate::dxf_ext::xdata_list(crate::dxf_ext::xdata(tags, crate::dxf_ext::APP), "PSVIEW");
     let g = |c: i32| list.iter().find(|t| t.code == c).map(Tag::f64).filter(|v| v.is_finite());

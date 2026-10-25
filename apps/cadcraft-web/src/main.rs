@@ -1,11 +1,11 @@
-//! CADCraft in the browser.
+//! Decode CAD in the browser.
 //!
 //! Runs the same [`cadcraft_ui_egui::CadApp`] as the desktop app through eframe's web runner
 //! (wgpu: WebGPU where available, WebGL2 otherwise). Build with `trunk build --release` from this
 //! directory (output in `dist/web`). URL flags: `?webgl` forces WebGL2, `?cpu` draws the drawing
 //! with egui shapes instead of the GPU canvas, `?sample` opens the sample drawing. Saving downloads
 //! the drawing through the browser (`download.rs`). With `?host=parent` (inside an `<iframe>`), a
-//! same-origin parent page sends the drawing to open and stores what CADCraft saves instead
+//! same-origin parent page sends the drawing to open and stores what Decode CAD saves instead
 //! (`host.rs`).
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
@@ -20,8 +20,8 @@ mod web {
     use cadcraft_ui_egui::{CadApp, Services};
     use wasm_bindgen::JsCast as _;
 
-    const CANVAS_ID: &str = "cadcraft_canvas";
-    const LOADING_ID: &str = "cadcraft_loading";
+    const CANVAS_ID: &str = "decodecad_canvas";
+    const LOADING_ID: &str = "decodecad_loading";
 
     /// The app, the files File > Open… and drag and drop read for it in the background, the
     /// page embedding it (`?host=parent`), the browser's `prefers-reduced-motion` (it stays
@@ -112,7 +112,7 @@ mod web {
             groups: cadcraft_io::entity_groups,
             entity: cadcraft_io::entity_from_groups,
         });
-        // `?host=parent`: a same-origin page framing CADCraft (such as a Nextcloud app) opens
+        // `?host=parent`: a same-origin page framing Decode CAD (such as a Nextcloud app) opens
         // drawings in it and stores what it saves. Otherwise there is no file system here: saved
         // files reach the user as browser downloads.
         let bridge = if query_param("host").as_deref() == Some("parent") { crate::host::Bridge::new() } else { None };
@@ -188,7 +188,7 @@ mod web {
                 match result {
                     Ok(()) => el.remove(),
                     Err(e) => {
-                        el.set_inner_html(&format!("<p>CADCraft failed to start: {e:?}</p><p>A browser with WebGPU or WebGL2 is required.</p>"))
+                        el.set_inner_html(&format!("<p>Decode CAD failed to start: {e:?}</p><p>A browser with WebGPU or WebGL2 is required.</p>"))
                     }
                 }
             }
@@ -203,13 +203,13 @@ fn wants_cpu(query: &str) -> bool {
 }
 
 /// The browser tab title: the open drawing's file name, a bullet once it has unsaved changes,
-/// and the app name (`drawing.dwg • — CADCraft`), or just the app name with no drawing. An
+/// and the app name (`drawing.dwg • — Decode CAD`), or just the app name with no drawing. An
 /// embedding page (`?host=parent`) reads it to tell which drawing opened and whether it is dirty.
 #[cfg(any(target_arch = "wasm32", test))]
 fn document_title(name: Option<&str>, dirty: bool) -> String {
     match name.filter(|n| !n.trim().is_empty()) {
-        Some(name) => format!("{name}{} — CADCraft", if dirty { " •" } else { "" }),
-        None => "CADCraft".to_string(),
+        Some(name) => format!("{name}{} — Decode CAD", if dirty { " •" } else { "" }),
+        None => "Decode CAD".to_string(),
     }
 }
 
@@ -228,7 +228,7 @@ fn title_to_send(sent: &mut Option<String>, name: Option<&str>, dirty: bool) -> 
 /// Writes a changed title through `write` (on the web, the browser's document title) and reports
 /// whether it wrote one. Split from [`title_to_send`] so the change decision and the write are
 /// both testable: eframe's web backend ignores `egui::ViewportCommand::Title`, so a title that is
-/// computed but not written leaves the tab on `CADCraft`.
+/// computed but not written leaves the tab on `Decode CAD`.
 #[cfg(any(target_arch = "wasm32", test))]
 fn push_title(sent: &mut Option<String>, name: Option<&str>, dirty: bool, write: impl FnOnce(&str)) -> bool {
     match title_to_send(sent, name, dirty) {
@@ -250,7 +250,7 @@ fn main() {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() {
-    eprintln!("cadcraft-web only runs in the browser: build it with `trunk build --release` in apps/cadcraft-web");
+    eprintln!("Decode CAD Web only runs in the browser: build it with `trunk build --release` in apps/cadcraft-web");
 }
 
 #[cfg(test)]
@@ -274,12 +274,12 @@ mod tests {
     /// bullet; a blank or missing name leaves the app name alone and never shows a bullet.
     #[test]
     fn viewport_title_names_the_document_and_marks_unsaved_changes() {
-        assert_eq!(document_title(Some("drawing.dwg"), false), "drawing.dwg — CADCraft");
-        assert_eq!(document_title(Some("drawing.dwg"), true), "drawing.dwg • — CADCraft");
-        assert_eq!(document_title(Some("Drawing1"), false), "Drawing1 — CADCraft");
-        assert_eq!(document_title(None, false), "CADCraft");
-        assert_eq!(document_title(None, true), "CADCraft");
-        assert_eq!(document_title(Some("   "), true), "CADCraft");
+        assert_eq!(document_title(Some("drawing.dwg"), false), "drawing.dwg — Decode CAD");
+        assert_eq!(document_title(Some("drawing.dwg"), true), "drawing.dwg • — Decode CAD");
+        assert_eq!(document_title(Some("Drawing1"), false), "Drawing1 — Decode CAD");
+        assert_eq!(document_title(None, false), "Decode CAD");
+        assert_eq!(document_title(None, true), "Decode CAD");
+        assert_eq!(document_title(Some("   "), true), "Decode CAD");
     }
 
     /// Guards the change signal: a title is sent on open, rename, dirty change and close, but
@@ -287,23 +287,23 @@ mod tests {
     #[test]
     fn viewport_title_follows_open_rename_and_dirty_changes_only() {
         let mut sent = None;
-        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), false).as_deref(), Some("drawing.dwg — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), false).as_deref(), Some("drawing.dwg — Decode CAD"));
         // The page already has it: send nothing.
         assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), false), None);
         // Unsaved changes add the bullet.
-        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), true).as_deref(), Some("drawing.dwg • — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), true).as_deref(), Some("drawing.dwg • — Decode CAD"));
         // A rename shows the new name.
-        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), true).as_deref(), Some("plan.dwg • — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), true).as_deref(), Some("plan.dwg • — Decode CAD"));
         // Saving clears it again.
-        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), false).as_deref(), Some("plan.dwg — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), false).as_deref(), Some("plan.dwg — Decode CAD"));
         // Closing the last drawing leaves the app name only.
-        assert_eq!(title_to_send(&mut sent, None, false).as_deref(), Some("CADCraft"));
+        assert_eq!(title_to_send(&mut sent, None, false).as_deref(), Some("Decode CAD"));
         assert_eq!(title_to_send(&mut sent, None, false), None);
     }
 
     /// Guards the title write: every changed title reaches the writer (on the web, the browser
     /// document title) exactly once, and an unchanged one is not written again. Without the write
-    /// the tab and an embedding page stay on `CADCraft` however the drawing changes.
+    /// the tab and an embedding page stay on `Decode CAD` however the drawing changes.
     #[test]
     fn changed_title_reaches_the_document_title_writer_once() {
         let mut sent = None;
@@ -315,6 +315,6 @@ mod tests {
         assert!(push_title(&mut sent, Some("drawing.dwg"), true, |title| written.push(title.to_owned())));
         // Closing the drawing writes the app name.
         assert!(push_title(&mut sent, None, false, |title| written.push(title.to_owned())));
-        assert_eq!(written, ["drawing.dwg — CADCraft", "drawing.dwg • — CADCraft", "CADCraft"]);
+        assert_eq!(written, ["drawing.dwg — Decode CAD", "drawing.dwg • — Decode CAD", "Decode CAD"]);
     }
 }

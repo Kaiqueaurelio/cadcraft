@@ -5,7 +5,7 @@
 .DESCRIPTION
   Produces, in $env:DIST (default: dist/release):
     decode-cad-<version>-windows-<arch>.msi            per-machine installer (WiX v5)
-    decode-cad-<version>-windows-<arch>-portable.zip   cadcraft.exe + cadcraft-cli.exe
+    decode-cad-<version>-windows-<arch>-portable.zip   decode-cad.exe + decode-cad-cli.exe
 
   The binaries link the C runtime statically (+crt-static), so neither the MSI nor the portable
   zip needs the Visual C++ redistributable. Signing is delegated to sign.ps1 (skipped with a
@@ -52,8 +52,10 @@ $Dist = if ($env:DIST) { $env:DIST } else { Join-Path $Root 'dist\release' }
 $TargetDir = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } else { Join-Path $Root 'target' }
 New-Item -ItemType Directory -Force -Path $Dist | Out-Null
 
-if (-not $env:CADCRAFT_BUILD_SHA) { $env:CADCRAFT_BUILD_SHA = (git -C $Root rev-parse HEAD 2>$null) }
-if (-not $env:CADCRAFT_BUILD_DATE) { $env:CADCRAFT_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') }
+if (-not $env:DECODE_CAD_BUILD_SHA) { $env:DECODE_CAD_BUILD_SHA = if ($env:CADCRAFT_BUILD_SHA) { $env:CADCRAFT_BUILD_SHA } else { (git -C $Root rev-parse HEAD 2>$null) } }
+if (-not $env:DECODE_CAD_BUILD_DATE) { $env:DECODE_CAD_BUILD_DATE = if ($env:CADCRAFT_BUILD_DATE) { $env:CADCRAFT_BUILD_DATE } else { (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') } }
+$env:CADCRAFT_BUILD_SHA = $env:DECODE_CAD_BUILD_SHA
+$env:CADCRAFT_BUILD_DATE = $env:DECODE_CAD_BUILD_DATE
 
 Write-Output "Decode CAD $Version for Windows $Arch ($Target)"
 
@@ -63,6 +65,7 @@ if (-not $SkipBuild) {
   $flagVar = 'CARGO_TARGET_' + ($Target.ToUpper() -replace '-', '_') + '_RUSTFLAGS'
   [Environment]::SetEnvironmentVariable($flagVar, '-C target-feature=+crt-static')
   # Fail the build (rather than warn) if the icon/VERSIONINFO can't be embedded.
+  $env:DECODE_CAD_REQUIRE_WINRES = '1'
   $env:CADCRAFT_REQUIRE_WINRES = '1'
   Invoke-Native "cargo build ($Target)" { cargo build --release --locked -p cadcraft -p cadcraft-cli --target $Target }
 }
@@ -88,7 +91,8 @@ foreach ($check in @(@('cadcraft.exe', 2), @('cadcraft-cli.exe', 3))) {
 $Stage = Join-Path $TargetDir "windows-package\$Arch"
 Remove-Item -Recurse -Force $Stage -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Stage | Out-Null
-Copy-Item (Join-Path $Bin 'cadcraft.exe'), (Join-Path $Bin 'cadcraft-cli.exe') $Stage
+Copy-Item -LiteralPath (Join-Path $Bin 'cadcraft.exe') -Destination (Join-Path $Stage 'decode-cad.exe')
+Copy-Item -LiteralPath (Join-Path $Bin 'cadcraft-cli.exe') -Destination (Join-Path $Stage 'decode-cad-cli.exe')
 
 # Install licence and attribution notices with the MSI as well as the portable ZIP.
 $LegalDir = Join-Path $Stage 'licenses'
@@ -107,13 +111,18 @@ if ($env:CRAFT_FONTS_DIR) {
   }
 }
 
-& (Join-Path $PSScriptRoot 'sign.ps1') (Join-Path $Stage 'cadcraft.exe') (Join-Path $Stage 'cadcraft-cli.exe')
+& (Join-Path $PSScriptRoot 'sign.ps1') (Join-Path $Stage 'decode-cad.exe') (Join-Path $Stage 'decode-cad-cli.exe')
 
 # ---- MSI ---------------------------------------------------------------------------------------
+$BuildDirectory = Join-Path $TargetDir "$Target\release\build"
+$IconFile = Get-ChildItem -LiteralPath $BuildDirectory -Filter 'decode-cad.ico' -File -Recurse -ErrorAction SilentlyContinue |
+  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+if (-not $IconFile) { throw 'The newly generated Decode CAD icon is missing from Cargo OUT_DIR; rebuild with the current source before packaging.' }
+$IconPath = $IconFile.FullName
 $Msi = Join-Path $Dist "decode-cad-$Version-windows-$Arch.msi"
 Invoke-Native 'wix build' {
-  wix build (Join-Path $PSScriptRoot 'cadcraft.wxs') -arch $Arch -ext WixToolset.UI.wixext `
-    -d "Version=$MsiVersion" -d "BinDir=$Stage" -d "IconPath=$(Join-Path $Root 'assets\app-icon\cadcraft.ico')" `
+  wix build (Join-Path $PSScriptRoot 'decode-cad.wxs') -arch $Arch -ext WixToolset.UI.wixext `
+    -d "Version=$MsiVersion" -d "BinDir=$Stage" -d "IconPath=$IconPath" `
     -o $Msi
 }
 # wix writes its debug symbols (.wixpdb) next to the MSI; keep them out of the release assets.
@@ -143,8 +152,8 @@ Compress-Archive -Path $Portable -DestinationPath $Zip
 # here; .github/workflows/windows-arm64.yml installs and runs it on ARM64 instead.
 $HostArch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant()
 if ($Arch -ne 'arm64' -or $HostArch -eq 'arm64') {
-  Invoke-Native 'cadcraft-cli --version' { & (Join-Path $Stage 'cadcraft-cli.exe') --version }
+  Invoke-Native 'Decode CAD CLI --version' { & (Join-Path $Stage 'decode-cad-cli.exe') --version }
 } else {
-  Write-Output "skipping cadcraft-cli --version: an $Arch build doesn't run on this $HostArch machine"
+  Write-Output "skipping Decode CAD CLI smoke test: an $Arch build doesn't run on this $HostArch machine"
 }
 Get-Item $Msi, $Zip | Format-Table Name, Length

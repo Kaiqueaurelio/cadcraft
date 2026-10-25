@@ -507,7 +507,7 @@ fn preferences(app: &CadApp, ui: &mut egui::Ui, changes: &mut Map<String, Value>
 
 fn profiles(app: &CadApp, ui: &mut egui::Ui, changes: &mut Map<String, Value>) {
     ui.label(crate::tl!(
-        "CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts."
+        "Decode CAD keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts."
     ));
     ui.add_space(8.0);
     ui.horizontal(|ui| {

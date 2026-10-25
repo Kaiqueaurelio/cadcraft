@@ -20,7 +20,7 @@ pub struct Workspace {
 }
 
 fn config_dir_from(platform: &str, get: impl Fn(&str) -> Option<OsString>) -> Option<PathBuf> {
-    if let Some(root) = get("CADCRAFT_CONFIG_DIR") {
+    if let Some(root) = get("DECODE_CAD_CONFIG_DIR").or_else(|| get("CADCRAFT_CONFIG_DIR")) {
         return (!root.is_empty()).then(|| PathBuf::from(root));
     }
     let nonempty = |key| get(key).filter(|value| !value.is_empty()).map(PathBuf::from);
@@ -191,7 +191,7 @@ mod tests {
         };
         for platform in ["macos", "windows", "linux", "freebsd"] {
             assert_eq!(config_dir_from(platform, get), Some(PathBuf::from("/private/test-state")));
-            assert_eq!(config_dir_from(platform, |key| if key == "CADCRAFT_CONFIG_DIR" { Some(OsString::new()) } else { get(key) }), None);
+            assert_eq!(config_dir_from(platform, |key| if key == "DECODE_CAD_CONFIG_DIR" || key == "CADCRAFT_CONFIG_DIR" { Some(OsString::new()) } else { get(key) }), None);
         }
         assert_eq!(
             config_dir_from("linux", |key| (key == "XDG_CONFIG_HOME").then(|| OsString::from("/config"))),
@@ -260,7 +260,7 @@ mod tests {
     #[test]
     fn version_one_docking_file_still_loads() {
         use cadcraft_ui_egui::docking::{Panel, reveal_panel};
-        // Written as CADCraft 0.7 writes it: craft-ui's v1 layout with no docking version, a
+        // Written as Decode CAD 0.7 writes it: craft-ui's v1 layout with no docking version, a
         // floating window as one `{panels, active, rect}` group, Tool Sets closed.
         let file = r#"{"version":1,"workspace":{
             "docking":{

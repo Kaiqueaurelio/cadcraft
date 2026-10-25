@@ -11,8 +11,8 @@
 //! - [`fallback_fonts`] (`FONTFALLBACK`): fonts tried first for characters the text's font
 //!   lacks (CJK in an SHX big font, for example), before the automatic system font search.
 //!
-//! On native builds both start from the `CADCRAFT_FONTALT` / `CADCRAFT_FONTFALLBACK`
-//! environment variables.
+//! On native builds these settings use `DECODE_CAD_FONTALT` / `DECODE_CAD_FONTFALLBACK`;
+//! the earlier variable names are accepted as silent compatibility aliases.
 
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -527,10 +527,13 @@ fn prefs() -> MutexGuard<'static, Prefs> {
     static P: OnceLock<Mutex<Prefs>> = OnceLock::new();
     P.get_or_init(|| {
         #[cfg(not(target_arch = "wasm32"))]
-        let env = |k: &str| std::env::var(k).unwrap_or_default();
+        let env = |key: &str, legacy: &str| std::env::var(key).or_else(|_| std::env::var(legacy)).unwrap_or_default();
         #[cfg(target_arch = "wasm32")]
-        let env = |_: &str| String::new();
-        Mutex::new(Prefs { alt: clean_name(&env("CADCRAFT_FONTALT")), fallback: split_list(&env("CADCRAFT_FONTFALLBACK")) })
+        let env = |_: &str, _: &str| String::new();
+        Mutex::new(Prefs {
+            alt: clean_name(&env("DECODE_CAD_FONTALT", "CADCRAFT_FONTALT")),
+            fallback: split_list(&env("DECODE_CAD_FONTFALLBACK", "CADCRAFT_FONTFALLBACK")),
+        })
     })
     .lock()
     .unwrap_or_else(PoisonError::into_inner)
