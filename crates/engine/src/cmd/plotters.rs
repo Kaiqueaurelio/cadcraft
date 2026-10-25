@@ -71,9 +71,9 @@ impl PlotterStore {
                 Some(r) if !r.is_empty() => Some(PathBuf::from(r)),
                 Some(_) => None,
                 None => match std::env::consts::OS {
-                    "macos" => get("HOME").map(|h| h.join("Library/Application Support/Decode CAD")),
-                    "windows" => get("APPDATA").map(|r| r.join("Decode CAD")),
-                    _ => get("XDG_CONFIG_HOME").map(|r| r.join("decode-cad")).or_else(|| get("HOME").map(|h| h.join(".config/decode-cad"))),
+                    "macos" => get("HOME").map(|h| h.join("Library/Application Support/CADCraft")),
+                    "windows" => get("APPDATA").map(|r| r.join("CADCraft")),
+                    _ => get("XDG_CONFIG_HOME").map(|r| r.join("cadcraft")).or_else(|| get("HOME").map(|h| h.join(".config/cadcraft"))),
                 },
             };
             root.map(|r| r.join("plotters")).ok_or_else(|| "there is no settings folder for plotter configurations".to_string())
