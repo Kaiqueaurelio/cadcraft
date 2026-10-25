@@ -100,7 +100,22 @@ notarize() {
 # ---- Decode CAD.app ----------------------------------------------------------------------------
 echo "==> assembling $APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-# Executable and icon carry the display name (CFBundleExecutable / CFBundleIconFile).
+# Generate the original Decode CAD mark and the full macOS iconset; never ship inherited icon art.
+ICONSET="$WORK/DecodeCAD.iconset"
+mkdir -p "$ICONSET"
+swift "$HERE/make_icon.swift" "$WORK/decode-cad-icon.png"
+make_icon() { sips -z "$1" "$1" "$WORK/decode-cad-icon.png" --out "$ICONSET/$2" >/dev/null; }
+make_icon 16 icon_16x16.png
+make_icon 32 icon_16x16@2x.png
+make_icon 32 icon_32x32.png
+make_icon 64 icon_32x32@2x.png
+make_icon 128 icon_128x128.png
+make_icon 256 icon_128x128@2x.png
+make_icon 256 icon_256x256.png
+make_icon 512 icon_256x256@2x.png
+make_icon 512 icon_512x512.png
+make_icon 1024 icon_512x512@2x.png
+iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/DecodeCAD.icns"
 cp "$WORK/bin/cadcraft" "$APP/Contents/MacOS/DecodeCAD"
 
 # Licences of the embedded craft-fonts fonts (only when built with CRAFT_FONTS_DIR).
