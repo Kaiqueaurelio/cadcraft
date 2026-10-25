@@ -33,7 +33,8 @@ permissions:
 
 concurrency:
   group: desktop-release-${{ github.ref }}
-  cancel-in-progress: false
+  # New commits supersede stale package builds on the same branch/tag.
+  cancel-in-progress: true
 
 jobs:
   release_preflight:
