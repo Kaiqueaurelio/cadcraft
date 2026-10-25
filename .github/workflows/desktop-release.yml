@@ -8,6 +8,11 @@ on:
         required: false
         type: string
         default: ""
+      publish_release:
+        description: "Publish a public GitHub Release after both package builds succeed"
+        required: false
+        type: boolean
+        default: false
   push:
     tags:
       - "v*"
@@ -136,8 +141,8 @@ jobs:
             export CADCRAFT_BUILD_DATE
           fi
           packaging/linux/package.sh --formats "appimage deb tar"
-          test -s dist/release/cadcraft-*-linux-x86_64.deb
-          test -s dist/release/cadcraft-*-linux-x86_64.AppImage
+          test -s dist/release/decode-cad-*-linux-x86_64.deb
+          test -s dist/release/decode-cad-*-linux-x86_64.AppImage
           chmod +x dist/release/*.AppImage
           sha256sum dist/release/* > dist/release/SHA256SUMS
 
@@ -151,12 +156,15 @@ jobs:
 
   publish:
     name: Publish GitHub Release
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish_release == true)
     needs: [windows, linux]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - name: Check out source to resolve release version
+        uses: actions/checkout@v4
+
       - name: Download Windows packages
         uses: actions/download-artifact@v4
         with:
@@ -172,10 +180,20 @@ jobs:
       - name: Create release with installers
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          REQUESTED_VERSION: ${{ inputs.version }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
+          TAG="$RELEASE_TAG"
+          if [[ -z "$TAG" ]]; then
+            VERSION="$REQUESTED_VERSION"
+            if [[ -z "$VERSION" ]]; then
+              VERSION="$(awk -F '\"' '/^version = / {print $2; exit}' Cargo.toml)"
+            fi
+            [[ -n "$VERSION" ]] || { echo 'Could not determine release version' >&2; exit 1; }
+            TAG="v$VERSION"
+          fi
           find release-assets -maxdepth 3 -type f -print
           test -n "$(find release-assets/windows -type f -name '*.msi' -print -quit)"
           test -n "$(find release-assets/linux -type f -name '*.deb' -print -quit)"
@@ -190,5 +208,6 @@ jobs:
             gh release create "$TAG" "${ASSETS[@]}" \
               --repo "$REPOSITORY" \
               --title "$TITLE" \
+              --target "$GITHUB_SHA" \
               --generate-notes
           fi
