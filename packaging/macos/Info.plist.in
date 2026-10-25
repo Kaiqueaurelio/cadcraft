@@ -7,11 +7,11 @@
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleDisplayName</key>
-  <string>Decode CAD</string>
+  <string>The Code Craft</string>
   <key>CFBundleName</key>
-  <string>Decode CAD</string>
+  <string>The Code Craft</string>
   <key>CFBundleExecutable</key>
-  <string>CADCraft</string>
+  <string>The Code Craft</string>
   <key>CFBundleIdentifier</key>
   <string>ai.storyteller.cadcraft</string>
   <key>CFBundleInfoDictionaryVersion</key>
@@ -29,7 +29,7 @@
   <key>CADCraftBuildCommit</key>
   <string>@BUILD_SHA@</string>
   <key>CFBundleIconFile</key>
-  <string>CADCraft</string>
+  <string>The Code Craft</string>
   <key>LSApplicationCategoryType</key>
   <string>public.app-category.graphics-design</string>
   <!-- Must match MACOSX_DEPLOYMENT_TARGET in package.sh. Big Sur is the first release on
@@ -91,7 +91,7 @@
       <key>LSItemContentTypes</key>
       <array><string>ai.storyteller.cadcraft.dxf</string></array>
       <key>CFBundleTypeIconFile</key>
-      <string>CADCraft</string>
+      <string>The Code Craft</string>
     </dict>
     <dict>
       <key>CFBundleTypeName</key>
@@ -103,7 +103,7 @@
       <key>LSItemContentTypes</key>
       <array><string>ai.storyteller.cadcraft.dwg</string></array>
       <key>CFBundleTypeIconFile</key>
-      <string>CADCraft</string>
+      <string>The Code Craft</string>
     </dict>
   </array>
 
