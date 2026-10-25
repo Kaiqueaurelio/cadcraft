@@ -1,0 +1,98 @@
+name: Publish update manifest
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-manifest-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  manifest:
+    name: Create checksummed update metadata
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern SHA256SUMS.txt --dir release-assets
+          test -s release-assets/SHA256SUMS.txt
+
+      - name: Build manifest from published assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.repository }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+
+          tag = os.environ["TAG"]
+          repo = os.environ["REPO"]
+          release_url = os.environ["RELEASE_URL"]
+          checksums = {}
+          for line in Path("release-assets/SHA256SUMS.txt").read_text().splitlines():
+              line = line.strip()
+              if not line or line.startswith("#"):
+                  continue
+              parts = line.split()
+              if len(parts) >= 2:
+                  digest, name = parts[0], parts[-1].lstrip("*")
+                  if len(digest) == 64 and all(c in "0123456789abcdefABCDEF" for c in digest):
+                      checksums[name.removeprefix("./")] = digest.lower()
+
+          raw = subprocess.check_output(
+              ["gh", "api", f"repos/{repo}/releases/tags/{tag}"], text=True
+          )
+          release = json.loads(raw)
+          assets = []
+          for asset in release.get("assets", []):
+              name = asset["name"]
+              digest = asset.get("digest")
+              digest = digest.removeprefix("sha256:") if digest else checksums.get(name)
+              if not digest or len(digest) != 64:
+                  continue
+              if name == "SHA256SUMS.txt" or name == "latest.json":
+                  continue
+              assets.append({
+                  "name": name,
+                  "url": asset["browser_download_url"],
+                  "size": asset["size"],
+                  "sha256": digest.lower(),
+                  "content_type": asset.get("content_type"),
+              })
+
+          manifest = {
+              "schema_version": 1,
+              "product": "Decode CAD",
+              "repository": repo,
+              "version": tag[1:] if tag.startswith("v") else tag,
+              "tag": tag,
+              "release_url": release_url,
+              "published_at": release.get("published_at"),
+              "prerelease": bool(release.get("prerelease")),
+              "assets": assets,
+          }
+          if not assets:
+              raise SystemExit("No release assets with SHA-256 checksums; refusing to publish an empty update manifest.")
+          Path("latest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+          print(f"Manifest includes {len(assets)} checksummed assets.")
+          PY
+
+      - name: Upload latest.json to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" latest.json --repo "$GITHUB_REPOSITORY" --clobber
