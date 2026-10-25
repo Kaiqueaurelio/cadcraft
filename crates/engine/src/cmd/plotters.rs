@@ -1,11 +1,11 @@
 //! Plotter configurations: PLOTTERMANAGER / -PLOTTERMANAGER, and the device and paper a page
 //! setup or a plot uses.
 //!
-//! The built-in devices (`CADCraft PDF`, `CADCraft PNG`, `CADCraft SVG`) come first. They offer
+//! The built-in devices (`Decode CAD PDF`, `Decode CAD PNG`, `Decode CAD SVG`) come first. They offer
 //! the standard ISO and ANSI/ARCH paper sizes with 5 mm (ISO) or quarter-inch (inch sizes)
 //! margins. User devices are `*.plotter.json` files ([`cadcraft_doc::PlotterConfig`],
 //! `docs/plotters.md`) in a folder the host provides through [`set_plotter_store`]. Without
-//! one, native builds use the `plotters` folder of the CADCraft settings directory and the web
+//! one, native builds use the `plotters` folder of the Decode CAD settings directory and the web
 //! keeps them for the session.
 
 use std::sync::{Mutex, OnceLock};
@@ -60,7 +60,7 @@ impl PlotterStore {
         }
     }
 
-    /// The `plotters` folder of the CADCraft settings directory (`CADCRAFT_CONFIG_DIR`, else
+    /// The `plotters` folder of the Decode CAD settings directory (`CADCRAFT_CONFIG_DIR`, else
     /// the platform's settings directory).
     #[cfg(not(target_arch = "wasm32"))]
     pub fn settings_folder() -> PlotterStore {
@@ -137,10 +137,33 @@ const MAX_DEVICES: usize = 1000;
 
 /// The built-in devices: name, output, description.
 const BUILTIN: [(&str, PlotOutput, &str); 3] = [
-    ("CADCraft PDF", PlotOutput::Pdf, "Vector PDF"),
-    ("CADCraft PNG", PlotOutput::Png, "Raster PNG image"),
-    ("CADCraft SVG", PlotOutput::Svg, "Vector SVG image"),
+    ("Decode CAD PDF", PlotOutput::Pdf, "Vector PDF"),
+    ("Decode CAD PNG", PlotOutput::Png, "Raster PNG image"),
+    ("Decode CAD SVG", PlotOutput::Svg, "Vector SVG image"),
 ];
+
+/// Historical names remain accepted when opening drawings or saved page setups made by earlier
+/// versions, but the current UI only displays Decode CAD names.
+const LEGACY_BUILTIN_NAMES: [(&str, PlotOutput); 3] = [
+    ("CADCraft PDF", PlotOutput::Pdf),
+    ("CADCraft PNG", PlotOutput::Png),
+    ("CADCraft SVG", PlotOutput::Svg),
+];
+
+fn builtin_spec(name: &str) -> Option<(&'static str, PlotOutput, &'static str)> {
+    let name = name.trim();
+    BUILTIN
+        .iter()
+        .find(|(n, _, _)| n.eq_ignore_ascii_case(name))
+        .copied()
+        .or_else(|| {
+            let output = LEGACY_BUILTIN_NAMES
+                .iter()
+                .find(|(n, _)| n.eq_ignore_ascii_case(name))
+                .map(|(_, output)| *output)?;
+            BUILTIN.iter().find(|(_, o, _)| *o == output).copied()
+        })
+}
 
 /// A page setup's "no device" name.
 const NO_DEVICE: &str = "None";
@@ -167,7 +190,7 @@ fn builtins() -> Vec<PlotterConfig> {
 }
 
 fn is_builtin(name: &str) -> bool {
-    BUILTIN.iter().any(|(n, _, _)| n.eq_ignore_ascii_case(name.trim()))
+    builtin_spec(name).is_some()
 }
 
 /// The user's devices (unreadable files are skipped), sorted by name.
@@ -204,7 +227,7 @@ pub fn find_device(name: &str) -> Option<PlotterConfig> {
     if n.is_empty() || n.eq_ignore_ascii_case(NO_DEVICE) {
         return None;
     }
-    if let Some((b, o, d)) = BUILTIN.iter().find(|(b, _, _)| b.eq_ignore_ascii_case(n)) {
+    if let Some((b, o, d)) = builtin_spec(n) {
         return Some(builtin(b, *o, d));
     }
     let st = store();
@@ -549,7 +572,7 @@ fn run_plottermanager(_s: &mut Session, p: &Value) -> Result<Value> {
                         Some(o) => o.as_str().and_then(PlotOutput::parse).ok_or_else(|| bad(cmd, "`output` must be pdf, png or svg"))?,
                         None => PlotOutput::Pdf,
                     };
-                    let (b, o, _) = BUILTIN.iter().find(|(_, o, _)| *o == output).copied().unwrap_or(("CADCraft PDF", PlotOutput::Pdf, ""));
+                    let (b, o, _) = BUILTIN.iter().find(|(_, o, _)| *o == output).copied().unwrap_or(("Decode CAD PDF", PlotOutput::Pdf, ""));
                     builtin(b, o, "")
                 }
             };
