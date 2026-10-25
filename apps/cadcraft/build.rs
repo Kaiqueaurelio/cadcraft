@@ -164,8 +164,8 @@ fn main() {
         .set("FileDescription", "Decode CAD — computer-aided design")
         .set("CompanyName", "Decode Analytics")
         .set("LegalCopyright", "Copyright (c) 2026 Decode Analytics and contributors; see bundled license notices. MIT OR Apache-2.0.")
-        .set("OriginalFilename", "cadcraft.exe")
-        .set("InternalName", "cadcraft");
+        .set("OriginalFilename", "decode-cad.exe")
+        .set("InternalName", "decode-cad");
     if let Err(error) = res.compile() {
         if std::env::var_os("CADCRAFT_REQUIRE_WINRES").is_some() {
             eprintln!("embedding Windows resources failed: {error}");
