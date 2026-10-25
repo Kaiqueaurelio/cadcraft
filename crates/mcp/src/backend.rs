@@ -152,7 +152,7 @@ fn not_open(addr: &str, e: std::io::Error) -> std::io::Error {
     std::io::Error::new(
         e.kind(),
         format!(
-            "Decode CAD is not answering at {addr} ({e}). Open Decode CAD with its control port (`--control PORT` or CADCRAFT_CONTROL_PORT), then try again"
+            "Decode CAD is not answering at {addr} ({e}). Open Decode CAD with its control port (`--control PORT` or DECODE_CAD_CONTROL_PORT), then try again"
         ),
     )
 }
@@ -164,7 +164,7 @@ fn launch_app(addr: &str) -> std::io::Result<()> {
         let ok = std::process::Command::new("open").args(["-a", "Decode CAD", "--args", "--control", port]).status()?.success();
         if ok { Ok(()) } else { Err(std::io::Error::other("could not open Decode CAD (is it in Applications?)")) }
     } else {
-        Err(std::io::Error::other(format!("Decode CAD is not running; start it with `cadcraft --control {port}`")))
+        Err(std::io::Error::other(format!("Decode CAD is not running; start it with `decode-cad --control {port}`")))
     }
 }
 
