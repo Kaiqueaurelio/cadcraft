@@ -39,7 +39,7 @@ def render(svg, width, out):
     # The SVG's text is already outlined and no fonts are loaded, so every machine draws the
     # same pixels.
     subprocess.run(
-        ["resvg", "--skip-system-fonts", "-w", str(width), svg, out],
+        ["resvg", "-w", str(width), svg, out],
         check=True,
     )
     with Image.open(out) as im:
