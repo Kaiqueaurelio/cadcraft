@@ -124,9 +124,9 @@
 	ByBlock	Κατά μπλοκ (ByBlock)
 	ByColor	Κατά χρώμα (ByColor)
 	ByLayer	Κατά επίπεδο (ByLayer)
-	CADCraft	CADCraft
-	CADCraft Help	Βοήθεια CADCraft
-	CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	Το CADCraft αποθηκεύει τις προτιμήσεις, τις λειτουργίες έλξης αντικειμένων και τους διακόπτες σχεδίασης στον λογαριασμό σας και τις επαναφέρει στην εκκίνηση.
+	Decode CAD	Decode CAD
+	Decode CAD Help	Βοήθεια Decode CAD
+	Decode CAD keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	Το Decode CAD αποθηκεύει τις προτιμήσεις, τις λειτουργίες έλξης αντικειμένων και τους διακόπτες σχεδίασης στον λογαριασμό σας και τις επαναφέρει στην εκκίνηση.
 	Calibrate	Βαθμονόμηση
 	Calibrate 3D Mouse	Βαθμονόμηση ποντικιού 3Δ
 	Cancel	Ακύρωση
@@ -464,7 +464,7 @@
 	Hide All	Απόκρυψη όλων
 	Hide All Constraint Bars	Απόκρυψη όλων των γραμμών περιορισμών
 	Hide All Dynamic Dimensions	Απόκρυψη όλων των δυναμικών διαστάσεων
-	Hide CADCraft	Απόκρυψη CADCraft
+	Hide Decode CAD	Απόκρυψη Decode CAD
 	Hide Layer List	Απόκρυψη λίστας επιπέδων
 	Hide Objects	Απόκρυψη αντικειμένων
 	Hide Others	Απόκρυψη άλλων
@@ -807,7 +807,7 @@
 	Quick Select...	Γρήγορη επιλογή...
 	QuickCalc	Γρήγορη αριθμομηχανή (QuickCalc)
 	QuickCalc Pick	Επιλογή στη γρήγορη αριθμομηχανή
-	Quit CADCraft	Έξοδος από το CADCraft
+	Quit Decode CAD	Έξοδος από το Decode CAD
 	Radius	Ακτίνα
 	Raster Image	Εικόνα ψηφίδων (Raster Image)
 	Ray	Ημιευθεία (Ray)
