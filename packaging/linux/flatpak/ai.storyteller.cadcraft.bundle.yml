@@ -1,5 +1,5 @@
 # Flatpak manifest for the single-file bundle attached to every GitHub release
-# (cadcraft-<version>-linux-<arch>.flatpak). Build it with packaging/linux/flatpak-bundle.sh.
+# (decode-cad-<version>-linux-<arch>.flatpak). Build it with packaging/linux/flatpak-bundle.sh.
 #
 # It repackages the release's own Linux tarball (cadcraft-<version>-linux-<arch>.tar.gz, built
 # on Ubuntu 22.04 by package.sh) instead of compiling Rust inside flatpak-builder: no network and
@@ -15,7 +15,7 @@ id: ai.storyteller.cadcraft
 runtime: org.freedesktop.Platform
 runtime-version: '26.08'
 sdk: org.freedesktop.Sdk
-command: cadcraft
+command: decode-cad
 finish-args:
   # Display: Wayland first; X11 only when no Wayland compositor is running.
   - --socket=wayland
@@ -34,17 +34,17 @@ finish-args:
   # the sandbox; `flatpak override --user --share=network ai.storyteller.cadcraft` exposes it to
   # host agents) and home/host filesystem access.
 modules:
-  - name: cadcraft
+  - name: decode-cad
     buildsystem: simple
     build-commands:
-      - install -Dm755 bin/cadcraft /app/bin/cadcraft
-      - install -Dm755 bin/cadcraft-cli /app/bin/cadcraft-cli
+      - install -Dm755 bin/decode-cad /app/bin/decode-cad\n      - ln -s decode-cad /app/bin/cadcraft
+      - install -Dm755 bin/decode-cad-cli /app/bin/decode-cad-cli\n      - ln -s decode-cad-cli /app/bin/cadcraft-cli
       - install -Dm644 share/applications/ai.storyteller.cadcraft.desktop /app/share/applications/ai.storyteller.cadcraft.desktop
       # .dxf and .dwg.
       - install -Dm644 share/mime/packages/ai.storyteller.cadcraft.xml /app/share/mime/packages/ai.storyteller.cadcraft.xml
       # Already has the release's version and date substituted by package.sh.
       - install -Dm644 share/metainfo/ai.storyteller.cadcraft.metainfo.xml /app/share/metainfo/ai.storyteller.cadcraft.metainfo.xml
-      - mkdir -p /app/share/icons /app/share/doc && cp -R share/icons/hicolor /app/share/icons/ && cp -R share/doc/cadcraft /app/share/doc/
+      - install -Dm644 share/icons/hicolor/scalable/apps/decode-cad.svg /app/share/icons/hicolor/scalable/apps/decode-cad.svg\n      - mkdir -p /app/share/doc && cp -R share/doc/cadcraft /app/share/doc/
     sources:
       - type: dir
         path: stage
