@@ -138,9 +138,9 @@
 	ByBlock	BloğaGöre
 	ByColor	RengeGöre
 	ByLayer	KatmanaGöre
-	CADCraft	CADCraft
-	CADCraft Help	CADCraft Yardımı
-	CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	CADCraft bu tercihleri, nesne kenetleme kiplerini ve çizim seçeneklerini kullanıcı hesabınız için saklar ve açılışta geri yükler.
+	Decode CAD	Decode CAD
+	Decode CAD Help	Decode CAD Yardımı
+	Decode CAD keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	Decode CAD bu tercihleri, nesne kenetleme kiplerini ve çizim seçeneklerini kullanıcı hesabınız için saklar ve açılışta geri yükler.
 	Calibrate	Kalibre Et
 	Calibrate 3D Mouse	3B Fareyi Kalibre Et
 	Cancel	İptal
@@ -476,7 +476,7 @@
 	Hide All	Tümünü Gizle
 	Hide All Constraint Bars	Tüm Kısıtlama Çubuklarını Gizle
 	Hide All Dynamic Dimensions	Tüm Dinamik Ölçüleri Gizle
-	Hide CADCraft	CADCraft'ı Gizle
+	Hide Decode CAD	Decode CAD'ı Gizle
 	Hide Layer List	Katman Listesini Gizle
 	Hide Objects	Nesneleri Gizle
 	Hide Others	Diğerlerini Gizle
@@ -817,7 +817,7 @@
 	Quick Select...	Hızlı Seçim...
 	QuickCalc	Hızlı Hesap
 	QuickCalc Pick	Hızlı Hesap Seçimi
-	Quit CADCraft	CADCraft'tan Çık
+	Quit Decode CAD	Decode CAD'tan Çık
 	Radius	Yarıçap
 	Raster Image	Raster Görüntü
 	Ray	Işın
