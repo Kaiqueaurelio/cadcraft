@@ -8,6 +8,8 @@ use serde_json::json;
 use crate::CadApp;
 use crate::theme::Tokens;
 
+const ABOUT_LOGO_PNG: &[u8] = include_bytes!("../../../assets/app-icon/decode-cad-logo.png");
+
 pub fn show(app: &mut CadApp, ctx: &egui::Context) {
     crate::mtext_editor::show(app, ctx);
     crate::quick::quick_properties(app, ctx);
@@ -337,9 +339,31 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 1 => crate::credits::contributors_ui(ui),
                 2 => crate::credits::models_ui(ui),
                 _ => {
-                    ui.heading(crate::tl!("Decode CAD"));
-                    ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
-                    ui.label(crate::tl!("Computer-aided design and drafting: an open-source, clean-room CAD application written in pure Rust."));
+                    let logo_id = egui::Id::new("decode_cad_about_logo");
+                    let mut logo = ctx.data_mut(|data| data.get_temp::<egui::TextureHandle>(logo_id));
+                    if logo.is_none()
+                        && let Ok(decoded) = image::load_from_memory(ABOUT_LOGO_PNG)
+                    {
+                        let rgba = decoded.to_rgba8();
+                        let size = [rgba.width() as usize, rgba.height() as usize];
+                        let texture = ctx.load_texture(
+                            "decode-cad-about-logo",
+                            egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw()),
+                            egui::TextureOptions::LINEAR,
+                        );
+                        ctx.data_mut(|data| data.insert_temp(logo_id, texture.clone()));
+                        logo = Some(texture);
+                    }
+                    ui.horizontal(|ui| {
+                        if let Some(logo) = &logo {
+                            ui.add(egui::Image::new(logo).fit_to_exact_size(vec2(104.0, 104.0)));
+                        }
+                        ui.vertical(|ui| {
+                            ui.heading("Decode CAD");
+                            ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
+                            ui.label(crate::tl!("Computer-aided design and drafting: an open-source, clean-room CAD application written in pure Rust."));
+                        });
+                    });
                     ui.add_space(6.0);
                     ui.label(RichText::new(crate::tl!("Developed and maintained by Decode Analytics.")).color(t.text_dim));
                     ui.hyperlink_to("Decode Analytics on Instagram", "https://www.instagram.com/decode.analytics/");
