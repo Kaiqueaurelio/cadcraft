@@ -92,8 +92,8 @@ O Decode CAD está em desenvolvimento. Consulte [ROADMAP.md](ROADMAP.md) para ve
 As versões para computador e navegador exigem Rust 1.95 ou posterior. A versão mínima declarada para o núcleo do projeto continua sendo Rust 1.90.
 
 ```sh
-git clone https://github.com/Kaiqueaurelio/cadcraft.git
-cd cadcraft
+git clone https://github.com/Kaiqueaurelio/decodecad.git
+cd decodecad
 cargo run --release -p cadcraft -- --sample
 ```
 
