@@ -29,7 +29,7 @@ impl Opening {
     pub fn start(&mut self, path: &str) {
         let (tx, rx) = channel();
         let p = path.to_string();
-        let spawned = std::thread::Builder::new().name("cadcraft-open".into()).spawn(move || {
+        let spawned = std::thread::Builder::new().name("decode-cad-open".into()).spawn(move || {
             let _ = tx.send(read_file(&p));
         });
         if spawned.is_err() {
@@ -112,7 +112,7 @@ mod tests {
     fn open_path_reads_in_the_background_and_reports_failure() {
         let mut app = CadApp::new(Session::new(), Services::default());
         let before = app.session.docs.len();
-        let missing = std::env::temp_dir().join(format!("cadcraft-missing-{}.dxf", std::process::id()));
+        let missing = std::env::temp_dir().join(format!("decode-cad-missing-{}.dxf", std::process::id()));
         let p = missing.to_string_lossy().to_string();
         app.open_path(&p);
         assert!(app.opening.busy() || app.status.is_some(), "the read starts in the background");
