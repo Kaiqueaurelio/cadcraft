@@ -29,9 +29,9 @@ NSColor.clear.setFill()
 NSBezierPath(rect: NSRect(x: 0, y: 0, width: canvas, height: canvas)).fill()
 
 let background = NSBezierPath(roundedRect: NSRect(x: 32, y: 32, width: 960, height: 960), xRadius: 192, yRadius: 192)
-NSColor(calibratedRed: 14/255, green: 24/255, blue: 42/255, alpha: 1).setFill()
+NSColor(calibratedRed: 14/255.0, green: 24/255.0, blue: 42/255.0, alpha: 1).setFill()
 background.fill()
-NSColor(calibratedRed: 43/255, green: 65/255, blue: 94/255, alpha: 1).setStroke()
+NSColor(calibratedRed: 43/255.0, green: 65/255.0, blue: 94/255.0, alpha: 1).setStroke()
 background.lineWidth = 12
 background.stroke()
 
@@ -51,10 +51,10 @@ func strokeLine(_ points: [NSPoint], color: NSColor, width: CGFloat) {
     path.stroke()
 }
 
-let blue = NSColor(calibratedRed: 56/255, green: 137/255, blue: 255/255, alpha: 1)
-let cyan = NSColor(calibratedRed: 43/255, green: 220/255, blue: 220/255, alpha: 1)
-let white = NSColor(calibratedRed: 244/255, green: 248/255, blue: 255/255, alpha: 1)
-let orange = NSColor(calibratedRed: 255/255, green: 166/255, blue: 74/255, alpha: 1)
+let blue = NSColor(calibratedRed: 56/255.0, green: 137/255.0, blue: 255/255.0, alpha: 1)
+let cyan = NSColor(calibratedRed: 43/255.0, green: 220/255.0, blue: 220/255.0, alpha: 1)
+let white = NSColor(calibratedRed: 244/255.0, green: 248/255.0, blue: 255/255.0, alpha: 1)
+let orange = NSColor(calibratedRed: 255/255.0, green: 166/255.0, blue: 74/255.0, alpha: 1)
 
 let cube: [(CGFloat, CGFloat)] = [
     (-0.30, -0.14), (0.0, -0.31), (0.30, -0.14), (0.30, 0.17),
