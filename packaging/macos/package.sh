@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Build, sign and (optionally) notarize the macOS release artifacts:
 #
-#   $DIST/cadcraft-<version>-macos-<arch>.dmg          Decode CAD.app on a drag-to-Applications DMG
-#   $DIST/cadcraft-cli-<version>-macos-<arch>.zip      the headless CLI
+#   $DIST/decode-cad-<version>-macos-<arch>.dmg          Decode CAD.app on a drag-to-Applications DMG
+#   $DIST/decode-cad-cli-<version>-macos-<arch>.zip      the headless CLI
 #
 # Usage: packaging/macos/package.sh [--arch universal|aarch64|x86_64] [--skip-build]
 #
@@ -101,7 +101,7 @@ notarize() {
 echo "==> assembling $APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 # Executable and icon carry the display name (CFBundleExecutable / CFBundleIconFile).
-cp "$WORK/bin/cadcraft" "$APP/Contents/MacOS/Decode CAD"
+cp "$WORK/bin/cadcraft" "$APP/Contents/MacOS/DecodeCAD"
 
 # Licences of the embedded craft-fonts fonts (only when built with CRAFT_FONTS_DIR).
 copy_font_licences "$APP/Contents/Resources"
@@ -113,7 +113,7 @@ printf 'APPL????' >"$APP/Contents/PkgInfo"
 
 # Sign inside-out: nested code first, then the bundle itself (no --deep on the final signature).
 # Today the only nested code is the main executable; frameworks/helpers would be signed here too.
-sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP/Contents/MacOS/Decode CAD"
+sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP/Contents/MacOS/DecodeCAD"
 sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP"
 codesign --verify --strict --deep --verbose=2 "$APP"
 
