@@ -1,4 +1,4 @@
-> **Decode CAD — desenvolvido e mantido pela Decode Analytics.** Esta edição é construída a partir de código aberto e adaptada para distribuição sob a identidade Decode CAD. Os avisos e atribuições exigidos continuam disponíveis em [LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE), [NOTICE](NOTICE) e [ATTRIBUTION.md](ATTRIBUTION.md).
+> **Decode CAD — desenvolvido e mantido pela [Decode Analytics](https://www.instagram.com/decode.analytics/).** Esta edição é construída a partir de código aberto e adaptada para distribuição sob a identidade Decode CAD. Os avisos e atribuições exigidos continuam disponíveis em [LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE), [NOTICE](NOTICE) e [ATTRIBUTION.md](ATTRIBUTION.md).
 
 <p align="center">
   <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png" width="256" alt="Logo Decode CAD da Decode Analytics">
@@ -14,7 +14,7 @@
   Ferramentas de desenho, camadas, cotas, hachuras, blocos, leitura e gravação DXF/DWG, exportação e automação — para desktop e navegador, conforme as plataformas disponíveis neste repositório.
 </p>
 
-**Tecnologia:** [Rust](https://www.rust-lang.org/) · **Licença:** [MIT](LICENSE-MIT) / [Apache 2.0](LICENSE-APACHE) · **Desenvolvido por:** [Decode Analytics](#desenvolvido-pela-decode-analytics)
+**Tecnologia:** [Rust](https://www.rust-lang.org/) · **Licença:** [MIT](LICENSE-MIT) / [Apache 2.0](LICENSE-APACHE) · **Desenvolvido por:** [Decode Analytics](https://www.instagram.com/decode.analytics/) · [Sobre a Decode Analytics](#desenvolvido-pela-decode-analytics)
 
 ## Downloads
 
@@ -196,7 +196,7 @@ Consulte a página de [Releases do Decode CAD](https://github.com/Kaiqueaurelio/
 
 ## Desenvolvido pela Decode Analytics
 
-O Decode CAD é uma edição mantida pela **Decode Analytics**. A identidade visual e a distribuição desta edição são administradas pela Decode Analytics; componentes e trechos derivados de dependências preservam seus respectivos avisos legais e licenças.
+O Decode CAD é uma edição mantida pela **[Decode Analytics](https://www.instagram.com/decode.analytics/)**. A identidade visual e a distribuição desta edição são administradas pela Decode Analytics; componentes e trechos derivados de dependências preservam seus respectivos avisos legais e licenças.
 
 ## Licença e créditos
 
