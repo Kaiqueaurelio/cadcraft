@@ -19,7 +19,7 @@ requirements and graphics-performance documentation. Nothing was benchmarked in 
 | GPU canvas for 2D | yes (hardware acceleration, GPU smoothing, high-quality geometry) | wgpu on Metal | wgpu on DirectX 12 by default (`WGPU_BACKEND` overrides; GL avoided after AMD crashes, #31) | wgpu on Vulkan (or GL) | WebGPU, WebGL2 fallback |
 | CPU fallback | software mode | yes (`tiny-skia` rasteriser) | yes | yes | — |
 | GPU for 3D (shaded visual styles, ray-traced rendering) | yes | no (no 3D) | no | no | no |
-| Low-latency presentation | yes | vsync or low-latency via `CADCRAFT_VSYNC` | same | no vsync queue so the crosshair keeps up (#183) | browser-controlled |
+| Low-latency presentation | yes | vsync or low-latency via `DECODE_CAD_VSYNC` | same | no vsync queue so the crosshair keeps up (#183) | browser-controlled |
 | HiDPI / Retina, display scaling | yes | yes (egui points per pixel) | yes; a Windows 11 DPI fix is queued upstream (PR #110) | yes | yes |
 | Multi-monitor (palettes on other screens, per-monitor DPI) | yes | not handled deliberately; one window | same | same | — |
 | Trackpad pan, pinch zoom | yes (Mac) | yes, with trackpad vs wheel detection (#58) | wheel only (precision touchpad untested) | wheel; delay reported on Linux Mint (#25) | browser events |
