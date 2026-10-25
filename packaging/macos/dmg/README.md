@@ -1,9 +1,9 @@
 # macOS DMG window
 
 What Finder shows when the DMG opens: a 660 × 400 pt background with the app icon and the
-`Applications` link side by side. `package.sh` copies these files into the image; nothing here is
-generated at build time, so the DMG still builds with `hdiutil makehybrid` (no mounted device, no
-Finder scripting on CI, nothing extra installed in the signing job).
+`Applications` link side by side. `package.sh` regenerates the TIFF background and Finder layout from the checked-in SVG using
+`generate.py` before assembling the image. The build does not require mounting the DMG or running
+Finder scripting, but it does require `resvg` and the isolated Python dependencies described below.
 
 | File | What |
 |---|---|
