@@ -1,6 +1,6 @@
-# CADCraft control protocol
+# Decode CAD control protocol
 
-Start the desktop app with `--control PORT` (or `CADCRAFT_CONTROL_PORT=PORT`). It listens on
+Start the desktop app with `--control PORT` (or `DECODE_CAD_CONTROL_PORT=PORT`). It listens on
 `127.0.0.1:PORT` for JSON lines: one request per line, one reply per line. A port given with
 `--control` wins over the variable; a bare `--control` keeps the variable's port.
 
@@ -15,7 +15,7 @@ control server starts, and refuses (`unauthorized`) any request without a matchi
 is `cadcraft-control-<port>.token` in the per-user runtime directory (`$XDG_RUNTIME_DIR`, else
 `~/.cache`; `%LOCALAPPDATA%` on Windows); its path is logged at startup. A client reads the token
 from that file — which requires the desktop user's own filesystem access — and includes it on each
-line. The MCP bridge (`cadcraft-cli mcp --connect`) does this automatically.
+line. The MCP bridge (`decode-cad-cli mcp --connect`) does this automatically.
 
 Errors come back as `{"id": …, "ok": false, "error": "message"}`. An unknown method's error points
 to `control.methods`, which lists the methods the server answers.
@@ -63,7 +63,7 @@ field. `engine.commands` returns a separate command catalog, not a list of addit
 | `ui.screenshot` | `{path?}` | PNG of the window (needs a presented frame). |
 | `ui.render` | `{path?, width?, height?, fit?}` | Headless render. `fit` (default true) frames the whole drawing; `false` uses the current view. Replies `{pngBase64, width, height, bytes, path?}`. |
 | `app.open` / `app.save` / `app.quit` | `{path}` | File operations. |
-| `control.methods` | | Every method this server answers: `{method, params, description}`. Headless (`cadcraft-cli mcp`) lists only the methods it serves. |
+| `control.methods` | | Every method this server answers: `{method, params, description}`. Headless (`decode-cad-cli mcp`) lists only the methods it serves. |
 | `ping` | | Replies `"pong"`. A cheap health check. |
 
 To run a command listed by `engine.commands`, put its id in `params.command` and its arguments
@@ -107,8 +107,8 @@ The existing response is unchanged: `count` is all matches, `returned` is the pa
 `entities` contains handles, layers and geometry. This query does not change selection, drawing
 contents or undo history. `entities` is a command, not a top-level protocol method.
 
-The MCP server (`cadcraft-cli mcp --connect 127.0.0.1:PORT`) wraps this protocol; headless
-(`cadcraft-cli mcp`) it serves the same methods from an in-process session.
+The MCP server (`decode-cad-cli mcp --connect 127.0.0.1:PORT`) wraps this protocol; headless
+(`decode-cad-cli mcp`) it serves the same methods from an in-process session.
 MCP tool names are another interface: `execute` maps to `engine.execute`, `list_commands` to
 `engine.commands`, and the MCP `open` tool to `app.open`. See [mcp.md](mcp.md).
 
@@ -121,8 +121,8 @@ acceptance. Unregistered controls still report their actual focus ID, with a nul
 The native host restores layout choices from `workspace.json` and saves changes atomically.
 It stores palette/toolset visibility, selected toolset, collapsed groups, command-line history
 height and related chrome choices. It does not store drawings, command buffers, dialogs or the
-current Start tab. The default directory is `~/Library/Application Support/CADCraft` on macOS,
-`%APPDATA%/CADCraft` on Windows, and `$XDG_CONFIG_HOME/cadcraft` or `~/.config/cadcraft` elsewhere.
+current Start tab. The default directory is `~/Library/Application Support/Decode CAD` on macOS,
+`%APPDATA%/Decode CAD` on Windows, and `$XDG_CONFIG_HOME/cadcraft` or `~/.config/cadcraft` elsewhere.
 Set `CADCRAFT_CONFIG_DIR` to a private directory for an isolated profile; an explicitly empty
 value disables workspace reads and writes. An invalid, oversized or newer-version file is
 reported and left untouched, with persistence disabled for that launch. Repair or move that
