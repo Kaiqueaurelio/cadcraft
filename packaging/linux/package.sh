@@ -69,7 +69,6 @@ mkdir -p "$STAGE/usr/share/metainfo"
 sed -e "s/@VERSION@/$VERSION/g" -e "s/@DATE@/$CADCRAFT_BUILD_DATE/g" \
   "$HERE/$APP_ID.metainfo.xml.in" >"$STAGE/usr/share/metainfo/$APP_ID.metainfo.xml"
 mkdir -p "$STAGE/usr/share/icons"
-cp -R "$ROOT/assets/app-icon/hicolor" "$STAGE/usr/share/icons/"
 install -Dm644 "$ROOT/assets/app-icon/decode-cad.svg" "$STAGE/usr/share/icons/hicolor/scalable/apps/decode-cad.svg"
 mkdir -p "$STAGE/usr/share/doc/cadcraft"
 copy_docs "$STAGE/usr/share/doc/cadcraft"
