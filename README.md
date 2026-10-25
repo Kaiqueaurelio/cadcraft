@@ -181,7 +181,7 @@ O Decode CAD respeita a preferência do sistema para reduzir animações. A conf
 
 ## Plano de desenvolvimento
 
-Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos.
+Consulte [ROADMAP.md](ROADMAP.md) para ver a etapa atual, os indicadores de compatibilidade e a estimativa de trabalho restante. O documento [docs/gaps.md](docs/gaps.md) lista os recursos e as áreas que ainda precisam ser concluídos. A comparação do fork com o CADCraft original está em [docs/decodecad-parity.md](docs/decodecad-parity.md).
 
 ## Downloads
 
