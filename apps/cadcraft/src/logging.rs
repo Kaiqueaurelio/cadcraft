@@ -421,7 +421,7 @@ mod tests {
         assert_eq!(read(&dir.join(LOG_FILE)), "run 4");
         assert_eq!(read(&dir.join("decode-cad.1.log")), "run 3");
         assert_eq!(read(&dir.join("decode-cad.2.log")), "run 2");
-        assert!(!dir.join("cadcraft.3.log").exists(), "only {KEEP} old logs are kept");
+        assert!(!dir.join("decode-cad.3.log").exists(), "only {KEEP} old logs are kept");
         let _ = std::fs::remove_dir_all(&dir);
     }
 
