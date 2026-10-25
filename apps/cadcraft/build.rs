@@ -141,7 +141,9 @@ fn write_decode_ico(path: &Path) -> std::io::Result<()> {
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-env-changed=DECODE_CAD_REQUIRE_WINRES");
     println!("cargo:rerun-if-env-changed=CADCRAFT_REQUIRE_WINRES");
+    println!("cargo:rerun-if-env-changed=DECODE_CAD_BUILD_SHA");
     println!("cargo:rerun-if-env-changed=CADCRAFT_BUILD_SHA");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
         return;
@@ -167,7 +169,7 @@ fn main() {
         .set("OriginalFilename", "decode-cad.exe")
         .set("InternalName", "decode-cad");
     if let Err(error) = res.compile() {
-        if std::env::var_os("CADCRAFT_REQUIRE_WINRES").is_some() {
+        if std::env::var_os("DECODE_CAD_REQUIRE_WINRES").is_some() || std::env::var_os("CADCRAFT_REQUIRE_WINRES").is_some() {
             eprintln!("embedding Windows resources failed: {error}");
             std::process::exit(1);
         }
