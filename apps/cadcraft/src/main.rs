@@ -1,4 +1,4 @@
-//! CADCraft desktop app.
+//! Decode CAD desktop app.
 //!
 //! Usage: `cadcraft [--control <port>] [--sample] [files…]`
 //!
@@ -46,7 +46,7 @@ impl App {
         let result = if final_attempt { self.workspace.save_on_exit(&self.cad.ui) } else { self.workspace.save_if_changed(&self.cad.ui) };
         if let Err(error) = result {
             if self.workspace_error.as_ref() != Some(&error) {
-                eprintln!("CADCraft workspace: {error}");
+                eprintln!("Decode CAD workspace: {error}");
                 self.cad.set_status(format!("Workspace could not be saved: {error}"));
                 self.workspace_error = Some(error);
             }
@@ -321,7 +321,7 @@ fn main() -> eframe::Result {
                 app.ui = ui;
             }
             if let Some(error) = &workspace_error {
-                eprintln!("CADCraft workspace: {error}");
+                eprintln!("Decode CAD workspace: {error}");
                 app.set_status(error);
             }
             app.system_languages = std::env::var("CADCRAFT_LOCALE").map(|s| vec![s]).unwrap_or_else(|_| sys_locale::get_locales().collect());
