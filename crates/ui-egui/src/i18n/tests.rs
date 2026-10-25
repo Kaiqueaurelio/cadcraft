@@ -131,7 +131,7 @@ fn missing_marked_ui_literals(language: &str) -> BTreeSet<String> {
                     .unwrap();
                 let key: String = serde_json::from_str(&rest[..end]).unwrap();
                 // Coordinate axes, glyph buttons and product names are not translated.
-                if !["X", "Y", "B", "CADCraft"].contains(&key.as_str()) && !catalog.contains_key(&("", key.as_str())) {
+                if !["X", "Y", "B", "Decode CAD"].contains(&key.as_str()) && !catalog.contains_key(&("", key.as_str())) {
                     missing.insert(key);
                 }
             }
