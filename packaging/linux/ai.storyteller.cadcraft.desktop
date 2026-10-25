@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=Decode CAD
+Name=The Code Craft
 GenericName=Computer-Aided Design
-Comment=Decode CAD by Decode Analytics — 2D drafting, dimensioning and plotting
+Comment=The Code Craft by Decode Analytics — 2D drafting, dimensioning and plotting
 Exec=cadcraft %F
 TryExec=cadcraft
 Icon=ai.storyteller.cadcraft
