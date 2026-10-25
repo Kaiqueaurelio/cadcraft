@@ -103,7 +103,7 @@ struct Widget {
 }
 
 fn widgets_id() -> egui::Id {
-    egui::Id::new("cadcraft-observed-widgets")
+    egui::Id::new("decode-cad-observed-widgets")
 }
 
 pub(crate) fn begin_frame(ctx: &egui::Context) {
@@ -551,7 +551,7 @@ pub fn save_screenshot(image: &egui::ColorImage, path: Option<&str>) -> Value {
         buf.extend_from_slice(&c.to_array());
     }
     let Some(img) = image::RgbaImage::from_raw(w as u32, h as u32, buf) else { return json!({"ok": false, "error": "bad image"}) };
-    let path = path.map(str::to_string).unwrap_or_else(|| std::env::temp_dir().join("cadcraft-shot.png").to_string_lossy().to_string());
+    let path = path.map(str::to_string).unwrap_or_else(|| std::env::temp_dir().join("decode-cad-shot.png").to_string_lossy().to_string());
     match img.save(&path) {
         Ok(()) => json!({"ok": true, "result": {"path": path, "width": w, "height": h}}),
         Err(e) => json!({"ok": false, "error": e.to_string()}),
