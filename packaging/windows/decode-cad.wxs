@@ -3,7 +3,7 @@
   Decode CAD MSI (WiX Toolset v5: `dotnet tool install -g wix`, plus the WixUI extension:
   `wix extension add -g WixToolset.UI.wixext/5.0.2`). Built by package.ps1:
 
-    wix build cadcraft.wxs -arch x64 -ext WixToolset.UI.wixext -d Version=1.2.3 -d BinDir=... -d IconPath=... -o out.msi
+    wix build decode-cad.wxs -arch x64 -ext WixToolset.UI.wixext -d Version=1.2.3 -d BinDir=... -d IconPath=... -o out.msi
 
   Per-machine install into Program Files, a Start Menu shortcut, an optional desktop shortcut, and
   Decode CAD offered under "Open with" for .dxf and .dwg drawings (without taking over the user's
