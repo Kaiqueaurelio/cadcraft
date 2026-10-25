@@ -28,11 +28,11 @@ settings directory:
 
 | System | Folder |
 |---|---|
-| Linux and FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` or `~/.config/decode-cad/plotters` |
-| macOS | `~/Library/Application Support/Decode CAD/plotters` |
+| Linux and FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` or `~/.config/cadcraft/plotters` |
+| macOS | `~/Library/Application Support/CADCraft/plotters` |
 | Windows | `%APPDATA%\CADCraft\plotters` |
 
-`DECODE_CAD_CONFIG_DIR` replaces the settings directory. On the web, devices last for the
+`DECODE_CAD_CONFIG_DIR` (also accepted under the earlier variable name) replaces the settings directory. The default folder names are retained so existing saved plotter devices continue to work. On the web, devices last for the
 session unless the host provides storage (`cmd::plotters::set_plotter_store`). Binary `.pc3`
 files are not read; we haven't found a public specification of that format.
 
