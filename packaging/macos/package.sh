@@ -144,8 +144,21 @@ fi
 echo "==> building $DMG"
 STAGE="$WORK/dmg"
 mkdir -p "$STAGE"
-# Never ship a stale disk image background from the upstream product identity.
-python3 "$HERE/dmg/generate.py"
+
+# Generate a fresh Decode CAD Finder background and disk layout. The script uses isolated Python
+# dependencies so it works on clean CI runners and doesn't modify the runner's system Python.
+if ! command -v resvg >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    brew install resvg
+  else
+    echo "error: resvg is required to render the Decode CAD installer artwork" >&2
+    exit 1
+  fi
+fi
+DMG_PYTHON="$WORK/dmg-venv"
+python3 -m venv "$DMG_PYTHON"
+"$DMG_PYTHON/bin/python" -m pip install --disable-pip-version-check 'pillow>=12' 'ds_store==1.3.3' 'mac_alias==2.2.3'
+"$DMG_PYTHON/bin/python" "$HERE/dmg/generate.py"
 ditto "$APP" "$STAGE/Decode CAD.app"
 ln -s /Applications "$STAGE/Applications"
 # Finder window layout: background, icon size and positions (packaging/macos/dmg/README.md).
