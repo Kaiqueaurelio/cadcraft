@@ -103,7 +103,7 @@
       <key>LSItemContentTypes</key>
       <array><string>ai.storyteller.cadcraft.dwg</string></array>
       <key>CFBundleTypeIconFile</key>
-      <string>CADCraft</string>
+      <string>DecodeCAD</string>
     </dict>
   </array>
 
