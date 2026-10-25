@@ -29,7 +29,7 @@ mod craft_fonts;
 pub use craft_fonts::{CRAFT_FONTS, CraftFont};
 
 /// Name of the built-in font.
-pub const BUILTIN_FONT: &str = "CADCraft Stroke";
+pub const BUILTIN_FONT: &str = "Decode CAD Stroke";
 
 /// One laid-out run of text: strokes in local coordinates (baseline at y = 0, x from 0).
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -289,7 +289,7 @@ impl TextFont {
             return TextFont::Outline(f);
         }
         let n = name.trim();
-        if n.is_empty() || n.eq_ignore_ascii_case(BUILTIN_FONT) || n.eq_ignore_ascii_case("CADCraft Stroke" {
+        if n.is_empty() || n.eq_ignore_ascii_case(BUILTIN_FONT) || n.eq_ignore_ascii_case("Decode CAD Stroke") {
             return TextFont::Stroke;
         }
         ttf::find(&ttf::font_alt()).map(TextFont::Outline).unwrap_or(TextFont::Stroke)
