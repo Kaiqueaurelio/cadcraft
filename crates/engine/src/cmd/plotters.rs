@@ -145,9 +145,9 @@ const BUILTIN: [(&str, PlotOutput, &str); 3] = [
 /// Historical names remain accepted when opening drawings or saved page setups made by earlier
 /// versions, but the current UI only displays Decode CAD names.
 const LEGACY_BUILTIN_NAMES: [(&str, PlotOutput); 3] = [
-    ("CADCraft PDF", PlotOutput::Pdf),
-    ("CADCraft PNG", PlotOutput::Png),
-    ("CADCraft SVG", PlotOutput::Svg),
+    ("Decode CAD PDF", PlotOutput::Pdf),
+    ("Decode CAD PNG", PlotOutput::Png),
+    ("Decode CAD SVG", PlotOutput::Svg),
 ];
 
 fn builtin_spec(name: &str) -> Option<(&'static str, PlotOutput, &'static str)> {
