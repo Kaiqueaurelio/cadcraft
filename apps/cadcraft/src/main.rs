@@ -1,13 +1,13 @@
 //! Decode CAD desktop app.
 //!
-//! Usage: `cadcraft [--control <port>] [--sample] [files…]`
+//! Usage: `decode-cad [--control <port>] [--sample] [files…]`
 //!
-//! `--control <port>` (or `CADCRAFT_CONTROL_PORT`) starts a localhost JSON-lines control server:
+//! `--control <port>` (or `DECODE_CAD_CONTROL_PORT`) starts a localhost JSON-lines control server:
 //! `{"id":1,"method":"cmdline.input","params":{"text":"circle 0,0 5"}}` → `{"id":1,"ok":true,…}`.
 //! See `cadcraft_ui_egui::control` for the methods.
 //!
-//! `CADCRAFT_VSYNC=1` presents with vsync on Linux/BSD, where the default is the low-latency
-//! present mode (`CADCRAFT_VSYNC=0` selects that elsewhere); see `cadcraft_ui_egui::gpu::surface_config`.
+//! `DECODE_CAD_VSYNC=1` presents with vsync on Linux/BSD, where the default is the low-latency
+//! present mode (`DECODE_CAD_VSYNC=0` selects that elsewhere); see `cadcraft_ui_egui::gpu::surface_config`.
 //!
 //! `log` records go to standard error and `<settings dir>/logs/cadcraft.log` (`RUST_LOG` sets the
 //! levels); see [`logging`] and [`config_dir`].
@@ -70,7 +70,7 @@ impl eframe::App for App {
     fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         #[cfg(target_os = "macos")]
         {
-            if self.native_menu.is_none() && std::env::var_os("CADCRAFT_NO_NATIVE_MENU").is_none() {
+            if self.native_menu.is_none() && std::env::var_os("DECODE_CAD_NO_NATIVE_MENU").is_none() && std::env::var_os("CADCRAFT_NO_NATIVE_MENU").is_none() {
                 self.native_menu = Some(native_menu::NativeMenu::install(&mut self.cad));
             }
             if let Some(m) = &mut self.native_menu {
@@ -173,9 +173,9 @@ fn filters_for_save(name: &str) -> [(&'static str, &'static str); 6] {
     filters
 }
 
-/// The per-user settings directory (it holds `logs/` and `autosave/`): `CADCRAFT_CONFIG_DIR` if set, else
+/// The per-user settings directory (it holds `logs/` and `autosave/`): `DECODE_CAD_CONFIG_DIR` if set, else
 /// `$XDG_CONFIG_HOME/cadcraft` or `~/.config/cadcraft` on Linux and the BSDs,
-/// `~/Library/Application Support/CADCraft` on macOS, `%APPDATA%\CADCraft` on Windows.
+/// `~/Library/Application Support/Decode CAD` on macOS, `%APPDATA%\CADCraft` on Windows.
 fn config_dir() -> Option<std::path::PathBuf> {
     config_dir_from(|k| std::env::var_os(k))
 }
@@ -184,16 +184,16 @@ fn config_dir() -> Option<std::path::PathBuf> {
 /// counts as unset, so a blank value never means the working directory.
 fn config_dir_from(var: impl Fn(&str) -> Option<std::ffi::OsString>) -> Option<std::path::PathBuf> {
     let set = |k: &str| var(k).filter(|v| !v.is_empty()).map(std::path::PathBuf::from);
-    if let Some(dir) = set("CADCRAFT_CONFIG_DIR") {
+    if let Some(dir) = set("DECODE_CAD_CONFIG_DIR").or_else(|| set("CADCRAFT_CONFIG_DIR")) {
         return Some(dir);
     }
     if cfg!(target_os = "macos") {
-        set("HOME").map(|h| h.join("Library/Application Support/CADCraft"))
+        set("HOME").map(|h| h.join("Library/Application Support/Decode CAD"))
     } else if cfg!(windows) {
-        set("APPDATA").map(|a| a.join("CADCraft"))
+        set("APPDATA").map(|a| a.join("Decode CAD"))
     } else {
         // The XDG spec ignores a relative XDG_CONFIG_HOME.
-        set("XDG_CONFIG_HOME").filter(|p| p.is_absolute()).or_else(|| set("HOME").map(|h| h.join(".config"))).map(|c| c.join("cadcraft"))
+        set("XDG_CONFIG_HOME").filter(|p| p.is_absolute()).or_else(|| set("HOME").map(|h| h.join(".config"))).map(|c| c.join("decode-cad"))
     }
 }
 
@@ -337,7 +337,7 @@ fn version_string() -> String {
     format!("Decode CAD {} ({sha})", env!("CARGO_PKG_VERSION"))
 }
 
-/// The control port from `--control <port>` or `CADCRAFT_CONTROL_PORT` (`source`); a value that is
+/// The control port from `--control <port>` or `DECODE_CAD_CONTROL_PORT` (`source`); a value that is
 /// not a port is logged and ignored instead of silently starting no control channel.
 fn control_port_from(source: &str, value: Option<String>) -> Option<u16> {
     let value = value?;
@@ -349,13 +349,13 @@ fn control_port_from(source: &str, value: Option<String>) -> Option<u16> {
 }
 
 /// `--control` followed by `value`: a bare `--control` (last argument) keeps the port already
-/// read from `CADCRAFT_CONTROL_PORT` (`current`) instead of turning the control channel off.
+/// read from `DECODE_CAD_CONTROL_PORT` (`current`) instead of turning the control channel off.
 fn control_flag(current: Option<u16>, value: Option<String>) -> Option<u16> {
     if value.is_some() {
         return control_port_from("--control", value);
     }
     match current {
-        Some(port) => log::warn!("--control: no port given; using CADCRAFT_CONTROL_PORT ({port})"),
+        Some(port) => log::warn!("--control: no port given; using DECODE_CAD_CONTROL_PORT ({port})"),
         None => log::warn!("--control: no port given; the control channel is off"),
     }
     current
@@ -366,7 +366,7 @@ fn main() -> eframe::Result {
     let logger = logging::install();
     // lossy, so a value that is not Unicode is reported like any other bad port instead of ignored
     let mut control_port =
-        control_port_from("CADCRAFT_CONTROL_PORT", std::env::var_os("CADCRAFT_CONTROL_PORT").map(|p| p.to_string_lossy().into_owned()));
+        control_port_from("DECODE_CAD_CONTROL_PORT", std::env::var_os("DECODE_CAD_CONTROL_PORT").or_else(|| std::env::var_os("CADCRAFT_CONTROL_PORT")).map(|p| p.to_string_lossy().into_owned()));
     let mut files = Vec::new();
     let mut sample = false;
     let mut args = std::env::args().skip(1);
@@ -389,15 +389,15 @@ fn main() -> eframe::Result {
             Some(Err(e)) => log::warn!("no log file: {e}"),
             None => {
                 logger.stderr_only();
-                log::warn!("no log file: no settings directory (set CADCRAFT_CONFIG_DIR)");
+                log::warn!("no log file: no settings directory (set DECODE_CAD_CONFIG_DIR)");
             }
         }
     }
     install_io();
-    let surface = cadcraft_ui_egui::gpu::surface_config(std::env::var("CADCRAFT_VSYNC").ok().as_deref(), cfg!(all(unix, not(target_os = "macos"))));
+    let surface = cadcraft_ui_egui::gpu::surface_config(std::env::var("DECODE_CAD_VSYNC").or_else(|_| std::env::var("CADCRAFT_VSYNC")).ok().as_deref(), cfg!(all(unix, not(target_os = "macos"))));
     let mut options = eframe::NativeOptions {
         // The crosshair is drawn by the app: present without a queue on Linux/BSD, where X11
-        // swapchains hold two frames back under vsync (`CADCRAFT_VSYNC=1` restores vsync).
+        // swapchains hold two frames back under vsync (`DECODE_CAD_VSYNC=1` restores vsync).
         wgpu_options: eframe::egui_wgpu::WgpuConfiguration::default().with_surface_config(surface),
         viewport: egui::ViewportBuilder::default()
             .with_title("Decode CAD")
@@ -431,10 +431,10 @@ fn main() -> eframe::Result {
         });
     }
     // winit has no file drag-and-drop on Wayland (only on X11), so dropping files from the file
-    // manager showed a "no" cursor. Run through XWayland when it's there; CADCRAFT_WAYLAND=1
+    // manager showed a "no" cursor. Run through XWayland when it's there; DECODE_CAD_WAYLAND=1
     // keeps the native Wayland backend.
     #[cfg(all(unix, not(target_os = "macos")))]
-    if std::env::var_os("DISPLAY").is_some() && std::env::var_os("CADCRAFT_WAYLAND").is_none() {
+    if std::env::var_os("DISPLAY").is_some() && std::env::var_os("DECODE_CAD_WAYLAND").is_none() && std::env::var_os("CADCRAFT_WAYLAND").is_none() {
         options.event_loop_builder = Some(Box::new(|b| {
             use winit::platform::x11::EventLoopBuilderExtX11;
             b.with_x11();
@@ -453,7 +453,7 @@ fn main() -> eframe::Result {
                 eprintln!("Decode CAD workspace: {error}");
                 app.set_status(error);
             }
-            app.system_languages = std::env::var("CADCRAFT_LOCALE").map(|s| vec![s]).unwrap_or_else(|_| sys_locale::get_locales().collect());
+            app.system_languages = std::env::var("DECODE_CAD_LOCALE").or_else(|_| std::env::var("CADCRAFT_LOCALE")).map(|s| vec![s]).unwrap_or_else(|_| sys_locale::get_locales().collect());
             // The user profile (Options): drafting settings, selection sizes, drawing-area colours.
             if let Some(profile) = cc.storage.and_then(|s| s.get_string(cadcraft_ui_egui::options::PROFILE_KEY)) {
                 app.load_profile(&profile);
@@ -554,7 +554,7 @@ mod tests {
 
     #[test]
     fn control_without_a_port_keeps_the_environment_port() {
-        // `CADCRAFT_CONTROL_PORT=47321 cadcraft --control` (#844)
+        // `DECODE_CAD_CONTROL_PORT=47321 cadcraft --control` (#844)
         assert_eq!(control_flag(Some(47321), None), Some(47321));
         assert_eq!(control_flag(None, None), None);
         // A port given on the command line still wins over the variable.
@@ -564,9 +564,9 @@ mod tests {
 
     #[test]
     fn the_override_variable_wins_and_empty_values_are_unset() {
-        let vars = [("CADCRAFT_CONFIG_DIR", "/tmp/cc"), ("HOME", "/home/u"), ("XDG_CONFIG_HOME", "/x"), ("APPDATA", "C:\\a")];
+        let vars = [("DECODE_CAD_CONFIG_DIR", "/tmp/cc"), ("HOME", "/home/u"), ("XDG_CONFIG_HOME", "/x"), ("APPDATA", "C:\\a")];
         assert_eq!(config_dir_from(env(&vars)), Some(PathBuf::from("/tmp/cc")));
-        let empty = [("CADCRAFT_CONFIG_DIR", ""), ("HOME", ""), ("XDG_CONFIG_HOME", ""), ("APPDATA", "")];
+        let empty = [("DECODE_CAD_CONFIG_DIR", ""), ("HOME", ""), ("XDG_CONFIG_HOME", ""), ("APPDATA", "")];
         assert_eq!(config_dir_from(env(&empty)), None, "no usable variable means no directory, not the working directory");
         assert_eq!(config_dir_from(env(&[])), None);
     }
@@ -583,7 +583,7 @@ mod tests {
     #[cfg(target_os = "macos")]
     #[test]
     fn macos_uses_application_support() {
-        assert_eq!(config_dir_from(env(&[("HOME", "/Users/u")])), Some(PathBuf::from("/Users/u/Library/Application Support/CADCraft")));
+        assert_eq!(config_dir_from(env(&[("HOME", "/Users/u")])), Some(PathBuf::from("/Users/u/Library/Application Support/Decode CAD")));
     }
 
     #[cfg(windows)]
@@ -591,7 +591,7 @@ mod tests {
     fn windows_uses_appdata() {
         assert_eq!(
             config_dir_from(env(&[("APPDATA", "C:\\Users\\u\\AppData\\Roaming")])),
-            Some(PathBuf::from("C:\\Users\\u\\AppData\\Roaming").join("CADCraft"))
+            Some(PathBuf::from("C:\\Users\\u\\AppData\\Roaming").join("Decode CAD"))
         );
     }
 
