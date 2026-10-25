@@ -10,9 +10,9 @@ The built-in devices come first:
 
 | Device | Output |
 |---|---|
-| `CADCraft PDF` | vector PDF |
-| `CADCraft PNG` | raster PNG on white paper at the device resolution (300 dpi) |
-| `CADCraft SVG` | vector SVG |
+| `Decode CAD PDF` | vector PDF |
+| `Decode CAD PNG` | raster PNG on white paper at the device resolution (300 dpi) |
+| `Decode CAD SVG` | vector SVG |
 
 They offer the standard sizes:
 
@@ -23,16 +23,16 @@ They offer the standard sizes:
 ISO sheets have 5 mm margins. Inch sheets have quarter-inch (6.35 mm) margins. A page setup
 with the device `None` plots to PDF on the page setup's paper, as before.
 
-User devices are files in our own format, kept in the `plotters` folder of the CADCraft
+User devices are files in our own format, kept in the `plotters` folder of Decode CAD
 settings directory:
 
 | System | Folder |
 |---|---|
-| Linux and FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` or `~/.config/cadcraft/plotters` |
-| macOS | `~/Library/Application Support/CADCraft/plotters` |
+| Linux and FreeBSD | `$XDG_CONFIG_HOME/cadcraft/plotters` or `~/.config/decode-cad/plotters` |
+| macOS | `~/Library/Application Support/Decode CAD/plotters` |
 | Windows | `%APPDATA%\CADCraft\plotters` |
 
-`CADCRAFT_CONFIG_DIR` replaces the settings directory. On the web, devices last for the
+`DECODE_CAD_CONFIG_DIR` replaces the settings directory. On the web, devices last for the
 session unless the host provides storage (`cmd::plotters::set_plotter_store`). Binary `.pc3`
 files are not read; we haven't found a public specification of that format.
 
