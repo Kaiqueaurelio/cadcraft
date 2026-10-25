@@ -5,14 +5,14 @@
   <id>ai.storyteller.cadcraft</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT OR Apache-2.0</project_license>
-  <name>Decode CAD</name>
+  <name>The Code Craft</name>
   <summary>Draft, dimension and plot 2D drawings</summary>
   <developer id="io.github.kaiqueaurelio">
     <name>Decode Analytics</name>
   </developer>
   <description>
     <p>
-      Decode CAD is an open-source computer-aided design and drafting application maintained by
+      The Code Craft is an open-source computer-aided design and drafting application maintained by
       Decode Analytics. It provides a familiar command line, object snaps, layers, dimensions,
       hatches and blocks. It opens and saves DXF and DWG drawings, exports SVG and PNG, and supports
       automation through its command-line and MCP interfaces.
