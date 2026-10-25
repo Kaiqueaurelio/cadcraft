@@ -51,6 +51,7 @@ jobs:
           - os: macos-latest
             artifact: decode-cad-macos
             binary: target/release/cadcraft
+            output_binary: decode-cad
 
     steps:
       - name: Check out source
