@@ -218,7 +218,7 @@ pub fn find_device(name: &str) -> Option<PlotterConfig> {
         return None;
     }
     if let Some((b, o, d)) = builtin_spec(n) {
-        return Some(builtin(b, *o, d));
+        return Some(builtin(b, o, d));
     }
     let st = store();
     let direct = cadcraft_doc::plotter_file_name(n).and_then(|f| PlotterConfig::from_file_text(&(st.read)(&f).ok()?).ok());
