@@ -50,7 +50,7 @@
 	A drawing opened from a file keeps that file's format.	A fájlból megnyitott rajz megtartja a fájl formátumát.
 	A variable name starts with a letter and has only letters, digits and _	A változónév betűvel kezdődik, és csak betűt, számjegyet és _ jelet tartalmazhat
 	About	Névjegy
-	About CADCraft	A CADCraft névjegye
+	About Decode CAD	A Decode CAD névjegye
 	Absolute	Abszolút
 	Accessibility	Akadálymentesség
 	Add	Hozzáad
@@ -704,7 +704,7 @@
 	Offset	Eltolás
 	On	Be
 	On/Off	Be/ki
-	One of the Crafting Apps by the ArtCraft team and community.	Az ArtCraft csapata és közössége által készített Craft-alkalmazások egyike.
+	Developed and maintained by Decode Analytics.	A Decode Analytics fejleszti és tartja karban.
 	Only in this drawing: {n}	Csak ebben a rajzban: {n}
 	Only in {name}: {n}	Csak ebben: {name} – {n}
 	Open	Megnyitás
