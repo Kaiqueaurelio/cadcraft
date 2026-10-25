@@ -339,11 +339,25 @@ fn about(ctx: &egui::Context, open: &mut bool) {
                 1 => crate::credits::contributors_ui(ui),
                 2 => crate::credits::models_ui(ui),
                 _ => {
+                    let logo_id = egui::Id::new("decode_cad_about_logo");
+                    let mut logo = ctx.data_mut(|data| data.get_temp::<egui::TextureHandle>(logo_id));
+                    if logo.is_none() {
+                        if let Ok(decoded) = image::load_from_memory(ABOUT_LOGO_PNG) {
+                            let rgba = decoded.to_rgba8();
+                            let size = [rgba.width() as usize, rgba.height() as usize];
+                            let texture = ctx.load_texture(
+                                "decode-cad-about-logo",
+                                egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw()),
+                                egui::TextureOptions::LINEAR,
+                            );
+                            ctx.data_mut(|data| data.insert_temp(logo_id, texture.clone()));
+                            logo = Some(texture);
+                        }
+                    }
                     ui.horizontal(|ui| {
-                        ui.add(
-                            egui::Image::from_bytes("bytes://decode-cad-logo.png", ABOUT_LOGO_PNG)
-                                .fit_to_exact_size(vec2(104.0, 104.0)),
-                        );
+                        if let Some(logo) = &logo {
+                            ui.add(egui::Image::new(logo).fit_to_exact_size(vec2(104.0, 104.0)));
+                        }
                         ui.vertical(|ui| {
                             ui.heading("Decode CAD");
                             ui.label(crate::tf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
