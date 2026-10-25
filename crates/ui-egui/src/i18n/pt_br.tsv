@@ -105,9 +105,9 @@
 	ByBlock	PorBloco
 	ByColor	PorCor
 	ByLayer	PorCamada
-	CADCraft	CADCraft
-	CADCraft Help	Ajuda do CADCraft
-	CADCraft keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	O CADCraft mantém estas preferências, os modos de snap a objetos e as opções de desenho na sua conta de usuário e os restaura ao iniciar.
+	Decode CAD	Decode CAD
+	Decode CAD Help	Ajuda do Decode CAD
+	Decode CAD keeps these preferences, object snap modes and drafting toggles for your user account and restores them when it starts.	O Decode CAD mantém estas preferências, os modos de snap a objetos e as opções de desenho na sua conta de usuário e os restaura ao iniciar.
 	Cancel	Cancelar
 	Cartesian (x, y)	Cartesiano (x, y)
 	Center	Centro
@@ -789,7 +789,7 @@
 	Quick Select Properties	Propriedades da seleção rápida
 	Quick Select...	Seleção rápida...
 	QuickCalc	Calculadora rápida
-	Quit CADCraft	Sair do CADCraft
+	Quit Decode CAD	Sair do Decode CAD
 	Radius	Raio
 	Raster Image	Imagem raster
 	Ray	Semirreta
@@ -1215,7 +1215,7 @@
 @plural	{n} contributor	{n} colaborador|{n} colaboradores
 	Drawing as bytes	Desenho como bytes
 	Services	Serviços
-	Hide CADCraft	Ocultar o CADCraft
+	Hide Decode CAD	Ocultar o Decode CAD
 	Hide Others	Ocultar outros
 	Accessibility	Acessibilidade
 	Show System Cursor	Exibir cursor do sistema
