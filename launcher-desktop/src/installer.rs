@@ -437,7 +437,6 @@ fn unpack_zip(archive_path: &Path, destination: &Path) -> Result<(), String> {
             return Err("O ZIP contém um caminho de arquivo inseguro.".into());
         };
         if !safe_relative(&relative) { return Err("O ZIP contém um caminho de arquivo inseguro.".into()); }
-        #[cfg(unix)]
         if entry.unix_mode().is_some_and(|mode| mode & 0o170000 == 0o120000) {
             return Err("O ZIP contém links simbólicos que não serão extraídos.".into());
         }
@@ -521,13 +520,12 @@ fn install_macos_dmg(
     previous: Option<&InstalledRecord>,
     report: &mut dyn FnMut(String),
 ) -> Result<InstallResult, String> {
-    use std::os::unix::fs::symlink_metadata;
     let home = dirs::home_dir().ok_or_else(|| "Não foi possível localizar a pasta pessoal.".to_string())?;
     let apps = home.join("Applications");
     fs::create_dir_all(&apps).map_err(|e| format!("Não foi possível criar ~/Applications: {e}"))?;
     let target = apps.join(format!("{}.app", app.name));
     if target.exists() && previous.is_none() {
-        return Err(format!("{} já existe em ~/Applications e não está registrado como instalação gerenciada.", target.display()));
+        return Err(format!("{} já existe e não está registrada como instalação gerenciada.", target.display()));
     }
     if let Some(old) = previous {
         if !is_expected_managed_record(app, old, paths) {
@@ -545,42 +543,49 @@ fn install_macos_dmg(
     }
     report("DMG montado; verificando o aplicativo.".into());
     let source = mount.path().join(format!("{}.app", app.name));
-    let mut result = Err("O DMG não contém o pacote .app esperado.".to_string());
-    if symlink_metadata(&source).is_ok_and(|m| m.file_type().is_dir()) {
-        let staging = apps.join(format!(".{}.app.stage-{}", app.id, std::process::id()));
-        let backup = apps.join(format!(".{}.app.backup-{}", app.id, std::process::id()));
-        let _ = fs::remove_dir_all(&staging);
-        let copied = Command::new("ditto").arg(&source).arg(&staging).status()
-            .map_err(|e| format!("Não foi possível copiar o aplicativo do DMG: {e}"));
-        match copied {
-            Ok(status) if status.success() => {
-                if backup.exists() { let _ = fs::remove_dir_all(&backup); }
-                if target.exists() {
-                    if let Err(e) = fs::rename(&target, &backup) {
-                        let _ = fs::remove_dir_all(&staging);
-                        result = Err(format!("Não foi possível preparar a versão anterior: {e}"));
-                    }
-                }
-                if result.is_err() {
-                    // Preserve the original copy when staging failed.
-                } else if let Err(e) = fs::rename(&staging, &target) {
-                    if backup.exists() { let _ = fs::rename(&backup, &target); }
-                    result = Err(format!("Não foi possível instalar o pacote no diretório Applications: {e}"));
-                } else {
-                    if backup.exists() { let _ = fs::remove_dir_all(&backup); }
-                    result = Ok(InstallResult {
-                        record: Some(InstalledRecord { version: release.tag_name.clone(), kind: PackageKind::Dmg, path: target.clone(), installed_at: unix_now() }),
-                        message: format!("{} {} instalado em ~/Applications.", app.name, release.tag_name),
-                    });
-                }
-            }
-            Ok(status) => result = Err(format!("A cópia do aplicativo falhou: {status}")),
-            Err(e) => result = Err(e),
-        }
-        let _ = fs::remove_dir_all(&staging);
-    }
+    let result = if fs::symlink_metadata(&source).is_ok_and(|metadata| metadata.file_type().is_dir()) {
+        install_mounted_bundle(app, release, &source, &target)
+    } else {
+        Err("O DMG não contém o pacote .app esperado.".into())
+    };
     let _ = Command::new("hdiutil").args(["detach", "-quiet"]).arg(mount.path()).status();
     result
+}
+
+#[cfg(target_os = "macos")]
+fn install_mounted_bundle(
+    app: &CraftApp,
+    release: &Release,
+    source: &Path,
+    target: &Path,
+) -> Result<InstallResult, String> {
+    let parent = target.parent().ok_or_else(|| "Pasta de destino inválida.".to_string())?;
+    let staging = parent.join(format!(".{}.stage-{}", app.id, std::process::id()));
+    let backup = parent.join(format!(".{}.backup-{}", app.id, std::process::id()));
+    if staging.exists() { fs::remove_dir_all(&staging).map_err(|e| format!("Não foi possível limpar a pasta temporária: {e}"))?; }
+    let copied = Command::new("ditto").arg(source).arg(&staging).status()
+        .map_err(|e| format!("Não foi possível copiar o aplicativo do DMG: {e}"))?;
+    if !copied.success() {
+        let _ = fs::remove_dir_all(&staging);
+        return Err(format!("A cópia do aplicativo falhou: {copied}"));
+    }
+    if backup.exists() { fs::remove_dir_all(&backup).map_err(|e| format!("Não foi possível limpar o backup: {e}"))?; }
+    if target.exists() {
+        if let Err(error) = fs::rename(target, &backup) {
+            let _ = fs::remove_dir_all(&staging);
+            return Err(format!("Não foi possível preparar a versão anterior: {error}"));
+        }
+    }
+    if let Err(error) = fs::rename(&staging, target) {
+        if backup.exists() { let _ = fs::rename(&backup, target); }
+        let _ = fs::remove_dir_all(&staging);
+        return Err(format!("Não foi possível instalar o aplicativo: {error}"));
+    }
+    if backup.exists() { fs::remove_dir_all(&backup).map_err(|e| format!("Nova versão instalada, mas não foi possível limpar o backup: {e}"))?; }
+    Ok(InstallResult {
+        record: Some(InstalledRecord { version: release.tag_name.clone(), kind: PackageKind::Dmg, path: target.to_path_buf(), installed_at: unix_now() }),
+        message: format!("{} {} instalado em ~/Applications.", app.name, release.tag_name),
+    })
 }
 
 #[cfg(not(target_os = "macos"))]
