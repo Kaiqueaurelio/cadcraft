@@ -30,6 +30,7 @@ struct Launcher {
     releases: BTreeMap<String, Release>,
     errors: HashMap<String, String>,
     detected: HashMap<String, ExternalInstall>,
+    icons: HashMap<String, egui::TextureHandle>,
     tasks: HashMap<String, String>,
     results: HashMap<String, String>,
     search: String,
@@ -51,13 +52,17 @@ impl Launcher {
         let manifest = installer::load_manifest(&paths);
         let releases = installer::load_release_cache(&paths.release_cache());
         let (tx, rx) = mpsc::channel();
+        let icons: HashMap<String, egui::TextureHandle> = APPS
+            .iter()
+            .filter_map(|app| load_icon_texture(&cc.egui_ctx, app).map(|texture| (app.id.to_string(), texture)))
+            .collect();
         let mut style = (*cc.egui_ctx.style_of(egui::Theme::Dark)).clone();
         style.visuals = egui::Visuals::dark();
         style.spacing.item_spacing = egui::vec2(10.0, 10.0);
         cc.egui_ctx.set_style_of(egui::Theme::Dark, style);
         let mut app = Self {
             tx, rx, paths, manifest, releases, errors: HashMap::new(),
-            detected: HashMap::new(), tasks: HashMap::new(),
+            detected: HashMap::new(), icons, tasks: HashMap::new(),
             results: HashMap::new(), search: String::new(), category: "Todos".into(),
             sort_az: false, refreshing: false, refresh_left: 0, notice: None,
             confirm_remove: None,
@@ -254,10 +259,14 @@ impl Launcher {
                 ui.set_max_width(width - 28.0);
                 ui.set_min_height(252.0);
                 ui.horizontal(|ui| {
-                    let (rect, _) = ui.allocate_exact_size(egui::vec2(48.0, 48.0), egui::Sense::hover());
-                    ui.painter().rect_filled(rect, egui::CornerRadius::same(12), rgb([44, 104, 211]));
-                    ui.painter().rect_stroke(rect, egui::CornerRadius::same(12), egui::Stroke::new(1.0, rgb([108, 169, 255])), egui::StrokeKind::Inside);
-                    ui.painter().text(rect.center(), egui::Align2::CENTER_CENTER, "D", egui::FontId::proportional(28.0), egui::Color32::WHITE);
+                    if let Some(icon) = self.icons.get(app.id) {
+                        ui.add(egui::Image::new((icon.id(), egui::vec2(48.0, 48.0))).fit_to_exact_size(egui::vec2(48.0, 48.0)));
+                    } else {
+                        let (rect, _) = ui.allocate_exact_size(egui::vec2(48.0, 48.0), egui::Sense::hover());
+                        ui.painter().rect_filled(rect, egui::CornerRadius::same(12), rgb([44, 104, 211]));
+                        ui.painter().rect_stroke(rect, egui::CornerRadius::same(12), egui::Stroke::new(1.0, rgb([108, 169, 255])), egui::StrokeKind::Inside);
+                        ui.painter().text(rect.center(), egui::Align2::CENTER_CENTER, "D", egui::FontId::proportional(28.0), egui::Color32::WHITE);
+                    }
                     ui.vertical(|ui| {
                         let group = if app.is_decode_project { "PROJETO DECODE" } else { "DECODE SUITE" };
                         ui.label(egui::RichText::new(group).size(9.0).strong().color(rgb([145, 190, 255])));
@@ -426,6 +435,22 @@ impl eframe::App for Launcher {
         });
         self.remove_confirmation(&ctx);
     }
+}
+
+fn load_icon_texture(ctx: &egui::Context, app: &DecodeApp) -> Option<egui::TextureHandle> {
+    let bytes = app.icon_svg().as_bytes();
+    let options = resvg::usvg::Options::default();
+    let tree = resvg::usvg::Tree::from_data(bytes, &options).ok()?;
+    let size = 128_u32;
+    let width = tree.size().width();
+    let height = tree.size().height();
+    if width <= 0.0 || height <= 0.0 { return None; }
+    let scale = (size as f32 / width.max(height)).min(1.0);
+    let mut pixmap = resvg::tiny_skia::Pixmap::new(size, size)?;
+    resvg::render(&tree, resvg::tiny_skia::Transform::from_scale(scale, scale), &mut pixmap.as_mut());
+    let rgba = image::RgbaImage::from_raw(size, size, pixmap.data().to_vec())?;
+    let color = egui::ColorImage::from_rgba_unmultiplied([size as usize, size as usize], rgba.as_raw());
+    Some(ctx.load_texture(format!("decode-icon-{}", app.product_id), color, egui::TextureOptions::LINEAR))
 }
 
 fn chip(ui: &mut egui::Ui, text: String, color: egui::Color32) {
