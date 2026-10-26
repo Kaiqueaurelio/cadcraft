@@ -1,6 +1,13 @@
 name: Decode Suite Downstream Build
 
 on:
+  push:
+    paths:
+      - "scripts/prepare_decode_suite.py"
+      - "scripts/rebrand_decode_suite.py"
+      - "open-source-hub/decode-suite-manifest.json"
+      - "open-source-hub/assets/icons/*.svg"
+      - ".github/workflows/decode-suite-downstream-build.yml"
   workflow_dispatch:
     inputs:
       product:
@@ -45,7 +52,7 @@ jobs:
       - name: Select products from the Decode manifest
         id: set-matrix
         env:
-          PRODUCT_SELECTION: ${{ inputs.product }}
+          PRODUCT_SELECTION: ${{ inputs.product || 'all' }}
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json, os
@@ -141,7 +148,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: decode-suite-${{ matrix.product_id }}-${{ inputs.mode }}
+          name: decode-suite-${{ matrix.product_id }}-${{ inputs.mode || 'prepare-source' }}
           path: dist/*
           if-no-files-found: warn
           retention-days: 14
