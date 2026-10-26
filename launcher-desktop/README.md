@@ -58,3 +58,30 @@ Os registros ficam em Decode Open Source Hub/installed.json dentro da pasta loca
 A central é um projeto independente da Decode Analytics, licenciada MIT/Apache-2.0 conforme os arquivos de licença do repositório. Os aplicativos, nomes, ícones e marcas dos projetos Craft pertencem a seus respectivos titulares; confira seus repositórios para avisos e condições de redistribuição. O launcher não é afiliado oficialmente à ArtCraft/storytold.
 
 Repositórios de referência: https://github.com/storytold/craft-launcher e https://github.com/Kaiqueaurelio/decodecad.
+
+
+## Downstream Decode Studio rebranding of the 13 apps
+
+The catalog names and original Decode SVG icon family are defined in `open-source-hub/decode-suite-manifest.json`. The source-migration tool is `scripts/rebrand_decode_suite.py`; it changes only local clones, creates/uses a `decode-branding` branch, renames matching icon resources and application IDs together, updates visible display strings and theme accents, and preserves `LICENSE-APACHE`, `LICENSE-MIT`, `NOTICE` and upstream attribution sidecars.
+
+To prepare all 13 projects locally (this clones roughly 13 Rust workspaces, so choose a location with enough disk space):
+
+```bash
+sudo apt update
+sudo apt install -y git python3-cairosvg python3-pil build-essential pkg-config \
+  libxkbcommon-dev libwayland-dev libx11-dev libxrandr-dev libxi-dev \
+  libgl1-mesa-dev libasound2-dev
+python3 scripts/prepare_decode_suite.py --workspace ~/decode-suite
+```
+
+To prepare only one project and test/build it on Linux:
+
+```bash
+python3 scripts/prepare_decode_suite.py --workspace ~/decode-suite --only decode-photo --build
+```
+
+Use the `product_id` values from the manifest for `--only`: `decode-photo`, `decode-light`, `decode-film`, `decode-design`, `decode-vector`, `decode-pdf`, `decode-effects`, `decode-writer`, `decode-slides`, `decode-sheets`, `decode-draft`, `decode-audio`, and `decode-ui`.
+
+Alternatively, GitHub Actions has a manual workflow named **Decode Suite Downstream Build**. Run it to prepare a source ZIP for one app or all 13; choose `build-linux` to additionally run the app's Rust tests and produce a Linux executable artifact. It does not push to the upstream repositories.
+
+**Important:** changing source identity is not the same as publishing a verified release. Until a downstream build passes tests and is released, the launcher intentionally does not install an upstream Craft binary under a Decode name. The original repository, upstream release and retained legal notices remain visible for traceability.
