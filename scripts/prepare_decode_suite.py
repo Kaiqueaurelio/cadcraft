@@ -85,7 +85,10 @@ def main() -> int:
         # The source rebrand tool starts a dedicated branch and never pushes.
         results.append(result)
     brand_script = root / "scripts" / "rebrand_decode_suite.py"
-    run([sys.executable, str(brand_script), "--workspace", str(workspace), "--manifest", str(args.manifest.resolve())])
+    brand_command = [sys.executable, str(brand_script), "--workspace", str(workspace), "--manifest", str(args.manifest.resolve())]
+    if args.only:
+        brand_command.extend(["--only", args.only])
+    run(brand_command)
     if args.build:
         for app in products:
             repo = workspace / app["product_id"]
