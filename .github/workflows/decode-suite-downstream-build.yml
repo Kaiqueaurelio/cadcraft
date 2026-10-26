@@ -96,7 +96,20 @@ jobs:
           git -C "$SOURCE_DIR" add -A
           git -C "$SOURCE_DIR" -c user.name="Decode Analytics CI" -c user.email="noreply@decodeanalytics.local" commit -m "Apply Decode branding to $DISPLAY_NAME"
           mkdir -p "$GITHUB_WORKSPACE/dist"
-          git -C "$SOURCE_DIR" archive --format=zip --output="$GITHUB_WORKSPACE/dist/$PRODUCT_ID-source.zip" HEAD
+          python - "$SOURCE_DIR" "$GITHUB_WORKSPACE/dist/$PRODUCT_ID-source.zip" <<'PY'
+          import pathlib, sys, zipfile
+          root = pathlib.Path(sys.argv[1])
+          destination = pathlib.Path(sys.argv[2])
+          excluded = {".git", "target", "node_modules", ".next", "dist"}
+          with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+              for path in root.rglob("*"):
+                  relative = path.relative_to(root)
+                  if any(part in excluded for part in relative.parts):
+                      continue
+                  if path.is_file():
+                      archive.write(path, relative.as_posix())
+          print(f"Created {destination} with upstream submodule source included")
+          PY
       - name: Install Linux build dependencies
         if: ${{ inputs.mode == 'build-linux' }}
         run: |
