@@ -119,10 +119,11 @@ function chooseAsset(app,os,arch){
   var n=(asset.name||"").toLowerCase();
   if(/riscv64/.test(n))return "riscv64";
   if(/aarch64|arm64|armv[0-9]+|armhf/.test(n))return "arm64";
-  if(/x86_64|x86-64|amd64|(^|[-_.])x64([_.-]|$)|i[3-6]86/.test(n))return "x86_64";
-  return "generic";
+  if(/x86_64|x86-64|amd64|(^|[-_.])x64([_.-]|$)/.test(n))return "x86_64";
+  if(/(^|[-_.])(?:universal2?|noarch|all[-_.]?arch|any[-_.]?arch)([-_.]|$)/.test(n))return "universal";
+  return "unknown";
  }
- var compatible=assets.filter(function(asset){var a=assetArchitecture(asset);return a==="generic"||a===arch;});
+ var compatible=assets.filter(function(asset){var a=assetArchitecture(asset);return a==="universal"||a===arch;});
  function rank(asset){
   var n=(asset.name||"").toLowerCase();
   if(os==="windows"){if(/\.msi$/i.test(n))return 0;if(/\.exe$/i.test(n))return 1;if(/\.zip$/i.test(n))return 2;}
@@ -130,7 +131,7 @@ function chooseAsset(app,os,arch){
   else {if(/\.deb$/i.test(n))return 0;if(/\.appimage$/i.test(n))return 1;if(/\.flatpak$/i.test(n))return 2;if(/\.tar\.gz$/i.test(n)||/\.tgz$/i.test(n))return 3;if(/\.rpm$/i.test(n))return 4;if(/\.pkg\.tar\.zst$/i.test(n))return 5;}
   return 99;
  }
- return compatible.filter(function(asset){return rank(asset)<99;}).sort(function(a,b){return rank(a)-rank(b)||(assetArchitecture(a)==="generic"?1:0)-(assetArchitecture(b)==="generic"?1:0);})[0]||null;
+ return compatible.filter(function(asset){return rank(asset)<99;}).sort(function(a,b){return rank(a)-rank(b)||(assetArchitecture(a)==="universal"?1:0)-(assetArchitecture(b)==="universal"?1:0);})[0]||null;
 }
 function packageName(asset){if(!asset)return "";var n=asset.name.toLowerCase();if(n.endsWith(".msi"))return "instalador Windows (.msi)";if(n.endsWith(".zip"))return "arquivo portátil (.zip)";if(n.endsWith(".deb"))return "pacote Linux (.deb)";if(n.endsWith(".appimage"))return "AppImage para Linux";if(n.endsWith(".dmg"))return "imagem de instalação macOS (.dmg)";if(n.endsWith(".pkg"))return "instalador macOS (.pkg)";if(n.endsWith(".tar.gz"))return "arquivo compactado (.tar.gz)";return "arquivo oficial";}
 function versionLabel(app){var data=releases[app.id];if(data&&data.tag_name)return '<strong>'+escapeHtml(data.tag_name)+'</strong>';return '<span>Confira downloads oficiais</span>';}
