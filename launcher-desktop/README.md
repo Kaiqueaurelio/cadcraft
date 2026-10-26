@@ -1,6 +1,6 @@
 # Decode Open Source Launcher
 
-Aplicativo desktop nativo da Decode Analytics para explorar, instalar, atualizar, abrir e remover cópias gerenciadas dos 13 projetos públicos da Craft App Suite e do Decode CAD.
+Aplicativo desktop nativo da Decode Analytics para explorar e gerenciar ferramentas open source com a identidade visual Decode Suite.
 
 ## Engenharia reversa de referência
 
@@ -17,8 +17,8 @@ Este repositório contém uma implementação independente para a Decode Analyti
 ## Estado da implementação
 
 - [x] Interface desktop em Rust + egui/eframe, busca, categorias e estado por aplicativo.
-- [x] Catálogo integrado dos 13 projetos Craft e Decode CAD, com ícones originais carregados das fontes públicas.
-- [x] Consulta de releases públicas do GitHub, cache de respostas e links de fallback.
+- [x] Catálogo com 13 nomes de produto Decode e o Decode CAD, usando uma família de ícones própria Decode.
+- [x] Consulta de releases públicas do GitHub, cache de respostas e links de fallback para os repositórios upstream.
 - [x] Seleção de pacotes por sistema/arquitetura e formato, com distinção entre instaladores e pacotes portáteis.
 - [x] Verificação SHA-256 por digest da API ou SHA256SUMS.txt, com recusa de pacotes sem checksum.
 - [x] Instalação local de AppImage/TAR.GZ no Linux e pacote ZIP portátil no Windows, com extração limitada e rejeição de caminhos inseguros/links simbólicos.
@@ -30,7 +30,7 @@ Este repositório contém uma implementação independente para a Decode Analyti
 
 ### Limitações conhecidas desta versão inicial
 
-Esta ainda não é paridade completa com o ArtCraft Launcher. A bandeja do sistema, notificações em segundo plano, single-instance, pausa/cancelamento de transferências, atualização automática do próprio launcher, detecção exaustiva de instalações de todos os gestores de pacotes e integração completa com MSI/DEB/RPM/Flatpak/Arch ainda precisam ser concluídas. A detecção de aplicativos instalados fora da central é intencionalmente conservadora; ela não deve prometer uma versão se não conseguir lê-la.
+Esta ainda não é paridade completa com o launcher de referência nem uma migração completa dos 13 aplicativos. A identidade Decode atualmente cobre o catálogo/launcher e os ícones do hub; cada aplicativo original ainda precisa ser bifurcado, retematizado, recompilado e validado antes de poder ser distribuído como versão Decode. A bandeja do sistema, notificações em segundo plano, single-instance, pausa/cancelamento de transferências, atualização automática do próprio launcher, detecção exaustiva de instalações de todos os gestores de pacotes e integração completa com MSI/DEB/RPM/Flatpak/Arch ainda precisam ser concluídas. A detecção de aplicativos instalados fora da central é intencionalmente conservadora; ela não deve prometer uma versão se não conseguir lê-la.
 
 No Windows, o MSI abre o instalador oficial com interface própria e a instalação passa a ser gerida pelo Windows Installer; esta central atualiza o status, mas não assume propriedade sobre esses arquivos. Não há execução silenciosa nem elevação invisível de privilégios.
 
