@@ -1,0 +1,129 @@
+name: Decode Suite Downstream Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      product:
+        description: "Qual produto preparar"
+        required: true
+        type: choice
+        default: all
+        options:
+          - all
+          - decode-photo
+          - decode-light
+          - decode-film
+          - decode-design
+          - decode-vector
+          - decode-pdf
+          - decode-effects
+          - decode-writer
+          - decode-slides
+          - decode-sheets
+          - decode-draft
+          - decode-audio
+          - decode-ui
+      mode:
+        description: "Preparar fontes ou também testar/compilar para Linux"
+        required: true
+        type: choice
+        default: prepare-source
+        options:
+          - prepare-source
+          - build-linux
+
+permissions:
+  contents: read
+
+jobs:
+  select-products:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select products from the Decode manifest
+        id: set-matrix
+        env:
+          PRODUCT_SELECTION: ${{ inputs.product }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          with open("open-source-hub/decode-suite-manifest.json", encoding="utf-8") as f:
+              products = json.load(f)["products"]
+          selected = os.environ["PRODUCT_SELECTION"]
+          if selected != "all":
+              products = [p for p in products if p["product_id"] == selected]
+          if not products:
+              raise SystemExit("No product matches the selected product ID")
+          print("matrix=" + json.dumps({"include": [
+              {"product_id": p["product_id"], "upstream_slug": p["upstream_slug"], "display_name": p["display_name"]}
+              for p in products
+          ]}, separators=(",", ":")))
+          PY
+
+  prepare:
+    needs: select-products
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix: ${{ fromJSON(needs.select-products.outputs.matrix) }}
+    env:
+      PRODUCT_ID: ${{ matrix.product_id }}
+      UPSTREAM_SLUG: ${{ matrix.upstream_slug }}
+      DISPLAY_NAME: ${{ matrix.display_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install branding asset dependencies
+        run: python -m pip install --disable-pip-version-check cairosvg Pillow
+      - name: Clone and rebrand source
+        run: |
+          set -euo pipefail
+          WORKSPACE="$RUNNER_TEMP/decode-suite"
+          python scripts/prepare_decode_suite.py --workspace "$WORKSPACE" --only "$PRODUCT_ID"
+          SOURCE_DIR="$WORKSPACE/$PRODUCT_ID"
+          git -C "$SOURCE_DIR" add -A
+          git -C "$SOURCE_DIR" -c user.name="Decode Analytics CI" -c user.email="noreply@decodeanalytics.local" commit -m "Apply Decode branding to $DISPLAY_NAME"
+          mkdir -p "$GITHUB_WORKSPACE/dist"
+          git -C "$SOURCE_DIR" archive --format=zip --output="$GITHUB_WORKSPACE/dist/$PRODUCT_ID-source.zip" HEAD
+      - name: Install Linux build dependencies
+        if: ${{ inputs.mode == 'build-linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libxkbcommon-dev libwayland-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libasound2-dev libvulkan-dev libssl-dev libgtk-3-dev libwebkit2gtk-4.1-dev libpulse-dev libpipewire-0.3-dev libjack-jackd2-dev
+      - name: Set up Rust
+        if: ${{ inputs.mode == 'build-linux' }}
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - name: Test and compile Linux application
+        if: ${{ inputs.mode == 'build-linux' }}
+        run: |
+          set -euo pipefail
+          SOURCE_DIR="$RUNNER_TEMP/decode-suite/$PRODUCT_ID"
+          APP_MANIFEST="$SOURCE_DIR/apps/$UPSTREAM_SLUG/Cargo.toml"
+          if [ ! -f "$APP_MANIFEST" ]; then
+            echo "Native Cargo manifest missing: $APP_MANIFEST"
+            exit 1
+          fi
+          cargo fmt --manifest-path "$APP_MANIFEST" -- --check
+          cargo test --manifest-path "$APP_MANIFEST" --locked
+          cargo build --release --manifest-path "$APP_MANIFEST" --locked
+          BINARY="$(find "$SOURCE_DIR/target/release" -maxdepth 1 -type f -executable ! -name '*.so*' | head -n 1)"
+          if [ -z "$BINARY" ]; then
+            echo "No top-level release executable found for $DISPLAY_NAME"
+            exit 1
+          fi
+          cp "$BINARY" "$GITHUB_WORKSPACE/dist/$PRODUCT_ID-linux-x86_64"
+      - name: Upload rebranded source and optional Linux binary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: decode-suite-${{ matrix.product_id }}-${{ inputs.mode }}
+          path: dist/*
+          if-no-files-found: warn
+          retention-days: 14
