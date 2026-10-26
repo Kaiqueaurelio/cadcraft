@@ -39,6 +39,10 @@ on:
           - prepare-source
           - build-linux
 
+concurrency:
+  group: decode-suite-downstream-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
