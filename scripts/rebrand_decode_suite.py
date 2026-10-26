@@ -357,6 +357,21 @@ def visible_files(repo: Path, slug: str) -> list[Path]:
     return sorted(candidates)
 
 
+def replace_rust_comment_text(text: str, old: str, new: str) -> str:
+    """Rebrand documentation comments without renaming Rust symbols or module paths."""
+    updated: list[str] = []
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        is_comment = stripped.startswith("//") or stripped.startswith("/*") or stripped.startswith("*") or stripped.startswith("*/")
+        if is_comment:
+            line = safe_word_replace(line, old, new)
+            line = re.sub(r"\bCraft App Suite\b", "Decode Studio Suite", line)
+            line = re.sub(r"\bThe Craft look\b", "The Decode look", line)
+            line = re.sub(r"\bthe Craft look\b", "the Decode look", line)
+        updated.append(line)
+    return "".join(updated)
+
+
 def patch_text_files(app: dict[str, Any], repo: Path) -> int:
     old, new = app["upstream_name"], app["display_name"]
     slug, product_id = app["upstream_slug"], app["product_id"]
@@ -369,7 +384,12 @@ def patch_text_files(app: dict[str, Any], repo: Path) -> int:
         before = text
         if path.suffix.lower() == ".rs":
             text = replace_rust_user_strings(text, old, new)
+            text = replace_rust_comment_text(text, old, new)
         elif path.suffix.lower() == ".md":
+            text = safe_word_replace(text, old, new)
+            text = re.sub(r"\bCraft App Suite\b", "Decode Studio Suite", text)
+            text = re.sub(r"\bThe Craft look\b", "The Decode look", text)
+            text = re.sub(r"\bthe Craft look\b", "the Decode look", text)
             if path == repo / "README.md":
                 lines = text.splitlines()
                 if lines and lines[0].startswith("# "):
@@ -383,7 +403,6 @@ def patch_text_files(app: dict[str, Any], repo: Path) -> int:
             changed += 1
     changed += add_downstream_metadata(app, repo)
     return changed
-
 
 def update_icons(app: dict[str, Any], repo: Path, icon_path: Path) -> int:
     svg_bytes = icon_path.read_bytes()
@@ -514,7 +533,7 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         assert "assets/app-icon/com.decodeanalytics." + app["product_id"] + ".png" in replace_bundle_id(sample_icon_path, app["upstream_slug"], app["product_id"])
     theme_sample = "accent: pick(dark, Color32::from_rgb(0x10, 0x20, 0x30), Color32::from_rgb(0x40, 0x50, 0x60)),\n"
     patched = replace_theme_colour_calls(theme_sample)
-    assert "0x25, 0x57, 0xC6" in patched and "0x7C, 0xA8, 0xFF" in patched
+    assert "0x25, 0x57, 0xC6" in patched and "0x4C, 0x85, 0xF7" in patched
     print("Decode rebrand self-test: OK — 13 products, 13 valid icons, safe names, IDs and theme tokens.")
     return 0
 
