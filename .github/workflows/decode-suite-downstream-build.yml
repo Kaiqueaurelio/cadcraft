@@ -113,12 +113,30 @@ jobs:
           cargo fmt --manifest-path "$APP_MANIFEST" -- --check
           cargo test --manifest-path "$APP_MANIFEST" --locked
           cargo build --release --manifest-path "$APP_MANIFEST" --locked
-          BINARY="$(find "$SOURCE_DIR/target/release" -maxdepth 1 -type f -executable ! -name '*.so*' | head -n 1)"
-          if [ -z "$BINARY" ]; then
-            echo "No top-level release executable found for $DISPLAY_NAME"
-            exit 1
-          fi
-          cp "$BINARY" "$GITHUB_WORKSPACE/dist/$PRODUCT_ID-linux-x86_64"
+          cargo metadata --no-deps --format-version 1 --manifest-path "$APP_MANIFEST" > "$RUNNER_TEMP/cargo-metadata.json"
+          python3 - "$APP_MANIFEST" "$RUNNER_TEMP/cargo-metadata.json" "$SOURCE_DIR/target/release" "$GITHUB_WORKSPACE/dist" "$PRODUCT_ID" <<'PY'
+          import json, shutil, sys
+          from pathlib import Path
+          manifest_path = Path(sys.argv[1]).resolve()
+          metadata_path = Path(sys.argv[2])
+          release_dir = Path(sys.argv[3])
+          out_dir = Path(sys.argv[4])
+          product_id = sys.argv[5]
+          metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+          package = next((p for p in metadata["packages"] if Path(p["manifest_path"]).resolve() == manifest_path), None)
+          if package is None:
+              raise SystemExit(f"Cargo metadata did not include {manifest_path}")
+          bin_names = [target["name"] for target in package["targets"] if "bin" in target["kind"]]
+          copied = 0
+          for name in bin_names:
+              executable = release_dir / name
+              if not executable.is_file():
+                  continue
+              shutil.copy2(executable, out_dir / f"{product_id}-{name}-linux-x86_64")
+              copied += 1
+          if copied == 0:
+              raise SystemExit(f"No release executables were found for {package['name']}: {bin_names}")
+          PY
       - name: Upload rebranded source and optional Linux binary
         if: always()
         uses: actions/upload-artifact@v4
