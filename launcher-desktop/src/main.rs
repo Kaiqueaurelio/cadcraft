@@ -84,7 +84,11 @@ impl Launcher {
                 let _ = tx.send(Event::Release { id: app.id.to_string(), result });
                 let detect_tx = tx.clone();
                 thread::spawn(move || {
-                    let result = installer::detect_external(&app);
+                    let result = if app.is_decode_project {
+                        installer::detect_external(&app)
+                    } else {
+                        None
+                    };
                     let _ = detect_tx.send(Event::Detected { id: app.id.to_string(), result });
                 });
 
@@ -137,7 +141,11 @@ impl Launcher {
                             if let Some(app) = APPS.iter().find(|a| a.id == id).copied() {
                                 let tx = self.tx.clone();
                                 thread::spawn(move || {
-                                    let result = installer::detect_external(&app);
+                                    let result = if app.is_decode_project {
+                                        installer::detect_external(&app)
+                                    } else {
+                                        None
+                                    };
                                     let _ = tx.send(Event::Detected { id: app.id.to_string(), result });
                                 });
                             }
@@ -158,10 +166,22 @@ impl Launcher {
     }
 
     fn external(&self, app: &DecodeApp) -> Option<&ExternalInstall> {
-        if self.managed(app).is_some() { None } else { self.detected.get(app.id) }
+        if !app.is_decode_project || self.managed(app).is_some() {
+            None
+        } else {
+            self.detected.get(app.id)
+        }
     }
 
     fn install(&mut self, app: &'static DecodeApp) {
+        if !app.is_decode_project {
+            self.notice = Some((
+                format!("{} ainda não possui um pacote recompilado com a identidade Decode. Para evitar instalar o executável original, esta ação abre as instruções de preparação.", app.name),
+                true,
+            ));
+            self.open_url("https://github.com/Kaiqueaurelio/decodecad/blob/main/scripts/prepare_decode_suite.py".to_string());
+            return;
+        }
         if self.tasks.contains_key(app.id) { return; }
         let Some(release) = self.releases.get(app.id).cloned() else {
             self.open_url(app.releases_url());
@@ -222,6 +242,15 @@ impl Launcher {
     }
 
     fn status(&self, app: &DecodeApp) -> (String, egui::Color32) {
+        if !app.is_decode_project {
+            if let Some(release) = self.releases.get(app.id) {
+                return (
+                    format!("Build Decode em preparação · fonte {}", release.tag_name),
+                    rgb([255, 196, 93]),
+                );
+            }
+            return ("Build Decode em preparação".into(), rgb([255, 196, 93]));
+        }
         if let Some(record) = self.managed(app) {
             let text = self.releases.get(app.id).map(|release| {
                 if is_newer(&release.tag_name, &record.version) {
@@ -248,7 +277,7 @@ impl Launcher {
     fn card(&mut self, ui: &mut egui::Ui, app: &'static DecodeApp, width: f32) {
         let (status, status_color) = self.status(app);
         let managed = self.managed(app).is_some();
-        let installed = managed || self.external(app).is_some();
+        let installed = app.is_decode_project && (managed || self.external(app).is_some());
         let busy = self.tasks.get(app.id).cloned();
         let fill = if app.is_decode_project { rgb([22, 38, 64]) } else { rgb([17, 27, 45]) };
         let stroke = if app.is_decode_project { rgb([83, 135, 218]) } else { rgb([42, 56, 78]) };
@@ -293,10 +322,19 @@ impl Launcher {
                     } else if installed {
                         if ui.add_sized([width - 105.0, 30.0], egui::Button::new("Abrir aplicativo")).clicked() { self.launch(app); }
                     } else {
-                        let label = if self.releases.contains_key(app.id) { "Instalar" } else { "Releases oficiais" };
+                        let label = if app.is_decode_project {
+                            if self.releases.contains_key(app.id) { "Instalar Decode CAD" } else { "Releases do Decode CAD" }
+                        } else {
+                            "Preparar build Decode"
+                        };
                         if ui.add_sized([width - 105.0, 30.0], egui::Button::new(label).fill(rgb([213, 230, 255])).stroke(egui::Stroke::NONE)).clicked() {
-                            if self.releases.contains_key(app.id) { self.install(app); }
-                            else { self.open_url(app.releases_url()); }
+                            if !app.is_decode_project {
+                                self.install(app);
+                            } else if self.releases.contains_key(app.id) {
+                                self.install(app);
+                            } else {
+                                self.open_url(app.releases_url());
+                            }
                         }
                     }
                     ui.menu_button("⋯", |ui| {
