@@ -60,7 +60,9 @@ assert.equal(pick([
   {name:"demo-x64.msi"}
 ], "windows", "x86_64")?.name, "demo-x64.msi", "Windows architecture selection must match x64");
 assert.equal(pick([{name:"demo-aarch64.AppImage"}], "linux", "x86_64"), null, "must not select explicitly incompatible packages");
-assert.equal(pick([{name:"demo-universal.dmg"}], "macos", "arm64")?.name, "demo-universal.dmg", "generic macOS packages should remain eligible");
+assert.equal(pick([{name:"demo-x86.msi"}], "windows", "x86_64"), null, "must not select 32-bit or unlabelled Windows packages for x64");
+assert.equal(pick([{name:"demo-linux.deb"}], "linux", "arm64"), null, "must not guess the architecture of an unlabelled Linux package");
+assert.equal(pick([{name:"demo-universal.dmg"}], "macos", "arm64")?.name, "demo-universal.dmg", "explicit universal macOS packages should remain eligible");
 assert.equal(pick([{name:"demo-x86_64.flatpak"}], "linux", "x86_64")?.name, "demo-x86_64.flatpak", "Flatpak is a supported Linux package format");
 
 console.log("Hub checks passed: catalog, unique IDs, HTTPS URLs, icon paths, syntax, lazy API calls and architecture-compatible packages.");
