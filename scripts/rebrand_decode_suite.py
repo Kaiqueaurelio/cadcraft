@@ -13,6 +13,7 @@ import re
 import struct
 import subprocess
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
@@ -467,6 +468,32 @@ def update_icons(app: dict[str, Any], repo: Path, icon_path: Path) -> int:
     return count
 
 
+def rename_bundle_id_files(app: dict[str, Any], repo: Path) -> int:
+    """Rename files whose names carry the upstream bundle ID after references are patched."""
+    old_stem = "ai.storyteller." + app["upstream_slug"]
+    new_stem = "com.decodeanalytics." + app["product_id"]
+    renamed = 0
+    # Process deepest paths first; never rename content in Git metadata, build outputs or vendor trees.
+    paths = sorted(repo.rglob("*"), key=lambda item: len(item.parts), reverse=True)
+    for path in paths:
+        try:
+            relative = path.relative_to(repo)
+        except ValueError:
+            continue
+        if not path.is_file() or path.is_symlink():
+            continue
+        if any(part in SKIP_PARTS for part in relative.parts):
+            continue
+        if old_stem not in path.name:
+            continue
+        target = path.with_name(path.name.replace(old_stem, new_stem))
+        if target.exists() and target != path:
+            raise RuntimeError("Refusing to overwrite duplicate branded resource: " + str(target))
+        path.rename(target)
+        renamed += 1
+    return renamed
+
+
 def ensure_safe_git_branch(repo: Path) -> None:
     if not (repo / ".git").exists():
         return
@@ -501,6 +528,7 @@ def apply_one(app: dict[str, Any], workspace: Path, icons_dir: Path) -> dict[str
     theme_changed = rebrand_theme_file(repo / "crates" / "ui-egui" / "src" / "theme.rs")
     text_changed = patch_text_files(app, repo)
     icons_changed = update_icons(app, repo, icons_dir / app["icon"])
+    bundle_files_renamed = rename_bundle_id_files(app, repo)
     add_brand_note(app, repo)
     licenses_after = {name: (repo / name).exists() for name in licenses_before}
     if licenses_before != licenses_after or not all(licenses_after.values()):
@@ -508,7 +536,8 @@ def apply_one(app: dict[str, Any], workspace: Path, icons_dir: Path) -> dict[str
     return {
         "product": app["display_name"], "status": "rebranded", "path": str(repo),
         "text_files_changed": text_changed, "theme_changed": theme_changed,
-        "icon_assets_replaced": icons_changed, "license_files_preserved": True,
+        "icon_assets_replaced": icons_changed, "bundle_id_files_renamed": bundle_files_renamed,
+        "license_files_preserved": True,
     }
 
 
@@ -531,6 +560,21 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         assert "com.decodeanalytics." + app["product_id"] in replace_bundle_id(sample_id, app["upstream_slug"], app["product_id"])
         sample_icon_path = "assets/app-icon/ai.storyteller." + app["upstream_slug"] + ".png"
         assert "assets/app-icon/com.decodeanalytics." + app["product_id"] + ".png" in replace_bundle_id(sample_icon_path, app["upstream_slug"], app["product_id"])
+    # Regression test: a Rust include_str! path and the resource filename must agree after rebinding.
+    app = products[0]
+    old_filename = "ai.storyteller." + app["upstream_slug"] + ".desktop"
+    new_filename = "com.decodeanalytics." + app["product_id"] + ".desktop"
+    with tempfile.TemporaryDirectory() as temporary:
+        fixture_root = Path(temporary)
+        fixture_file = fixture_root / "packaging" / "linux" / old_filename
+        fixture_file.parent.mkdir(parents=True)
+        fixture_file.write_text("[Desktop Entry]\n", encoding="utf-8")
+        source_reference = 'include_str!("../../../packaging/linux/' + old_filename + '")'
+        rewritten_reference = replace_bundle_id(source_reference, app["upstream_slug"], app["product_id"])
+        renamed_count = rename_bundle_id_files(app, fixture_root)
+        assert renamed_count == 1, "Bundle-ID resource filename was not renamed."
+        assert (fixture_file.parent / new_filename).is_file(), "Branded Linux desktop resource is missing."
+        assert new_filename in rewritten_reference, "Embedded resource reference and renamed filename disagree."
     theme_sample = "accent: pick(dark, Color32::from_rgb(0x10, 0x20, 0x30), Color32::from_rgb(0x40, 0x50, 0x60)),\n"
     patched = replace_theme_colour_calls(theme_sample)
     assert "0x25, 0x57, 0xC6" in patched and "0x4C, 0x85, 0xF7" in patched
