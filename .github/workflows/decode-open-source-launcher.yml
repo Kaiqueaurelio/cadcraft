@@ -11,6 +11,10 @@ on:
       - ".github/workflows/decode-open-source-launcher.yml"
   workflow_dispatch:
 
+concurrency:
+  group: decode-open-source-launcher-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
