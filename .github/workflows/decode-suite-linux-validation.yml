@@ -1,15 +1,6 @@
 name: Decode Suite Linux Validation
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/decode-suite-linux-validation.yml"
-      - "scripts/prepare_decode_suite.py"
-      - "scripts/rebrand_decode_suite.py"
-      - "open-source-hub/decode-suite-manifest.json"
-      - "open-source-hub/assets/icons/*.svg"
   workflow_dispatch:
 
 permissions:
