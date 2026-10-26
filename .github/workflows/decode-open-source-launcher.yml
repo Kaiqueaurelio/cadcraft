@@ -1,0 +1,55 @@
+name: Decode Open Source Launcher CI
+
+on:
+  push:
+    paths:
+      - "launcher-desktop/**"
+      - ".github/workflows/decode-open-source-launcher.yml"
+  pull_request:
+    paths:
+      - "launcher-desktop/**"
+      - ".github/workflows/decode-open-source-launcher.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Linux desktop libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libxkbcommon-dev libwayland-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libasound2-dev
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Format Rust source
+        run: cargo fmt --manifest-path launcher-desktop/Cargo.toml
+
+      - name: Run tests
+        run: cargo test --manifest-path launcher-desktop/Cargo.toml
+
+      - name: Build release binary
+        run: cargo build --release --manifest-path launcher-desktop/Cargo.toml
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: decode-open-source-launcher-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            launcher-desktop/target/release/decode-open-source-launcher*
+          if-no-files-found: error
