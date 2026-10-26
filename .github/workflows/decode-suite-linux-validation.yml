@@ -1,0 +1,108 @@
+name: Decode Suite Linux Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/decode-suite-linux-validation.yml"
+      - "scripts/prepare_decode_suite.py"
+      - "scripts/rebrand_decode_suite.py"
+      - "open-source-hub/decode-suite-manifest.json"
+      - "open-source-hub/assets/icons/*.svg"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  select-products:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select all 13 products from the manifest
+        id: set-matrix
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          with open("open-source-hub/decode-suite-manifest.json", encoding="utf-8") as f:
+              products = json.load(f)["products"]
+          print("matrix=" + json.dumps({"include": [
+              {"product_id": p["product_id"], "upstream_slug": p["upstream_slug"], "display_name": p["display_name"]}
+              for p in products
+          ]}, separators=(",", ":")))
+          PY
+
+  linux-build-and-test:
+    needs: select-products
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix: ${{ fromJSON(needs.select-products.outputs.matrix) }}
+    env:
+      PRODUCT_ID: ${{ matrix.product_id }}
+      UPSTREAM_SLUG: ${{ matrix.upstream_slug }}
+      DISPLAY_NAME: ${{ matrix.display_name }}
+      CARGO_TERM_COLOR: never
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install branding dependencies
+        run: python -m pip install --disable-pip-version-check cairosvg Pillow
+      - name: Clone source and apply Decode identity
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/decode-validation"
+          python scripts/prepare_decode_suite.py --workspace "$RUNNER_TEMP/decode-suite" --only "$PRODUCT_ID"
+          test -f "$RUNNER_TEMP/decode-suite/$PRODUCT_ID/DECODE_BRANDING.md"
+          test -f "$RUNNER_TEMP/decode-suite/$PRODUCT_ID/LICENSE-MIT"
+          test -f "$RUNNER_TEMP/decode-suite/$PRODUCT_ID/LICENSE-APACHE"
+      - name: Install native Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libxkbcommon-dev libwayland-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libasound2-dev libvulkan-dev libssl-dev libgtk-3-dev libwebkit2gtk-4.1-dev libpulse-dev libpipewire-0.3-dev libjack-jackd2-dev
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Run Cargo tests
+        id: test
+        run: |
+          set -euo pipefail
+          SOURCE_DIR="$RUNNER_TEMP/decode-suite/$PRODUCT_ID"
+          APP_MANIFEST="$SOURCE_DIR/apps/$UPSTREAM_SLUG/Cargo.toml"
+          test -f "$APP_MANIFEST" || { echo "Missing Cargo manifest: $APP_MANIFEST"; exit 2; }
+          cargo test --manifest-path "$APP_MANIFEST" --locked 2>&1 | tee "$RUNNER_TEMP/decode-validation/cargo-test.log"
+      - name: Build release binary
+        id: release
+        if: success() && steps.test.outcome == 'success'
+        run: |
+          set -euo pipefail
+          SOURCE_DIR="$RUNNER_TEMP/decode-suite/$PRODUCT_ID"
+          APP_MANIFEST="$SOURCE_DIR/apps/$UPSTREAM_SLUG/Cargo.toml"
+          cargo build --release --manifest-path "$APP_MANIFEST" --locked 2>&1 | tee "$RUNNER_TEMP/decode-validation/cargo-build-release.log"
+      - name: Write product result summary
+        if: always()
+        env:
+          TEST_OUTCOME: ${{ steps.test.outcome }}
+          BUILD_OUTCOME: ${{ steps.release.outcome }}
+        run: |
+          {
+            echo "## $DISPLAY_NAME"
+            echo
+            echo "- Product ID: `$PRODUCT_ID`"
+            echo "- Cargo tests: **$TEST_OUTCOME**"
+            echo "- Release build: **$BUILD_OUTCOME**"
+            echo "- This checks the Linux source build only; it does not yet certify an installer or other operating systems."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: decode-validation-${{ matrix.product_id }}
+          path: ${{ runner.temp }}/decode-validation/
+          if-no-files-found: ignore
+          retention-days: 14
