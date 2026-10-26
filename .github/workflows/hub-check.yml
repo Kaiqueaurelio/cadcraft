@@ -1,0 +1,24 @@
+name: Open Source Hub checks
+
+on:
+  pull_request:
+    paths:
+      - "open-source-hub/**"
+      - ".github/workflows/hub-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  hub-check:
+    name: Validate open-source hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run hub checks
+        run: node open-source-hub/check.mjs
