@@ -179,7 +179,7 @@ impl Launcher {
                 format!("{} ainda não possui um pacote recompilado com a identidade Decode. Para evitar instalar o executável original, esta ação abre as instruções de preparação.", app.name),
                 true,
             ));
-            self.open_url("https://github.com/Kaiqueaurelio/decodecad/blob/main/scripts/prepare_decode_suite.py".to_string());
+            self.open_url(app.preparation_url());
             return;
         }
         if self.tasks.contains_key(app.id) { return; }
@@ -242,26 +242,43 @@ impl Launcher {
     }
 
     fn status(&self, app: &DecodeApp) -> (String, egui::Color32) {
+        if let Some(record) = self.managed(app) {
+            if app.is_decode_project {
+                let text = self.releases.get(app.id).map(|release| {
+                    if is_newer(&release.tag_name, &record.version) {
+                        format!("Atualização disponível · {}", release.tag_name)
+                    } else {
+                        format!("Decode instalado · {}", record.version)
+                    }
+                }).unwrap_or_else(|| format!("Decode instalado · {}", record.version));
+                let color = if text.starts_with("Atualização") { rgb([255, 196, 93]) } else { rgb([123, 225, 180]) };
+                return (text, color);
+            }
+            return (
+                format!("Decode instalado · {}", record.version),
+                rgb([123, 225, 180]),
+            );
+        }
+        if self.external(app).is_some() {
+            if app.is_decode_project {
+                return ("Instalado fora da central".into(), rgb([123, 225, 180]));
+            }
+            return ("Instalação upstream encontrada".into(), rgb([255, 196, 93]));
+        }
         if !app.is_decode_project {
             if let Some(release) = self.releases.get(app.id) {
                 return (
-                    format!("Build Decode em preparação · fonte {}", release.tag_name),
+                    format!("Build Decode em preparação · base {}", release.tag_name),
                     rgb([255, 196, 93]),
                 );
             }
+            if self.refreshing {
+                return ("Build Decode em preparação · consultando fonte".into(), rgb([255, 196, 93]));
+            }
+            if self.errors.contains_key(app.id) {
+                return ("Build Decode em preparação".into(), rgb([255, 196, 93]));
+            }
             return ("Build Decode em preparação".into(), rgb([255, 196, 93]));
-        }
-        if let Some(record) = self.managed(app) {
-            let text = self.releases.get(app.id).map(|release| {
-                if is_newer(&release.tag_name, &record.version) {
-                    format!("Atualização disponível · {}", release.tag_name)
-                } else { format!("Instalado · {}", record.version) }
-            }).unwrap_or_else(|| format!("Instalado · {}", record.version));
-            let color = if text.starts_with("Atualização") { rgb([255, 196, 93]) } else { rgb([123, 225, 180]) };
-            return (text, color);
-        }
-        if self.external(app).is_some() {
-            return ("Instalado fora da central".into(), rgb([123, 225, 180]));
         }
         if let Some(release) = self.releases.get(app.id) {
             if model::select_asset(release, app, HostPlatform::current(), None).is_some() {
@@ -320,7 +337,8 @@ impl Launcher {
                     if busy.is_some() {
                         ui.add_enabled(false, egui::Button::new("Processando…").min_size(egui::vec2(width - 105.0, 30.0)));
                     } else if installed {
-                        if ui.add_sized([width - 105.0, 30.0], egui::Button::new("Abrir aplicativo")).clicked() { self.launch(app); }
+                        let open_label = if managed { "Abrir aplicativo" } else { "Abrir instalação original" };
+                        if ui.add_sized([width - 105.0, 30.0], egui::Button::new(open_label)).clicked() { self.launch(app); }
                     } else {
                         let label = if app.is_decode_project {
                             if self.releases.contains_key(app.id) { "Instalar Decode CAD" } else { "Releases do Decode CAD" }
@@ -329,7 +347,7 @@ impl Launcher {
                         };
                         if ui.add_sized([width - 105.0, 30.0], egui::Button::new(label).fill(rgb([213, 230, 255])).stroke(egui::Stroke::NONE)).clicked() {
                             if !app.is_decode_project {
-                                self.install(app);
+                                self.open_url(app.preparation_url());
                             } else if self.releases.contains_key(app.id) {
                                 self.install(app);
                             } else {
