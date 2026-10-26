@@ -17,7 +17,6 @@ use model::{HostPlatform, Release};
 
 enum Event {
     Release { id: String, result: Result<Release, String> },
-    Icon { id: String, bytes: Vec<u8> },
     Detected { id: String, result: Option<ExternalInstall> },
     Progress { id: String, text: String },
     Finished { id: String, result: Result<InstallResult, String> },
@@ -31,7 +30,6 @@ struct Launcher {
     releases: BTreeMap<String, Release>,
     errors: HashMap<String, String>,
     detected: HashMap<String, ExternalInstall>,
-    icons: HashMap<String, egui::TextureHandle>,
     tasks: HashMap<String, String>,
     results: HashMap<String, String>,
     search: String,
@@ -59,7 +57,7 @@ impl Launcher {
         cc.egui_ctx.set_style_of(egui::Theme::Dark, style);
         let mut app = Self {
             tx, rx, paths, manifest, releases, errors: HashMap::new(),
-            detected: HashMap::new(), icons: HashMap::new(), tasks: HashMap::new(),
+            detected: HashMap::new(), tasks: HashMap::new(),
             results: HashMap::new(), search: String::new(), category: "Todos".into(),
             sort_az: false, refreshing: false, refresh_left: 0, notice: None,
             confirm_remove: None,
@@ -84,21 +82,7 @@ impl Launcher {
                     let result = installer::detect_external(&app);
                     let _ = detect_tx.send(Event::Detected { id: app.id.to_string(), result });
                 });
-                let icon_tx = tx.clone();
-                thread::spawn(move || {
-                    let fetched = reqwest::blocking::Client::builder()
-                        .user_agent(concat!("DecodeOpenSourceLauncher/", env!("CARGO_PKG_VERSION")))
-                        .timeout(Duration::from_secs(12))
-                        .build()
-                        .and_then(|client| client.get(app.icon_url()).send())
-                        .and_then(|response| response.error_for_status())
-                        .and_then(|response| response.bytes());
-                    if let Ok(bytes) = fetched {
-                        if bytes.len() <= 1024 * 1024 {
-                            let _ = icon_tx.send(Event::Icon { id: app.id.to_string(), bytes: bytes.to_vec() });
-                        }
-                    }
-                });
+
             });
         }
     }
@@ -126,14 +110,6 @@ impl Launcher {
                             ("Algumas versões não atualizaram; os dados em cache foram preservados.".to_string(), true)
                         };
                         self.notice = Some(message);
-                    }
-                }
-                Ok(Event::Icon { id, bytes }) => {
-                    if let Ok(image) = image::load_from_memory(&bytes) {
-                        let rgba = image.to_rgba8();
-                        let size = [rgba.width() as usize, rgba.height() as usize];
-                        let source = egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw());
-                        self.icons.insert(id.clone(), ctx.load_texture(format!("icon-{id}"), source, egui::TextureOptions::LINEAR));
                     }
                 }
                 Ok(Event::Detected { id, result }) => {
@@ -278,16 +254,12 @@ impl Launcher {
                 ui.set_max_width(width - 28.0);
                 ui.set_min_height(252.0);
                 ui.horizontal(|ui| {
-                    if let Some(icon) = self.icons.get(app.id) {
-                        ui.add(egui::Image::new((icon.id(), egui::vec2(48.0, 48.0))).fit_to_exact_size(egui::vec2(48.0, 48.0)));
-                    } else {
-                        let (rect, _) = ui.allocate_exact_size(egui::vec2(48.0, 48.0), egui::Sense::hover());
-                        ui.painter().rect_filled(rect, egui::CornerRadius::same(10), rgb(app.color));
-                        let initial = app.name.chars().next().unwrap_or('D').to_string();
-                        ui.painter().text(rect.center(), egui::Align2::CENTER_CENTER, initial, egui::FontId::proportional(25.0), egui::Color32::WHITE);
-                    }
+                    let (rect, _) = ui.allocate_exact_size(egui::vec2(48.0, 48.0), egui::Sense::hover());
+                    ui.painter().rect_filled(rect, egui::CornerRadius::same(12), rgb([44, 104, 211]));
+                    ui.painter().rect_stroke(rect, egui::CornerRadius::same(12), egui::Stroke::new(1.0, rgb([108, 169, 255])), egui::StrokeKind::Inside);
+                    ui.painter().text(rect.center(), egui::Align2::CENTER_CENTER, "D", egui::FontId::proportional(28.0), egui::Color32::WHITE);
                     ui.vertical(|ui| {
-                        let group = if app.is_decode_project { "PROJETO DECODE" } else { "CRAFT APP SUITE" };
+                        let group = if app.is_decode_project { "PROJETO DECODE" } else { "DECODE SUITE" };
                         ui.label(egui::RichText::new(group).size(9.0).strong().color(rgb([145, 190, 255])));
                         ui.label(egui::RichText::new(app.license).size(10.0).color(rgb([155, 174, 199])));
                     });
@@ -385,7 +357,7 @@ impl eframe::App for Launcher {
                 });
                 ui.separator();
                 ui.vertical(|ui| {
-                    ui.label(egui::RichText::new("Seu estúdio open source").size(20.0).strong().color(rgb([238, 245, 255])));
+                    ui.label(egui::RichText::new("Seu universo open source").size(20.0).strong().color(rgb([238, 245, 255])));
                     ui.label(egui::RichText::new("Explore, instale, atualize e abra as ferramentas em um só lugar.").size(12.0).color(rgb([155, 174, 199])));
                 });
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
@@ -395,7 +367,7 @@ impl eframe::App for Launcher {
             ui.add_space(14.0);
             ui.horizontal_wrapped(|ui| {
                 chip(ui, format!("{} ferramentas", APPS.len()), rgb([126, 179, 255]));
-                chip(ui, "13 apps Craft".into(), rgb([169, 185, 208]));
+                chip(ui, "13 apps Decode".into(), rgb([169, 185, 208]));
                 chip(ui, "1 projeto Decode".into(), rgb([111, 222, 231]));
                 chip(ui, HostPlatform::current().label().to_string(), rgb([123, 225, 180]));
             });
@@ -449,7 +421,7 @@ impl eframe::App for Launcher {
             ui.horizontal_wrapped(|ui| {
                 ui.label(egui::RichText::new("Central independente da Decode Analytics. Marcas e aplicativos pertencem aos seus projetos originais.").size(10.0).color(rgb([111, 130, 158])));
                 ui.hyperlink_to("Código-fonte", "https://github.com/Kaiqueaurelio/decodecad/tree/main/launcher-desktop");
-                ui.hyperlink_to("ArtCraft Launcher (referência)", "https://github.com/storytold/craft-launcher");
+                ui.hyperlink_to("Launcher open source de referência", "https://github.com/storytold/craft-launcher");
             });
         });
         self.remove_confirmation(&ctx);
