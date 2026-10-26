@@ -1,0 +1,31 @@
+name: Decode branding tooling checks
+
+on:
+  push:
+    paths:
+      - "scripts/rebrand_decode_suite.py"
+      - "open-source-hub/decode-suite-manifest.json"
+      - "open-source-hub/assets/icons/*.svg"
+      - ".github/workflows/decode-branding-check.yml"
+  pull_request:
+    paths:
+      - "scripts/rebrand_decode_suite.py"
+      - "open-source-hub/decode-suite-manifest.json"
+      - "open-source-hub/assets/icons/*.svg"
+      - ".github/workflows/decode-branding-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate branding migration tooling
+        run: python scripts/rebrand_decode_suite.py --self-test
