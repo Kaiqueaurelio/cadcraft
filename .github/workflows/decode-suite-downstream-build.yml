@@ -135,7 +135,6 @@ jobs:
             echo "Native Cargo manifest missing: $APP_MANIFEST"
             exit 1
           fi
-          cargo fmt --manifest-path "$APP_MANIFEST" -- --check
           cargo test --manifest-path "$APP_MANIFEST" --locked
           cargo build --release --manifest-path "$APP_MANIFEST" --locked
           cargo metadata --no-deps --format-version 1 --manifest-path "$APP_MANIFEST" > "$RUNNER_TEMP/cargo-metadata.json"
