@@ -32,6 +32,10 @@ assert.match(script, /grid\.addEventListener\("click",handleDownload\)/, "downlo
 assert.match(script, /var os=platform\.value,arch=selectedArchitecture\(\)/, "system and architecture must be captured at click time");
 assert.match(script, /chooseAsset\(app,os,arch\)/, "download must use the captured platform selection");
 assert.match(script, /function safeHttps\(url,fallback\)/, "download URLs must be HTTPS-validated");
+assert.match(script, /site:"https:\/\/getartcraft\.com\/apps\/printcraft"/, "PdfCraft must use the official repository homepage");
+assert.match(script, /site:"https:\/\/getartcraft\.com\/apps\/slidecraft"/, "DeckCraft must use the official repository homepage");
+assert.doesNotMatch(script, /site:"https:\/\/getartcraft\.com\/apps\/(pdfcraft|deckcraft)"/, "obsolete guessed app page URLs must not remain");
+assert.match(html, /option value="x86"/, "32-bit Windows option must be present");
 assert.match(script, /filmcraft\/main\/assets\/app-icon\/filmcraft-1024\.png/, "FilmCraft icon path must exist in repository");
 assert.match(script, /effectcraft\/main\/assets\/app-icon\/effectcraft-1024\.png/, "EffectCraft icon path must exist in repository");
 assert.match(script, /figcraft\/main\/assets\/app-icon\/figcraft-256\.png/, "FigCraft icon path must exist in repository");
@@ -62,7 +66,11 @@ assert.equal(pick([
   {name:"demo-x64.msi"}
 ], "windows", "x86_64")?.name, "demo-x64.msi", "Windows architecture selection must match x64");
 assert.equal(pick([{name:"demo-aarch64.AppImage"}], "linux", "x86_64"), null, "must not select explicitly incompatible packages");
-assert.equal(pick([{name:"demo-x86.msi"}], "windows", "x86_64"), null, "must not select 32-bit or unlabelled Windows packages for x64");
+assert.equal(pick([{name:"demo-x86.msi"}], "windows", "x86_64"), null, "must not select 32-bit Windows packages for x64");
+assert.equal(pick([{name:"demo-x86.msi"}], "windows", "x86")?.name, "demo-x86.msi", "32-bit Windows must select 32-bit packages");
+assert.equal(pick([{name:"demo-windows-x64.msi"}], "linux", "x86_64"), null, "Linux must never select a Windows installer");
+assert.equal(pick([{name:"demo-freebsd-x86_64.tar.gz"}], "linux", "x86_64"), null, "Linux must never select a FreeBSD archive");
+assert.equal(pick([{name:"demo-windows-x64-portable.zip"}], "macos", "x86_64"), null, "macOS must never select a Windows ZIP");
 assert.equal(pick([{name:"demo-linux.deb"}], "linux", "arm64"), null, "must not guess the architecture of an unlabelled Linux package");
 assert.equal(pick([{name:"demo-universal.dmg"}], "macos", "arm64")?.name, "demo-universal.dmg", "explicit universal macOS packages should remain eligible");
 assert.equal(pick([{name:"demo-x86_64.flatpak"}], "linux", "x86_64")?.name, "demo-x86_64.flatpak", "Flatpak is a supported Linux package format");
