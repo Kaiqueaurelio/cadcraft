@@ -2,7 +2,7 @@
 name = "decode-open-source-launcher"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.90"
+rust-version = "1.95"
 description = "Native, open-source application manager for the Decode Analytics Open Source Hub"
 license = "MIT OR Apache-2.0"
 publish = false
