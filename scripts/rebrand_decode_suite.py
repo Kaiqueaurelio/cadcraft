@@ -21,11 +21,18 @@ from typing import Any
 TEXT_SUFFIXES = {
     ".rs", ".toml", ".json", ".xml", ".plist", ".html", ".htm", ".js", ".mjs",
     ".cjs", ".ts", ".tsx", ".css", ".scss", ".desktop", ".webmanifest", ".yml",
-    ".yaml", ".sh", ".svg", ".in", ".ps1",
+    ".yaml", ".sh", ".svg", ".in", ".ps1", ".md",
 }
 SKIP_PARTS = {
     ".git", "target", "node_modules", "dist", "build", "vendor", "third_party",
     "third-party", ".next", ".turbo", ".cache",
+}
+# These pages preserve upstream ownership / credit language and should not be relabeled as Decode.
+PRESERVE_ATTRIBUTION_DOCS = {
+    "docs/project/credits.md",
+    "docs/project/licenses.md",
+    "book/src/project/credits.md",
+    "book/src/project/licenses.md",
 }
 LIGHT_BLUE = (0x25, 0x57, 0xC6)
 DARK_BLUE = (0x7C, 0xA8, 0xFF)
@@ -353,6 +360,8 @@ def visible_files(repo: Path, slug: str) -> list[Path]:
                 continue
             parts = path.relative_to(repo).parts
             if any(part in SKIP_PARTS for part in parts):
+                continue
+            if path.relative_to(repo).as_posix() in PRESERVE_ATTRIBUTION_DOCS:
                 continue
             if any(part.lower() in {"tests", "fixtures", "goldens", "testdata", "test-data"} for part in parts):
                 continue
