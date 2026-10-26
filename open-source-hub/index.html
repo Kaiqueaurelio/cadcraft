@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="Descubra e baixe ferramentas criativas open source em uma central visual da Decode Analytics.">
+<title>Decode Open Source Hub</title>
+<link rel="preconnect" href="https://raw.githubusercontent.com">
+<link rel="preconnect" href="https://api.github.com">
+<style>
+:root{color-scheme:dark;--bg:#080d19;--panel:#10192b;--panel2:#131f35;--line:#27354b;--text:#eef4ff;--muted:#9aa9c2;--blue:#72a7ff;--cyan:#62e4ee;--green:#7be1b4;--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 12% 0%,rgba(36,91,183,.22),transparent 34%),radial-gradient(ellipse at 88% 15%,rgba(29,174,187,.10),transparent 32%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit}button,a,select{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan)}
+.shell{width:min(1440px,calc(100% - 48px));margin:auto}.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(154,169,194,.15);gap:20px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.04em}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,#80adff,#3868d9);color:#08111f;box-shadow:0 0 32px rgba(74,133,255,.22)}.brand small{display:block;font-size:10px;letter-spacing:.18em;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:3px}.nav{display:flex;align-items:center;gap:22px;color:#c2cde0;font-size:13px}.nav a:hover{color:white}.source-pill{border:1px solid #3a4a62;border-radius:999px;padding:10px 14px;background:#111c2e}
+.hero{padding:65px 0 38px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);align-items:end;gap:40px}.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(114,167,255,.28);background:rgba(40,79,145,.16);color:#b8d2ff;border-radius:999px;padding:8px 12px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 11px rgba(123,225,180,.8)}h1{font-size:clamp(42px,6vw,76px);line-height:.99;letter-spacing:-.065em;margin:23px 0 18px;max-width:800px}.gradient-text{background:linear-gradient(105deg,#f3f7ff 12%,#8eb8ff 52%,#75e3e9 100%);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-copy{font-size:17px;line-height:1.65;color:#a7b6cd;max-width:670px;margin:0}.hero-side{border:1px solid rgba(128,163,219,.22);background:linear-gradient(150deg,rgba(29,46,76,.72),rgba(12,20,35,.84));padding:23px;border-radius:22px;position:relative;overflow:hidden}.hero-side:after{content:"";position:absolute;width:170px;height:170px;right:-65px;top:-88px;background:rgba(85,146,255,.18);filter:blur(36px);border-radius:50%;pointer-events:none}.mini-label{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#8fa2c0;font-weight:800}.stat-row{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-top:10px}.stat-big{font-size:52px;letter-spacing:-.07em;font-weight:800;line-height:1}.stat-big span{font-size:18px;color:var(--cyan);letter-spacing:0;margin-left:4px}.stat-side{color:#9daec7;font-size:12px;line-height:1.55;text-align:right;max-width:125px}.stat-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.tag{font-size:11px;border:1px solid #344760;background:rgba(10,18,31,.5);padding:7px 9px;border-radius:8px;color:#c5d5eb}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:22px 0 18px}.section-head h2{font-size:24px;letter-spacing:-.04em;margin:0}.section-head p{margin:7px 0 0;color:var(--muted);font-size:13px}.count{font-size:12px;color:#bac8dc;border:1px solid var(--line);border-radius:10px;padding:9px 12px;white-space:nowrap}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}.search-wrap{min-width:220px;flex:1;position:relative}.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#8a9bb5;font-size:18px;pointer-events:none}.search{width:100%;height:48px;border:1px solid var(--line);background:#0e1727;border-radius:13px;padding:0 16px 0 43px;color:var(--text);outline:none}.search::placeholder{color:#6f809a}.search:focus{border-color:#5c8de2;box-shadow:0 0 0 3px rgba(88,140,232,.12)}.select{height:48px;border:1px solid var(--line);border-radius:13px;background:#0e1727;color:#d8e4f7;padding:0 34px 0 13px;max-width:190px}.filter-row{display:flex;align-items:center;gap:8px;overflow:auto;padding:1px 1px 15px;margin-bottom:3px;scrollbar-width:thin}.filter{flex:0 0 auto;border:1px solid var(--line);background:rgba(16,25,43,.72);color:#9fadc4;padding:10px 14px;border-radius:999px;font-size:12px;cursor:pointer;transition:background .18s,border .18s,color .18s}.filter:hover{border-color:#5879aa;color:white}.filter.active{background:#dbe9ff;color:#101a2a;border-color:#dbe9ff;font-weight:800}.tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.card{min-width:0;display:flex;flex-direction:column;position:relative;overflow:hidden;border:1px solid #25334a;background:linear-gradient(155deg,rgba(19,30,50,.97),rgba(13,21,36,.98));border-radius:17px;padding:18px;min-height:272px;transition:transform .18s,border-color .18s,background .18s}.card:hover{transform:translateY(-3px);border-color:#496894;background:linear-gradient(155deg,#172640,#101a2d)}.card.featured{border-color:rgba(114,167,255,.55);background:linear-gradient(155deg,rgba(30,54,91,.78),rgba(14,23,39,.98))}.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.app-icon{width:56px;height:56px;flex:0 0 56px;border-radius:15px;object-fit:contain;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:5px}.category-symbol{display:grid;place-items:center;width:31px;height:31px;background:rgba(114,167,255,.09);border:1px solid rgba(114,167,255,.15);border-radius:10px;color:#a9c9ff;font-size:15px}.card h3{font-size:18px;letter-spacing:-.035em;margin:17px 0 7px}.card p{font-size:12px;line-height:1.55;color:#9eacc2;margin:0;min-height:38px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.meta span{border:1px solid #2a3a52;border-radius:6px;color:#9dafc9;font-size:10px;padding:5px 7px}.meta .owner{color:#b6d1ff;border-color:#344f77}.release-line{font-size:11px;color:#7588a5;margin-top:11px;min-height:15px}.release-line strong{color:#c5d5ee;font-weight:700}.card-actions{display:flex;gap:7px;margin-top:auto;padding-top:15px}.btn{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:37px;padding:9px 12px;border-radius:9px;font-size:11px;font-weight:800;border:1px solid transparent;cursor:pointer;transition:transform .16s,background .16s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:#dceaff;color:#10203a;flex:1}.btn-primary:hover{background:#fff}.btn-secondary{background:#111d30;border-color:#34435b;color:#c2d0e5}.btn-secondary:hover{background:#1a2a43;color:white}.btn-icon{font-size:13px}.owner-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:#b8d0ff;background:rgba(77,129,220,.13);border:1px solid rgba(106,154,230,.26);padding:5px 7px;border-radius:6px;position:absolute;top:87px;right:17px}
+.status{display:flex;align-items:center;justify-content:center;gap:9px;padding:30px 10px;color:#889ab5;font-size:12px}.spinner{width:14px;height:14px;border:2px solid #2a3a53;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.empty{grid-column:1/-1;text-align:center;padding:60px 18px;border:1px dashed #35455e;border-radius:17px;color:#9eacc2}.notice{margin:35px 0 0;border:1px solid #2c3b52;background:rgba(16,25,43,.65);border-radius:15px;padding:17px 19px;display:flex;gap:13px;align-items:flex-start;color:#a4b4cc;font-size:12px;line-height:1.6}.notice-icon{font-size:18px;color:var(--cyan)}.notice strong{display:block;color:#e1eaf8;font-size:12px;margin-bottom:3px}.footer{margin-top:60px;border-top:1px solid rgba(154,169,194,.15);padding:24px 0 33px;display:flex;justify-content:space-between;gap:24px;align-items:center;color:#7587a3;font-size:11px;line-height:1.7}.footer-brand{font-weight:800;color:#b8c7dc;letter-spacing:.02em}.footer-links{display:flex;gap:16px;flex-wrap:wrap}.footer-links a:hover{color:#fff}
+@media(max-width:1120px){.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{grid-template-columns:minmax(0,1fr) 300px;gap:25px}.hero-copy{font-size:15px}}
+@media(max-width:820px){.shell{width:min(100% - 30px,680px)}.topbar{height:70px}.nav{gap:12px}.nav .hide-mobile{display:none}.hero{grid-template-columns:1fr;padding:48px 0 27px;gap:25px}.hero-side{max-width:none}.hero h1{max-width:580px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.section-head h2{font-size:21px}.select{flex:1;max-width:none}}
+@media(max-width:520px){.shell{width:calc(100% - 24px)}.topbar{height:66px}.brand-mark{width:34px;height:34px}.brand{font-size:14px}.source-pill{font-size:11px;padding:9px 10px}.hero{padding-top:37px}h1{font-size:46px}.hero-copy{font-size:14px}.hero-side{padding:18px}.stat-big{font-size:45px}.toolbar{gap:8px}.search-wrap{flex-basis:100%}.select{height:43px;font-size:12px}.filter-row{margin-right:-12px;padding-right:12px}.tool-grid{grid-template-columns:1fr;gap:10px}.card{min-height:0;padding:16px}.card h3{margin-top:12px}.card p{min-height:0}.release-line{margin-top:9px}.footer{align-items:flex-start;flex-direction:column;gap:14px}.section-head{align-items:flex-start}.count{font-size:10px;padding:8px}.owner-badge{top:83px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+  <a class="brand" href="#" aria-label="Decode Open Source Hub, início">
+    <span class="brand-mark" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M5 4.5h7.2a7.5 7.5 0 1 1 0 15H5v-15Z" stroke="currentColor" stroke-width="2.1"/><path d="M5.5 12h7.3" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg></span>
+    <span>DECODE <small>OPEN SOURCE HUB</small></span>
+  </a>
+  <nav class="nav" aria-label="Navegação principal">
+    <a href="#catalogo" class="hide-mobile">Explorar ferramentas</a>
+    <a href="https://github.com/Kaiqueaurelio/decodecad" target="_blank" rel="noopener noreferrer" class="source-pill">Código-fonte ↗</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> 14 ferramentas • código aberto</div>
+      <h1>Seu estúdio open source.<br><span class="gradient-text">Tudo em um só lugar.</span></h1>
+      <p class="hero-copy">Descubra ferramentas para desenhar, editar, projetar e criar. Compare opções, encontre a versão para seu computador e vá direto aos downloads oficiais — sem caça ao tesouro no GitHub.</p>
+    </div>
+    <aside class="hero-side" aria-label="Resumo do catálogo">
+      <div class="mini-label">O catálogo, sem complicação</div>
+      <div class="stat-row"><div class="stat-big">14<span>apps</span></div><div class="stat-side">Uma central simples para ferramentas livres e abertas.</div></div>
+      <div class="stat-tags"><span class="tag">13 projetos Craft</span><span class="tag">1 projeto Decode</span><span class="tag">Links oficiais</span></div>
+    </aside>
+  </section>
+
+  <section id="catalogo" aria-labelledby="catalog-title">
+    <div class="section-head">
+      <div><h2 id="catalog-title">Encontre sua próxima ferramenta</h2><p>Pesquise pelo nome ou filtre por tipo de trabalho.</p></div>
+      <div id="resultCount" class="count" aria-live="polite">14 ferramentas</div>
+    </div>
+    <div class="toolbar">
+      <label class="search-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="searchInput" class="search" type="search" placeholder="Buscar ferramenta, categoria ou uso..." autocomplete="off" aria-label="Buscar ferramenta"></label>
+      <label><span class="mini-label" style="display:block;margin:0 0 5px 3px">Seu sistema</span><select class="select" id="platformSelect" aria-label="Sistema operacional"><option value="linux">Linux (Mint, Ubuntu…)</option><option value="windows">Windows</option><option value="macos">macOS</option></select></label>
+      <label><span class="mini-label" style="display:block;margin:0 0 5px 3px">Ordenar</span><select class="select" id="sortSelect" aria-label="Ordenar ferramentas"><option value="featured">Recomendados</option><option value="az">Nome: A–Z</option><option value="za">Nome: Z–A</option></select></label>
+    </div>
+    <div class="filter-row" id="filterRow" aria-label="Filtrar por categoria"></div>
+    <div class="tool-grid" id="toolGrid" aria-live="polite"></div>
+    <div id="loadingState" class="status"><span class="spinner" aria-hidden="true"></span> Consultando versões publicadas…</div>
+  </section>
+
+  <aside class="notice">
+    <span class="notice-icon" aria-hidden="true">ⓘ</span>
+    <div><strong>Downloads seguros e transparentes</strong>Os botões levam às páginas e arquivos oficiais dos respectivos projetos. Esta central não instala nem executa programas automaticamente; a instalação e as atualizações são concluídas pelo instalador ou pelo sistema operacional. As versões aparecem somente quando a API pública informa uma release.</div>
+  </aside>
+</main>
+<footer class="footer">
+  <div><div class="footer-brand">DECODE ANALYTICS · OPEN SOURCE HUB</div><div>Central independente para descobrir ferramentas de código aberto.</div></div>
+  <div class="footer-links"><a href="https://github.com/storytold/craft-launcher" target="_blank" rel="noopener noreferrer">Projeto de referência ↗</a><a href="https://github.com/Kaiqueaurelio/decodecad/releases/latest" target="_blank" rel="noopener noreferrer">Decode CAD ↗</a><a href="#catalogo">Voltar ao catálogo ↑</a></div>
+  <div style="max-width:390px">Os aplicativos, marcas e ícones pertencem aos respetivos projetos. Consulte os repositórios para licenças e atribuições. Não afiliado oficialmente à equipe ArtCraft/storytold.</div>
+</footer>
+</div>
+<script>
+(function(){
+"use strict";
+var apps = [
+{id:"photocraft",name:"PhotoCraft",desc:"Edite imagens com camadas, máscaras, tipografia e fluxos de trabalho criativos.",cat:"Imagem e fotografia",symbol:"◉",repo:"storytold/photocraft",site:"https://getartcraft.com/apps/photocraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/photocraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.photocraft.png"},
+{id:"lightcraft",name:"LightCraft",desc:"Revele arquivos RAW e refine fotografias com edição não destrutiva.",cat:"Imagem e fotografia",symbol:"◐",repo:"storytold/lightcraft",site:"https://getartcraft.com/apps/lightcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/lightcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.lightcraft.png"},
+{id:"filmcraft",name:"FilmCraft",desc:"Monte vídeos, trabalhe cores e organize o áudio da sua produção.",cat:"Vídeo e motion",symbol:"▷",repo:"storytold/filmcraft",site:"https://getartcraft.com/apps/filmcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/filmcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.filmcraft.png"},
+{id:"designcraft",name:"DesignCraft",desc:"Crie layouts, publicações e projetos de design editorial.",cat:"Design e ilustração",symbol:"▤",repo:"storytold/designcraft",site:"https://getartcraft.com/apps/designcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/designcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.designcraft.png"},
+{id:"vectorcraft",name:"VectorCraft",desc:"Desenhe ilustrações vetoriais, formas e artes escaláveis.",cat:"Design e ilustração",symbol:"◇",repo:"storytold/vectorcraft",site:"https://getartcraft.com/apps/vectorcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/vectorcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.vectorcraft.png"},
+{id:"pdfcraft",name:"PdfCraft",desc:"Leia, organize e proteja seus documentos PDF em um só fluxo.",cat:"Documentos e escritório",symbol:"▧",repo:"storytold/pdfcraft",site:"https://getartcraft.com/apps/pdfcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/pdfcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.pdfcraft.png"},
+{id:"effectcraft",name:"EffectCraft",desc:"Componha motion graphics e efeitos visuais para suas produções.",cat:"Vídeo e motion",symbol:"✳",repo:"storytold/effectcraft",site:"https://getartcraft.com/apps/effectcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/effectcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.effectcraft.png"},
+{id:"wordcraft",name:"WordCraft",desc:"Escreva, organize e formate documentos de texto.",cat:"Documentos e escritório",symbol:"¶",repo:"storytold/wordcraft",site:"https://getartcraft.com/apps/wordcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/wordcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.wordcraft.png"},
+{id:"deckcraft",name:"DeckCraft",desc:"Transforme ideias em apresentações e conjuntos de slides.",cat:"Documentos e escritório",symbol:"▥",repo:"storytold/deckcraft",site:"https://getartcraft.com/apps/deckcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/deckcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.deckcraft.png"},
+{id:"gridcraft",name:"GridCraft",desc:"Trabalhe com planilhas, tabelas e análise de dados.",cat:"Documentos e escritório",symbol:"▦",repo:"storytold/gridcraft",site:"https://getartcraft.com/apps/gridcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/gridcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.gridcraft.png"},
+{id:"cadcraft",name:"CADCraft",desc:"Faça desenho técnico e projetos de desenho assistido por computador.",cat:"CAD e engenharia",symbol:"⌗",repo:"storytold/cadcraft",site:"https://getartcraft.com/apps/cadcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/cadcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.cadcraft.png"},
+{id:"soundcraft",name:"SoundCraft",desc:"Grave, edite e organize áudio para música e produção.",cat:"Áudio",symbol:"♫",repo:"storytold/soundcraft",site:"https://getartcraft.com/apps/soundcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/soundcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.soundcraft.png"},
+{id:"figcraft",name:"FigCraft",desc:"Modele interfaces, crie protótipos e desenvolva experiências digitais.",cat:"Design e ilustração",symbol:"⌘",repo:"storytold/figcraft",site:"https://getartcraft.com/apps/figcraft",license:"Apache-2.0",icon:"https://raw.githubusercontent.com/storytold/figcraft/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.figcraft.png"},
+{id:"decodecad",name:"Decode CAD",desc:"CAD 2D/3D da Decode Analytics, com desenhos técnicos e automação.",cat:"CAD e engenharia",symbol:"⌗",repo:"Kaiqueaurelio/decodecad",site:"https://github.com/Kaiqueaurelio/decodecad",releaseUrl:"https://github.com/Kaiqueaurelio/decodecad/releases/latest",license:"MIT / Apache-2.0",icon:"https://raw.githubusercontent.com/Kaiqueaurelio/decodecad/main/assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png",decode:true}
+];
+var categories=["Todos"].concat(Array.from(new Set(apps.map(function(a){return a.cat;}))));
+var releases={}, apiDone=0, activeCat="Todos";
+var grid=document.getElementById("toolGrid"), filters=document.getElementById("filterRow"), search=document.getElementById("searchInput"), platform=document.getElementById("platformSelect"), sort=document.getElementById("sortSelect"), count=document.getElementById("resultCount"), loading=document.getElementById("loadingState");
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function external(url,label,cls){return '<a class="btn '+cls+'" href="'+escapeHtml(url)+'" target="_blank" rel="noopener noreferrer">'+label+'</a>';}
+function releaseHref(app){return app.releaseUrl||("https://github.com/"+app.repo+"/releases/latest");}
+function renderFilters(){
+ filters.innerHTML=categories.map(function(cat){return '<button type="button" class="filter'+(activeCat===cat?' active':'')+'" data-cat="'+escapeHtml(cat)+'" aria-pressed="'+(activeCat===cat)+'">'+escapeHtml(cat)+'</button>';}).join("");
+ filters.querySelectorAll("button").forEach(function(button){button.addEventListener("click",function(){activeCat=button.dataset.cat;renderFilters();renderCards();});});
+}
+function getAssets(release){return release&&Array.isArray(release.assets)?release.assets:[];}
+function chooseAsset(app,os){
+ var release=releases[app.id], assets=getAssets(release), tests;
+ if(!assets.length)return null;
+ if(os==="windows"){
+  tests=[function(a){return /\.msi$/i.test(a.name)&&/(x64|x86_64|amd64)/i.test(a.name)&&!/(arm64|aarch64|x86[^_])/i.test(a.name);},function(a){return /\.msi$/i.test(a.name)&&!/(arm64|aarch64|x86[^_])/i.test(a.name);},function(a){return /\.zip$/i.test(a.name)&&/(portable|windows)/i.test(a.name)&&!/(arm64|aarch64|x86[^_])/i.test(a.name);}];
+ }else if(os==="macos"){
+  tests=[function(a){return /\.dmg$/i.test(a.name)&&/(universal|macos|darwin)/i.test(a.name);},function(a){return /\.(dmg|pkg)$/i.test(a.name);},function(a){return /\.zip$/i.test(a.name)&&/(macos|darwin|portable)/i.test(a.name);}];
+ }else{
+  tests=[function(a){return /\.deb$/i.test(a.name)&&/(x86_64|amd64|linux)/i.test(a.name)&&!/(arm64|aarch64|riscv)/i.test(a.name);},function(a){return /\.appimage$/i.test(a.name)&&/(x86_64|amd64|linux)/i.test(a.name)&&!/(arm64|aarch64|riscv)/i.test(a.name);},function(a){return /\.tar\.gz$/i.test(a.name)&&/(x86_64|amd64|linux)/i.test(a.name)&&!/(arm64|aarch64|riscv)/i.test(a.name);},function(a){return /\.rpm$/i.test(a.name)&&/(x86_64|amd64)/i.test(a.name);}];
+ }
+ for(var i=0;i<tests.length;i++){var found=assets.find(tests[i]);if(found)return found;}
+ return null;
+}
+function packageName(asset){if(!asset)return "";var n=asset.name.toLowerCase();if(n.endsWith(".msi"))return "instalador Windows (.msi)";if(n.endsWith(".zip"))return "arquivo portátil (.zip)";if(n.endsWith(".deb"))return "pacote Linux (.deb)";if(n.endsWith(".appimage"))return "AppImage para Linux";if(n.endsWith(".dmg"))return "imagem de instalação macOS (.dmg)";if(n.endsWith(".pkg"))return "instalador macOS (.pkg)";if(n.endsWith(".tar.gz"))return "arquivo compactado (.tar.gz)";return "arquivo oficial";}
+function versionLabel(app){var data=releases[app.id];if(data&&data.tag_name)return '<strong>'+escapeHtml(data.tag_name)+'</strong>';return '<span>Versão indisponível</span>';}
+function renderCards(){
+ var query=search.value.trim().toLowerCase();
+ var list=apps.filter(function(a){var all=(a.name+" "+a.desc+" "+a.cat+" "+a.repo+" "+a.license).toLowerCase();return (activeCat==="Todos"||a.cat===activeCat)&&all.indexOf(query)!==-1;});
+ if(sort.value==="az")list.sort(function(a,b){return a.name.localeCompare(b.name);});
+ if(sort.value==="za")list.sort(function(a,b){return b.name.localeCompare(a.name);});
+ count.textContent=list.length+" de "+apps.length+" ferramentas";
+ if(!list.length){grid.innerHTML='<div class="empty">Nenhuma ferramenta encontrada.<br><span style="display:block;margin-top:7px;font-size:12px">Tente outro termo ou escolha “Todos”.</span></div>';return;}
+ grid.innerHTML=list.map(function(app){
+  var release=releases[app.id], asset=chooseAsset(app,platform.value);
+  var releaseInfo=versionLabel(app);
+  if(release&&release.published_at){releaseInfo+=' <span>· '+new Date(release.published_at).toLocaleDateString("pt-BR")+'</span>';}
+  var status=release?"Release publicada":"Abra os downloads oficiais";
+  var buttonText=asset?"↓ Baixar":"Ver downloads ↗";
+  var target=asset?asset.browser_download_url:releaseHref(app);
+  var statusTitle=asset?("Abrir "+packageName(asset)+" publicado oficialmente"):("Ver releases e pacotes publicados pelo projeto");
+  return '<article class="card'+(app.decode?' featured':'')+'"><div class="card-top"><img class="app-icon" src="'+escapeHtml(app.icon)+'" alt="Ícone de '+escapeHtml(app.name)+'" loading="lazy" onerror="this.style.visibility=\'hidden\'"><span class="category-symbol" aria-hidden="true">'+escapeHtml(app.symbol)+'</span></div>'+(app.decode?'<span class="owner-badge">Projeto Decode</span>':'')+'<h3>'+escapeHtml(app.name)+'</h3><p>'+escapeHtml(app.desc)+'</p><div class="meta"><span>'+escapeHtml(app.cat)+'</span><span>'+escapeHtml(app.license)+'</span></div><div class="release-line" title="'+escapeHtml(status)+'">'+releaseInfo+'</div><div class="card-actions"><a class="btn btn-primary" title="'+escapeHtml(statusTitle)+'" href="'+escapeHtml(target)+'" target="_blank" rel="noopener noreferrer"><span class="btn-icon">'+(asset?'↓':'↗')+'</span> '+buttonText.replace('↓ ','').replace(' ↗','')+'</a>'+external("https://github.com/"+app.repo,"Código","btn-secondary")+'</div></article>';
+ }).join("");
+}
+function detectPlatform(){
+ var p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||navigator.userAgent||"";
+ p=p.toLowerCase();
+ if(p.indexOf("win")!==-1)platform.value="windows";
+ else if(p.indexOf("mac")!==-1||p.indexOf("iphone")!==-1||p.indexOf("ipad")!==-1)platform.value="macos";
+ else platform.value="linux";
+}
+async function loadRelease(app){
+ try{
+  var response=await fetch("https://api.github.com/repos/"+app.repo+"/releases/latest",{headers:{Accept:"application/vnd.github+json"},cache:"no-store"});
+  if(!response.ok)throw new Error("release unavailable");
+  var data=await response.json();
+  if(data&&data.tag_name)releases[app.id]=data;
+ }catch(err){releases[app.id]=null;}
+ finally{apiDone++;if(apiDone>=apps.length){loading.style.display="none";}renderCards();}
+}
+search.addEventListener("input",renderCards);platform.addEventListener("change",renderCards);sort.addEventListener("change",renderCards);
+detectPlatform();renderFilters();renderCards();
+apps.forEach(function(app){loadRelease(app);});
+})();
+</script>
+</body>
+</html>
