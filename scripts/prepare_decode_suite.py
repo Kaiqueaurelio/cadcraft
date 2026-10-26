@@ -55,11 +55,20 @@ def build_product(app: dict[str, Any], repo: Path) -> dict[str, Any]:
     if not manifest.is_file():
         return {"product": app["display_name"], "status": "no native Cargo manifest", "path": str(repo)}
     commands = [
-        ["cargo", "test", "--manifest-path", str(manifest), "--locked"],
-        ["cargo", "build", "--release", "--manifest-path", str(manifest), "--locked"],
+        ("tests failed", ["cargo", "test", "--manifest-path", str(manifest), "--locked"]),
+        ("release build failed", ["cargo", "build", "--release", "--manifest-path", str(manifest), "--locked"]),
     ]
-    for command in commands:
-        run(command)
+    for failure_status, command in commands:
+        try:
+            run(command)
+        except subprocess.CalledProcessError as exc:
+            return {
+                "product": app["display_name"],
+                "status": failure_status,
+                "path": str(repo),
+                "exit_code": exc.returncode,
+                "command": command,
+            }
     return {"product": app["display_name"], "status": "tests and release build passed", "path": str(repo)}
 
 def main() -> int:
@@ -95,6 +104,11 @@ def main() -> int:
             result = build_product(app, repo)
             results.append(result)
     print(json.dumps({"workspace": str(workspace), "build_requested": args.build, "results": results}, ensure_ascii=False, indent=2))
+    if args.build:
+        failed_statuses = {"tests failed", "release build failed"}
+        failures = [item for item in results if item.get("status") in failed_statuses]
+        print(f"Build summary: {len(products) - len(failures)} products passed or had no native target; {len(failures)} failed.", flush=True)
+        return 1 if failures else 0
     return 0
 
 if __name__ == "__main__":
