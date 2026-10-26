@@ -384,6 +384,7 @@ def main() -> int:
     parser.add_argument("--workspace", type=Path, help="Directory containing clones named by Decode product ID.")
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--icons", type=Path)
+    parser.add_argument("--only", help="Only rebrand one product_id from the manifest.")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
@@ -397,7 +398,12 @@ def main() -> int:
     if not workspace.is_dir():
         parser.error("Workspace directory does not exist: " + str(workspace))
     manifest = load_json(manifest_path)
-    results = [apply_one(app, workspace, icons_dir) for app in manifest["products"]]
+    products = manifest["products"]
+    if args.only:
+        products = [app for app in products if app["product_id"] == args.only]
+        if not products:
+            parser.error("Unknown product_id: " + args.only)
+    results = [apply_one(app, workspace, icons_dir) for app in products]
     print(json.dumps({"workspace": str(workspace), "results": results}, ensure_ascii=False, indent=2))
     if any(result["status"] != "rebranded" for result in results):
         print("Some downstream source clones were missing. See the results above.", file=sys.stderr)
