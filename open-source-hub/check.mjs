@@ -28,6 +28,8 @@ assert.match(html, /id="architectureSelect"/, "architecture selector must be pre
 assert.match(html, /Arquitetura do processador/, "architecture selector must have an accessible label");
 assert.match(script, /function selectedArchitecture\(\)/, "automatic architecture detection must exist");
 assert.match(script, /data-download-app=/, "primary download links must opt into the download handler");
+assert.match(script, /var buttonText="Baixar"/, "primary action must say Baixar even before release lookup");
+assert.doesNotMatch(script, /var buttonText=asset\?/, "download label must not depend on whether a release was preloaded");
 assert.match(script, /grid\.addEventListener\("click",handleDownload\)/, "download handler must be connected");
 assert.match(script, /var os=platform\.value,arch=selectedArchitecture\(\)/, "system and architecture must be captured at click time");
 assert.match(script, /chooseAsset\(app,os,arch\)/, "download must use the captured platform selection");
