@@ -28,6 +28,10 @@ impl DecodeApp {
         "https://decode-open-source-hub.vercel.app".to_string()
     }
 
+    pub fn preparation_url(&self) -> String {
+        "https://github.com/Kaiqueaurelio/decodecad/actions/workflows/decode-suite-downstream-build.yml".to_string()
+    }
+
     pub fn icon_url(&self) -> String {
         format!(
             "https://raw.githubusercontent.com/Kaiqueaurelio/decodecad/main/open-source-hub/assets/icons/{}.svg",
