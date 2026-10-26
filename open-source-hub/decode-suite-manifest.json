@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "suite_name": "Decode Studio Suite",
+  "brand": {
+    "deep_navy": "#07101E",
+    "navy_surface": "#0D1B34",
+    "blue": "#4C85F7",
+    "blue_light": "#7CA8FF",
+    "blue_dark": "#2557C6",
+    "cyan": "#55DDEB",
+    "text": "#F4F8FF",
+    "secondary_text": "#9FB1CC",
+    "border": "#263B5B"
+  },
+  "products": [
+    {
+      "upstream_slug": "photocraft",
+      "upstream_name": "PhotoCraft",
+      "product_id": "decode-photo",
+      "display_name": "Decode Photo",
+      "category": "Imagem e fotografia",
+      "icon": "decode-photo.svg",
+      "tagline": "Edição de imagens com camadas e máscaras"
+    },
+    {
+      "upstream_slug": "lightcraft",
+      "upstream_name": "LightCraft",
+      "product_id": "decode-light",
+      "display_name": "Decode Light",
+      "category": "Imagem e fotografia",
+      "icon": "decode-light.svg",
+      "tagline": "Revelação RAW e edição fotográfica"
+    },
+    {
+      "upstream_slug": "filmcraft",
+      "upstream_name": "FilmCraft",
+      "product_id": "decode-film",
+      "display_name": "Decode Film",
+      "category": "Vídeo e motion",
+      "icon": "decode-film.svg",
+      "tagline": "Edição de vídeo, cor e áudio"
+    },
+    {
+      "upstream_slug": "designcraft",
+      "upstream_name": "DesignCraft",
+      "product_id": "decode-design",
+      "display_name": "Decode Design",
+      "category": "Design e ilustração",
+      "icon": "decode-design.svg",
+      "tagline": "Diagramação e design editorial"
+    },
+    {
+      "upstream_slug": "vectorcraft",
+      "upstream_name": "VectorCraft",
+      "product_id": "decode-vector",
+      "display_name": "Decode Vector",
+      "category": "Design e ilustração",
+      "icon": "decode-vector.svg",
+      "tagline": "Ilustração vetorial"
+    },
+    {
+      "upstream_slug": "pdfcraft",
+      "upstream_name": "PdfCraft",
+      "product_id": "decode-pdf",
+      "display_name": "Decode PDF",
+      "category": "Documentos e escritório",
+      "icon": "decode-pdf.svg",
+      "tagline": "Leitura e organização de PDFs"
+    },
+    {
+      "upstream_slug": "effectcraft",
+      "upstream_name": "EffectCraft",
+      "product_id": "decode-effects",
+      "display_name": "Decode Effects",
+      "category": "Vídeo e motion",
+      "icon": "decode-effects.svg",
+      "tagline": "Motion graphics e efeitos visuais"
+    },
+    {
+      "upstream_slug": "wordcraft",
+      "upstream_name": "WordCraft",
+      "product_id": "decode-writer",
+      "display_name": "Decode Writer",
+      "category": "Documentos e escritório",
+      "icon": "decode-writer.svg",
+      "tagline": "Documentos de texto"
+    },
+    {
+      "upstream_slug": "deckcraft",
+      "upstream_name": "DeckCraft",
+      "product_id": "decode-slides",
+      "display_name": "Decode Slides",
+      "category": "Documentos e escritório",
+      "icon": "decode-slides.svg",
+      "tagline": "Apresentações e slides"
+    },
+    {
+      "upstream_slug": "gridcraft",
+      "upstream_name": "GridCraft",
+      "product_id": "decode-sheets",
+      "display_name": "Decode Sheets",
+      "category": "Documentos e escritório",
+      "icon": "decode-sheets.svg",
+      "tagline": "Planilhas e análise de dados"
+    },
+    {
+      "upstream_slug": "cadcraft",
+      "upstream_name": "CADCraft",
+      "product_id": "decode-draft",
+      "display_name": "Decode Draft",
+      "category": "CAD e engenharia",
+      "icon": "decode-draft.svg",
+      "tagline": "Desenho técnico CAD"
+    },
+    {
+      "upstream_slug": "soundcraft",
+      "upstream_name": "SoundCraft",
+      "product_id": "decode-audio",
+      "display_name": "Decode Audio",
+      "category": "Áudio",
+      "icon": "decode-audio.svg",
+      "tagline": "Gravação e edição de áudio"
+    },
+    {
+      "upstream_slug": "figcraft",
+      "upstream_name": "FigCraft",
+      "product_id": "decode-ui",
+      "display_name": "Decode UI",
+      "category": "Design e ilustração",
+      "icon": "decode-ui.svg",
+      "tagline": "Design de interfaces e protótipos"
+    }
+  ]
+}
