@@ -29,6 +29,8 @@ assert.match(html, /Arquitetura do processador/, "architecture selector must hav
 assert.match(script, /function selectedArchitecture\(\)/, "automatic architecture detection must exist");
 assert.match(script, /data-download-app=/, "primary download links must opt into the download handler");
 assert.match(script, /grid\.addEventListener\("click",handleDownload\)/, "download handler must be connected");
+assert.match(script, /var os=platform\.value,arch=selectedArchitecture\(\)/, "system and architecture must be captured at click time");
+assert.match(script, /chooseAsset\(app,os,arch\)/, "download must use the captured platform selection");
 assert.match(script, /function safeHttps\(url,fallback\)/, "download URLs must be HTTPS-validated");
 assert.match(script, /filmcraft\/main\/assets\/app-icon\/filmcraft-1024\.png/, "FilmCraft icon path must exist in repository");
 assert.match(script, /effectcraft\/main\/assets\/app-icon\/effectcraft-1024\.png/, "EffectCraft icon path must exist in repository");
