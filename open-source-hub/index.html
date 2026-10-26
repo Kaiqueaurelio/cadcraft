@@ -182,12 +182,13 @@ async function handleDownload(event){
  if(!app)return;
  event.preventDefault();
  var fallback=app.decode?releaseHref(app):(app.site||releaseHref(app));
+ var os=platform.value,arch=selectedArchitecture();
  var target=fallback,popup=null;
  try{popup=window.open("about:blank","_blank");if(popup)popup.opener=null;}catch(err){popup=null;}
  link.setAttribute("aria-busy","true");
  try{
   await loadRelease(app);
-  var asset=chooseAsset(app,platform.value,selectedArchitecture());
+  var asset=chooseAsset(app,os,arch);
   if(asset&&asset.browser_download_url)target=asset.browser_download_url;
   renderCards();
  }catch(err){target=fallback;}
