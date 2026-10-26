@@ -45,7 +45,12 @@ def safe_word_replace(text: str, old: str, new: str) -> str:
 
 def replace_rust_user_strings(text: str, old: str, new: str) -> str:
     def replace_literal(match: re.Match[str]) -> str:
-        return safe_word_replace(match.group(0), old, new)
+        rewritten = safe_word_replace(match.group(0), old, new)
+        # Keep upstream patch provenance labels inside regression tests. These labels are
+        # part of the vendored source contract (for example "PdfCraft patch:" in winit),
+        # not a user-facing application name; rewriting them breaks tests that verify patches.
+        rewritten = re.sub(re.escape(new) + r"(?=\\s+patch:)", old, rewritten)
+        return rewritten
     return RUST_STRING_RE.sub(replace_literal, text)
 
 
@@ -556,6 +561,13 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         changed = replace_rust_user_strings(sample, app["upstream_name"], app["display_name"])
         assert '"' + app["display_name"] + '"' in changed
         assert '"' + app["upstream_name"] + 'Engine"' in changed, "Internal identifiers must not be rewritten."
+        patch_marker_sample = '" + app["upstream_name"] + ' patch: preserves an upstream fix"'
+        patch_marker_changed = replace_rust_user_strings(
+            patch_marker_sample, app["upstream_name"], app["display_name"]
+        )
+        assert app["upstream_name"] + " patch:" in patch_marker_changed, (
+            "Upstream patch provenance labels must not be rebranded inside Rust string literals."
+        )
         sample_id = 'const ID = "ai.storyteller.' + app["upstream_slug"] + '";'
         assert "com.decodeanalytics." + app["product_id"] in replace_bundle_id(sample_id, app["upstream_slug"], app["product_id"])
         sample_icon_path = "assets/app-icon/ai.storyteller." + app["upstream_slug"] + ".png"
