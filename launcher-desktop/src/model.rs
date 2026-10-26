@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::catalog::CraftApp;
+use crate::catalog::DecodeApp;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Release {
@@ -126,7 +126,7 @@ pub fn safe_download_url(repo: &str, tag: &str, asset: &ReleaseAsset) -> bool {
     asset.browser_download_url == expected
 }
 
-fn version_matches(release: &Release, app: &CraftApp, asset_name: &str, suffix: &str) -> bool {
+fn version_matches(release: &Release, app: &DecodeApp, asset_name: &str, suffix: &str) -> bool {
     let Some(after_stem) = asset_name.strip_prefix(&format!("{}-", app.asset_stem)) else {
         return false;
     };
@@ -144,7 +144,7 @@ fn version_matches(release: &Release, app: &CraftApp, asset_name: &str, suffix: 
 
 fn find_kind<'a>(
     release: &'a Release,
-    app: &CraftApp,
+    app: &DecodeApp,
     kind: PackageKind,
     suffixes: &[&str],
 ) -> Option<&'a ReleaseAsset> {
@@ -163,7 +163,7 @@ fn find_kind<'a>(
 
 pub fn select_asset<'a>(
     release: &'a Release,
-    app: &CraftApp,
+    app: &DecodeApp,
     platform: HostPlatform,
     preferred: Option<PackageKind>,
 ) -> Option<(&'a ReleaseAsset, PackageKind)> {
