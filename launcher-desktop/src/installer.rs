@@ -145,6 +145,12 @@ pub fn install_or_update(
     previous: Option<&InstalledRecord>,
     report: &mut dyn FnMut(String),
 ) -> Result<InstallResult, String> {
+    if !app.is_decode_project {
+        return Err(format!(
+            "{} ainda não tem um pacote Decode publicado. A instalação de releases upstream está bloqueada para evitar apresentar o executável original como se fosse um build Decode.",
+            app.name
+        ));
+    }
     if release.prerelease {
         return Err("A release selecionada é uma versão de pré-lançamento; esta central não a instala automaticamente.".into());
     }
