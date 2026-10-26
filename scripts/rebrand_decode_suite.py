@@ -218,7 +218,7 @@ def visible_files(repo: Path, slug: str) -> list[Path]:
     roots = [
         repo / "apps" / slug,
         repo / ("apps/" + slug + "-web"),
-        repo / "crates" / "ui-egui",
+        repo / "crates",
         repo / "packaging",
     ]
     candidates: set[Path] = set()
@@ -230,6 +230,8 @@ def visible_files(repo: Path, slug: str) -> list[Path]:
                 continue
             parts = path.relative_to(repo).parts
             if any(part in SKIP_PARTS for part in parts):
+                continue
+            if any(part.lower() in {"tests", "fixtures", "goldens", "testdata", "test-data"} for part in parts):
                 continue
             if "assets" in parts and "icons" in parts:
                 continue
