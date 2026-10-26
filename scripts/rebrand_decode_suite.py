@@ -310,18 +310,20 @@ def update_icons(app: dict[str, Any], repo: Path, icon_path: Path) -> int:
     # Preserve original attribution records and clarify that the displayed brand asset was
     # replaced downstream. Never delete or rewrite the existing third-party attribution.
     attribution_note = (
-        "\\n\\nDecode Analytics downstream rebrand note: the visual app icon in this "
+        "\n\nDecode Analytics downstream rebrand note: the visual app icon in this "
         "downstream build was replaced by an original Decode Studio asset. The original "
         "attribution above is retained for the upstream source/history and any third-party "
         "materials that remain in the project. See DECODE_BRANDING.md."
     )
-    for sidecar in (repo / "assets" / "app-icon").rglob("*.attribution") if (repo / "assets" / "app-icon").exists() else []:
+    attribution_root = repo / "assets" / "app-icon"
+    sidecars = attribution_root.rglob("*.attribution") if attribution_root.exists() else []
+    for sidecar in sidecars:
         try:
             old_text = sidecar.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue
         if "Decode Analytics downstream rebrand note:" not in old_text:
-            sidecar.write_text(old_text.rstrip() + attribution_note + "\\n", encoding="utf-8")
+            sidecar.write_text(old_text.rstrip() + attribution_note + "\n", encoding="utf-8")
     return count
 
 
