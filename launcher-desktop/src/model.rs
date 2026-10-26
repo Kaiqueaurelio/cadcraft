@@ -176,7 +176,9 @@ pub fn select_asset<'a>(
             };
             let mut candidates = Vec::new();
             if let Some(kind) = preferred { candidates.push(kind); }
-            candidates.extend([PackageKind::Msi, PackageKind::PortableZip].into_iter().filter(|k| !candidates.contains(k)));
+            for kind in [PackageKind::Msi, PackageKind::PortableZip] {
+                if !candidates.contains(&kind) { candidates.push(kind); }
+            }
             for kind in candidates {
                 let suffixes: Vec<String> = tokens.iter().flat_map(|t| match kind {
                     PackageKind::Msi => vec![format!("-{t}.msi")],
