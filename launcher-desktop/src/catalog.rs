@@ -35,6 +35,26 @@ impl DecodeApp {
         )
     }
 
+    pub fn icon_svg(&self) -> &'static str {
+        match self.product_id {
+            "decode-photo" => include_str!("../../open-source-hub/assets/icons/decode-photo.svg"),
+            "decode-light" => include_str!("../../open-source-hub/assets/icons/decode-light.svg"),
+            "decode-film" => include_str!("../../open-source-hub/assets/icons/decode-film.svg"),
+            "decode-design" => include_str!("../../open-source-hub/assets/icons/decode-design.svg"),
+            "decode-vector" => include_str!("../../open-source-hub/assets/icons/decode-vector.svg"),
+            "decode-pdf" => include_str!("../../open-source-hub/assets/icons/decode-pdf.svg"),
+            "decode-effects" => include_str!("../../open-source-hub/assets/icons/decode-effects.svg"),
+            "decode-writer" => include_str!("../../open-source-hub/assets/icons/decode-writer.svg"),
+            "decode-slides" => include_str!("../../open-source-hub/assets/icons/decode-slides.svg"),
+            "decode-sheets" => include_str!("../../open-source-hub/assets/icons/decode-sheets.svg"),
+            "decode-draft" => include_str!("../../open-source-hub/assets/icons/decode-draft.svg"),
+            "decode-audio" => include_str!("../../open-source-hub/assets/icons/decode-audio.svg"),
+            "decode-ui" => include_str!("../../open-source-hub/assets/icons/decode-ui.svg"),
+            "decode-cad" => include_str!("../../open-source-hub/assets/icons/decode-cad.svg"),
+            _ => include_str!("../../open-source-hub/assets/icons/decode-hub-mark.svg"),
+        }
+    }
+
     pub fn bundle_id(&self) -> String {
         format!("com.decodeanalytics.{}", self.product_id)
     }
