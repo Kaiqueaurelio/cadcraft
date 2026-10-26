@@ -69,7 +69,6 @@ jobs:
       PRODUCT_ID: ${{ matrix.id }}
       UPSTREAM_SLUG: ${{ matrix.slug }}
       PRODUCT_NAME: ${{ matrix.product }}
-      SOURCE_WORKSPACE: ${{ runner.temp }}/decode-source-workspace
     steps:
       - name: Checkout Decode tooling
         uses: actions/checkout@v4
@@ -84,6 +83,7 @@ jobs:
 
       - name: Clone the public upstream source
         run: |
+          SOURCE_WORKSPACE="$RUNNER_TEMP/decode-source-workspace"
           mkdir -p "$SOURCE_WORKSPACE"
           git clone --recurse-submodules --depth 1 "https://github.com/storytold/$UPSTREAM_SLUG.git" "$SOURCE_WORKSPACE/$PRODUCT_ID"
           git -C "$SOURCE_WORKSPACE/$PRODUCT_ID" rev-parse HEAD > "$SOURCE_WORKSPACE/$PRODUCT_ID/UPSTREAM_COMMIT.txt"
@@ -91,12 +91,14 @@ jobs:
 
       - name: Apply Decode branding to this product only
         run: |
+          SOURCE_WORKSPACE="$RUNNER_TEMP/decode-source-workspace"
           python scripts/rebrand_decode_suite.py \
             --workspace "$SOURCE_WORKSPACE" \
             --only "$PRODUCT_ID"
 
       - name: Validate branding and preserve required notices
         run: |
+          SOURCE_WORKSPACE="$RUNNER_TEMP/decode-source-workspace"
           python - "$SOURCE_WORKSPACE/$PRODUCT_ID" "$PRODUCT_NAME" <<'PY'
           import sys
           from pathlib import Path
@@ -116,6 +118,7 @@ jobs:
 
       - name: Package rebranded source tree
         run: |
+          SOURCE_WORKSPACE="$RUNNER_TEMP/decode-source-workspace"
           mkdir -p artifacts
           tar --exclude='.git' --exclude='target' --exclude='node_modules' \
             -czf "artifacts/${{ matrix.id }}-source.tar.gz" -C "$SOURCE_WORKSPACE/$PRODUCT_ID" .
