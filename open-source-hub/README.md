@@ -2,16 +2,39 @@
 
 Central visual independente, mantida pela Decode Analytics, para explorar ferramentas criativas open source.
 
-## Estrutura
+## Estrutura e recursos
 
-- `index.html`: site estático em HTML, CSS e JavaScript, sem build, backend, autenticação, banco de dados ou serviços pagos.
-- Catálogo inicial: 13 aplicações da Craft App Suite e o Decode CAD da Decode Analytics, cada uma com links para o respectivo repositório e página de releases oficiais.
-- O site consulta as releases públicas do GitHub para exibir versões e escolher pacotes conforme o sistema operacional selecionado. Se a API estiver indisponível, os links oficiais continuam disponíveis.
+- `index.html`: site estático em HTML, CSS e JavaScript, sem build, backend, autenticação ou banco de dados.
+- Catálogo com 13 aplicações da Craft App Suite e o Decode CAD da Decode Analytics.
+- Busca, filtros por categoria, ordenação e interface responsiva.
+- Seletor de sistema operacional e arquitetura do processador (automática, x86_64 ou ARM64).
+- Links para as páginas oficiais, repositórios e downloads.
+- Consulta à API pública do GitHub somente quando alguém aciona **Baixar** — não dispara uma rajada de requisições ao abrir a página.
+- Se uma release não estiver disponível ou não houver pacote compatível, a central abre a página oficial do aplicativo; a escolha da arquitetura pode ser ajustada manualmente.
+
+## Executar e validar localmente
+
+Para servir a pasta localmente:
+
+```bash
+cd open-source-hub
+python3 -m http.server 8080
+```
+
+Acesse http://localhost:8080. A verificação automatizada pode ser executada com Node.js 22 ou superior:
+
+```bash
+node open-source-hub/check.mjs
+```
+
+O mesmo teste é executado pelo GitHub Actions em pull requests que alteram esta pasta.
 
 ## Publicação na Vercel
 
-Configure o projeto para usar a pasta `open-source-hub` como Root Directory. Como é um site estático, não é necessário comando de build nem dependências de instalação.
+A configuração do projeto Vercel utiliza a pasta `open-source-hub` como Root Directory. É um site estático, sem comando de build nem dependências de instalação.
 
 ## Limites importantes
 
-O site não instala programas nem detecta instalações locais; downloads e instalações são feitos pelo navegador e pelo sistema operacional. A central é independente e não é afiliada oficialmente ao ArtCraft/storytold. Consulte cada repositório para confirmar licença, estado de desenvolvimento e compatibilidade.
+O site não instala nem executa programas, não detecta instalações locais e não faz atualizações silenciosas. Os downloads vêm dos projetos originais. A identificação automática da arquitetura depende das informações fornecidas pelo navegador; selecione manualmente a arquitetura se necessário.
+
+A central é independente e não é afiliada oficialmente ao ArtCraft/storytold. As marcas e os ícones pertencem aos respetivos projetos; consulte cada repositório para confirmar licenças, estado de desenvolvimento e compatibilidade.
