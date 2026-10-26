@@ -49,8 +49,9 @@ def replace_rust_user_strings(text: str, old: str, new: str) -> str:
 
 
 def replace_bundle_id(text: str, upstream_slug: str, product_id: str) -> str:
-    # Preserve asset filenames such as ai.storyteller.photocraft.png/.svg; application IDs change.
-    pattern = r"ai\.storyteller\." + re.escape(upstream_slug) + r"(?!\.(?:png|svg|ico|icns))"
+    # Rename both product IDs and matching icon-file references. update_icons() renames the
+    # corresponding files, so desktop Icon= keys and embedded asset paths remain in sync.
+    pattern = r"ai\.storyteller\." + re.escape(upstream_slug) + r"(?![A-Za-z0-9_-])"
     return re.sub(pattern, "com.decodeanalytics." + product_id, text)
 
 
@@ -286,6 +287,20 @@ def update_icons(app: dict[str, Any], repo: Path, icon_path: Path) -> int:
         raise RuntimeError("Invalid Decode SVG icon: " + str(icon_path)) from exc
     count = 0
     roots = [repo / "assets" / "app-icon", repo / "apps" / (app["upstream_slug"] + "-web") / "web"]
+    old_stem = "ai.storyteller." + app["upstream_slug"]
+    new_stem = "com.decodeanalytics." + app["product_id"]
+    # Rename the resource files and attribution sidecars as a single downstream operation.
+    for root in roots:
+        if not root.exists():
+            continue
+        for path in sorted(root.rglob("*"), key=lambda item: len(item.parts), reverse=True):
+            if not path.is_file() or old_stem not in path.name:
+                continue
+            target = path.with_name(path.name.replace(old_stem, new_stem))
+            if target.exists() and target != path:
+                raise RuntimeError("Refusing to overwrite duplicate branded asset: " + str(target))
+            if target != path:
+                path.rename(target)
     for root in roots:
         if not root.exists():
             continue
@@ -389,6 +404,8 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         assert '"' + app["upstream_name"] + 'Engine"' in changed, "Internal identifiers must not be rewritten."
         sample_id = 'const ID = "ai.storyteller.' + app["upstream_slug"] + '";'
         assert "com.decodeanalytics." + app["product_id"] in replace_bundle_id(sample_id, app["upstream_slug"], app["product_id"])
+        sample_icon_path = "assets/app-icon/ai.storyteller." + app["upstream_slug"] + ".png"
+        assert "assets/app-icon/com.decodeanalytics." + app["product_id"] + ".png" in replace_bundle_id(sample_icon_path, app["upstream_slug"], app["product_id"])
     theme_sample = "accent: pick(dark, Color32::from_rgb(0x10, 0x20, 0x30), Color32::from_rgb(0x40, 0x50, 0x60)),\n"
     patched = replace_theme_colour_calls(theme_sample)
     assert "0x25, 0x57, 0xC6" in patched and "0x7C, 0xA8, 0xFF" in patched
