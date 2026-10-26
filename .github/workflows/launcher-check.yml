@@ -1,0 +1,24 @@
+name: Launcher checks
+
+on:
+  pull_request:
+    paths:
+      - "launcher/**"
+      - ".github/workflows/launcher-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  launcher-check:
+    name: Validate static launcher
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run launcher checks
+        run: node launcher/check.mjs
