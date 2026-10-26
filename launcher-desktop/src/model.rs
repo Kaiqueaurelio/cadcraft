@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::catalog::CraftApp;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Release {
     #[serde(default)]
     pub tag_name: String,
