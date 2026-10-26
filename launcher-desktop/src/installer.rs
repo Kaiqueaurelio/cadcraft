@@ -433,7 +433,7 @@ fn unpack_zip(archive_path: &Path, destination: &Path) -> Result<(), String> {
     let mut expanded: u64 = 0;
     for index in 0..archive.len() {
         let mut entry = archive.by_index(index).map_err(|e| format!("Não foi possível ler uma entrada ZIP: {e}"))?;
-        let Some(relative) = entry.enclosed_name().map(Path::to_path_buf) else {
+        let Some(relative) = entry.enclosed_name().as_deref().map(Path::to_path_buf) else {
             return Err("O ZIP contém um caminho de arquivo inseguro.".into());
         };
         if !safe_relative(&relative) { return Err("O ZIP contém um caminho de arquivo inseguro.".into()); }
