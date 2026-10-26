@@ -21,7 +21,7 @@ from typing import Any
 TEXT_SUFFIXES = {
     ".rs", ".toml", ".json", ".xml", ".plist", ".html", ".htm", ".js", ".mjs",
     ".cjs", ".ts", ".tsx", ".css", ".scss", ".desktop", ".webmanifest", ".yml",
-    ".yaml", ".sh", ".svg",
+    ".yaml", ".sh", ".svg", ".in", ".ps1",
 }
 SKIP_PARTS = {
     ".git", "target", "node_modules", "dist", "build", "vendor", "third_party",
@@ -57,7 +57,8 @@ def replace_rust_user_strings(text: str, old: str, new: str) -> str:
 def replace_bundle_id(text: str, upstream_slug: str, product_id: str) -> str:
     # Rename both product IDs and matching icon-file references. update_icons() renames the
     # corresponding files, so desktop Icon= keys and embedded asset paths remain in sync.
-    pattern = r"ai\.storyteller\." + re.escape(upstream_slug) + r"(?![A-Za-z0-9_-])"
+    # Product-specific suffixes such as "-cli" are valid bundle IDs and must be rebranded too.
+    pattern = r"ai\.storyteller\." + re.escape(upstream_slug) + r"(?![A-Za-z0-9_])"
     return re.sub(pattern, "com.decodeanalytics." + product_id, text)
 
 
@@ -333,13 +334,22 @@ def visible_files(repo: Path, slug: str) -> list[Path]:
         repo / ("apps/" + slug + "-web"),
         repo / "crates",
         repo / "packaging",
+        repo / "docs",
+        repo / "book",
     ]
     candidates: set[Path] = set()
     for root in roots:
         if not root.exists():
             continue
         for path in root.rglob("*"):
-            if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
+            is_extensionless_packaging_script = (
+                path.is_file()
+                and not path.suffix
+                and (repo / "packaging") in path.parents
+            )
+            if not path.is_file() or (
+                path.suffix.lower() not in TEXT_SUFFIXES and not is_extensionless_packaging_script
+            ):
                 continue
             parts = path.relative_to(repo).parts
             if any(part in SKIP_PARTS for part in parts):
@@ -378,6 +388,12 @@ def replace_rust_comment_text(text: str, old: str, new: str) -> str:
     return "".join(updated)
 
 
+def replace_markdown_package_names(text: str, upstream_slug: str, product_id: str) -> str:
+    """Rebrand documented release filenames while leaving upstream repository URLs intact."""
+    pattern = r"(?<![A-Za-z0-9_])" + re.escape(upstream_slug) + r"(?=-(?:<version>|[vV]?[0-9]))"
+    return re.sub(pattern, product_id, text)
+
+
 def patch_text_files(app: dict[str, Any], repo: Path) -> int:
     old, new = app["upstream_name"], app["display_name"]
     slug, product_id = app["upstream_slug"], app["product_id"]
@@ -396,6 +412,7 @@ def patch_text_files(app: dict[str, Any], repo: Path) -> int:
             text = re.sub(r"\bCraft App Suite\b", "Decode Studio Suite", text)
             text = re.sub(r"\bThe Craft look\b", "The Decode look", text)
             text = re.sub(r"\bthe Craft look\b", "the Decode look", text)
+            text = replace_markdown_package_names(text, slug, product_id)
             if path == repo / "README.md":
                 lines = text.splitlines()
                 if lines and lines[0].startswith("# "):
@@ -570,6 +587,14 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         )
         sample_id = 'const ID = "ai.storyteller.' + app["upstream_slug"] + '";'
         assert "com.decodeanalytics." + app["product_id"] in replace_bundle_id(sample_id, app["upstream_slug"], app["product_id"])
+        sample_cli_id = 'const ID = "ai.storyteller.' + app["upstream_slug"] + '-cli";'
+        assert "com.decodeanalytics." + app["product_id"] + "-cli" in replace_bundle_id(
+            sample_cli_id, app["upstream_slug"], app["product_id"]
+        ), "Bundle-ID suffixes such as CLI must be rebranded."
+        sample_release_name = app["upstream_slug"] + "-<version>-linux-x86_64.flatpak"
+        assert app["product_id"] + "-<version>" in replace_markdown_package_names(
+            sample_release_name, app["upstream_slug"], app["product_id"]
+        ), "Documented release filenames must use the Decode product ID."
         sample_icon_path = "assets/app-icon/ai.storyteller." + app["upstream_slug"] + ".png"
         assert "assets/app-icon/com.decodeanalytics." + app["product_id"] + ".png" in replace_bundle_id(sample_icon_path, app["upstream_slug"], app["product_id"])
     # Regression test: a Rust include_str! path and the resource filename must agree after rebinding.
