@@ -53,10 +53,10 @@ impl Launcher {
         let manifest = installer::load_manifest(&paths);
         let releases = installer::load_release_cache(&paths.release_cache());
         let (tx, rx) = mpsc::channel();
-        let mut style = (*cc.egui_ctx.style()).clone();
+        let mut style = (*cc.egui_ctx.style_of(egui::Theme::Dark)).clone();
         style.visuals = egui::Visuals::dark();
         style.spacing.item_spacing = egui::vec2(10.0, 10.0);
-        cc.egui_ctx.set_style(style);
+        cc.egui_ctx.set_style_of(egui::Theme::Dark, style);
         let mut app = Self {
             tx, rx, paths, manifest, releases, errors: HashMap::new(),
             detected: HashMap::new(), icons: HashMap::new(), tasks: HashMap::new(),
@@ -215,7 +215,7 @@ impl Launcher {
     fn remove(&mut self, id: &str) {
         let Some(app) = APPS.iter().find(|a| a.id == id).copied() else { self.confirm_remove = None; return };
         let Some(record) = self.manifest.apps.get(id).cloned() else { self.confirm_remove = None; return };
-        match installer::remove_managed(app, &record, &self.paths) {
+        match installer::remove_managed(&app, &record, &self.paths) {
             Ok(()) => {
                 self.manifest.apps.remove(id);
                 let saved = self.manifest.save(&self.paths.manifest());
