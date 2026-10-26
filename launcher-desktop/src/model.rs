@@ -167,7 +167,7 @@ pub fn select_asset<'a>(
     platform: HostPlatform,
     preferred: Option<PackageKind>,
 ) -> Option<(&'a ReleaseAsset, PackageKind)> {
-    let kinds = match platform.os {
+    match platform.os {
         OperatingSystem::Windows => {
             let tokens: &[&str] = match platform.arch {
                 Architecture::Arm64 => &["windows-arm64", "windows-x64", "windows-x86"],
