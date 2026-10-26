@@ -3,35 +3,35 @@ import { readFile } from "node:fs/promises";
 import vm from "node:vm";
 
 const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
-const match = html.match(/<script>([\\s\\S]*?)<\\/script>/i);
+const match = html.match(/<script>([\s\S]*?)<\/script>/i);
 assert.ok(match, "index.html must contain its inline script");
 const script = match[1];
 assert.doesNotThrow(() => new vm.Script(script, { filename: "launcher/index.html" }), "inline JavaScript must parse");
 
-const appMatch = script.match(/const apps=(\\[[\\s\\S]*?\\]);\\s*const iconBase=/);
+const appMatch = script.match(/const apps=(\[[\s\S]*?\]);\s*const iconBase=/);
 assert.ok(appMatch, "app catalog must be present");
 const apps = vm.runInNewContext("(" + appMatch[1] + ")");
 const ids = apps.map((app) => app.id);
 assert.equal(apps.length, 14, "catalog must have 13 Craft apps plus Decode CAD");
 assert.equal(new Set(ids).size, ids.length, "app IDs must be unique");
 for (const app of apps) {
-  assert.ok(app.name && app.desc && app.cat && app.owner && app.repo, `incomplete card: ${app.id}`);
-  assert.ok(/^https:\\/\\//.test(app.site), `site URL must use HTTPS: ${app.id}`);
+  assert.ok(app.name && app.desc && app.cat && app.owner && app.repo, "incomplete card: " + app.id);
+  assert.ok(/^https:\/\//.test(app.site), "site URL must use HTTPS: " + app.id);
 }
 for (const id of ["photocraft","lightcraft","filmcraft","designcraft","vectorcraft","pdfcraft","effectcraft","wordcraft","deckcraft","gridcraft","cadcraft","soundcraft","figcraft","decodecad"]) {
-  assert.ok(ids.includes(id), `missing catalog item: ${id}`);
+  assert.ok(ids.includes(id), "missing catalog item: " + id);
 }
 
 assert.match(html, /aria-label="Arquitetura do processador"/, "architecture selector must be accessible");
-assert.match(script, /function architecture\\(\\)/, "architecture detection must be present");
-assert.doesNotMatch(script, /loadReleases\\s*\\(/, "the page must not query all releases on initial load");
-assert.equal((script.match(/\\bfetch\\(/g) || []).length, 1, "only the selected app should trigger a release API request");
-assert.match(script, /function assetFor\\(assets,os,arch\\)/, "asset picker must consider architecture");
-assert.match(script, /filmcraft-1024\\.png/, "FilmCraft must use its real icon path");
-assert.match(script, /effectcraft-1024\\.png/, "EffectCraft must use its real icon path");
-assert.match(script, /figcraft-256\\.png/, "FigCraft must use its real icon path");
+assert.match(script, /function architecture\(\)/, "architecture detection must be present");
+assert.doesNotMatch(script, /loadReleases\s*\(/, "the page must not query all releases on initial load");
+assert.equal((script.match(/\bfetch\(/g) || []).length, 1, "only the selected app should trigger a release API request");
+assert.match(script, /function assetFor\(assets,os,arch\)/, "asset picker must consider architecture");
+assert.match(script, /filmcraft-1024\.png/, "FilmCraft must use its real icon path");
+assert.match(script, /effectcraft-1024\.png/, "EffectCraft must use its real icon path");
+assert.match(script, /figcraft-256\.png/, "FigCraft must use its real icon path");
 
-const assetMatch = script.match(/function assetFor\\(assets,os,arch\\)\\{[\\s\\S]*?\\}(?=\\nfunction toast)/);
+const assetMatch = script.match(/function assetFor\(assets,os,arch\)\{[\s\S]*?\}(?=\nfunction toast)/);
 assert.ok(assetMatch, "asset selection function must be extractable for tests");
 const assetFor = vm.runInNewContext(assetMatch[0] + "; assetFor");
 const linuxAssets = [
