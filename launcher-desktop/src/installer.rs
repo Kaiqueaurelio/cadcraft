@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use tar::Archive;
 
-use crate::catalog::CraftApp;
+use crate::catalog::DecodeApp;
 use crate::model::{self, HostPlatform, OperatingSystem, PackageKind, Release, ReleaseAsset};
 
 const MAX_DOWNLOAD_BYTES: u64 = 2 * 1024 * 1024 * 1024;
@@ -94,7 +94,7 @@ pub struct InstallResult {
     pub message: String,
 }
 
-pub fn fetch_latest(app: &CraftApp) -> Result<Release, String> {
+pub fn fetch_latest(app: &DecodeApp) -> Result<Release, String> {
     let url = format!("https://api.github.com/repos/{}/releases/latest", app.repo);
     let client = Client::builder()
         .user_agent(concat!("DecodeOpenSourceLauncher/", env!("CARGO_PKG_VERSION")))
@@ -139,7 +139,7 @@ pub fn load_manifest(paths: &Paths) -> Manifest {
 }
 
 pub fn install_or_update(
-    app: &CraftApp,
+    app: &DecodeApp,
     release: &Release,
     paths: &Paths,
     previous: Option<&InstalledRecord>,
@@ -200,7 +200,7 @@ pub fn install_or_update(
     }
 }
 
-fn published_sha256(client: &Client, app: &CraftApp, release: &Release, asset: &ReleaseAsset) -> Result<String, String> {
+fn published_sha256(client: &Client, app: &DecodeApp, release: &Release, asset: &ReleaseAsset) -> Result<String, String> {
     if let Some(digest) = &asset.digest {
         if let Some(value) = digest.strip_prefix("sha256:") {
             if is_hex_sha256(value) { return Ok(value.to_ascii_lowercase()); }
@@ -316,7 +316,7 @@ fn hash_file(path: &Path) -> Result<String, String> {
 }
 
 fn install_portable_tree(
-    app: &CraftApp,
+    app: &DecodeApp,
     release: &Release,
     kind: PackageKind,
     download: &Path,
@@ -461,7 +461,7 @@ fn unpack_zip(archive_path: &Path, destination: &Path) -> Result<(), String> {
     Ok(())
 }
 
-fn find_app_executable(root: &Path, app: &CraftApp) -> Option<PathBuf> {
+fn find_app_executable(root: &Path, app: &DecodeApp) -> Option<PathBuf> {
     let candidate_names = [
         app.id.to_string(),
         app.asset_stem.to_string(),
@@ -513,7 +513,7 @@ fn make_executable(path: &Path) -> Result<(), String> {
 
 #[cfg(target_os = "macos")]
 fn install_macos_dmg(
-    app: &CraftApp,
+    app: &DecodeApp,
     release: &Release,
     download: &Path,
     paths: &Paths,
@@ -523,7 +523,7 @@ fn install_macos_dmg(
     let home = dirs::home_dir().ok_or_else(|| "Não foi possível localizar a pasta pessoal.".to_string())?;
     let apps = home.join("Applications");
     fs::create_dir_all(&apps).map_err(|e| format!("Não foi possível criar ~/Applications: {e}"))?;
-    let target = apps.join(format!("{}.app", app.name));
+    let target = apps.join(format!("{}.app", app.upstream_name));
     if target.exists() && previous.is_none() {
         return Err(format!("{} já existe e não está registrada como instalação gerenciada.", target.display()));
     }
@@ -542,7 +542,7 @@ fn install_macos_dmg(
         return Err(format!("O macOS não conseguiu montar o DMG: {}", String::from_utf8_lossy(&attach.stderr)));
     }
     report("DMG montado; verificando o aplicativo.".into());
-    let source = mount.path().join(format!("{}.app", app.name));
+    let source = mount.path().join(format!("{}.app", app.upstream_name));
     let result = if fs::symlink_metadata(&source).is_ok_and(|metadata| metadata.file_type().is_dir()) {
         install_mounted_bundle(app, release, &source, &target)
     } else {
@@ -554,7 +554,7 @@ fn install_macos_dmg(
 
 #[cfg(target_os = "macos")]
 fn install_mounted_bundle(
-    app: &CraftApp,
+    app: &DecodeApp,
     release: &Release,
     source: &Path,
     target: &Path,
@@ -590,7 +590,7 @@ fn install_mounted_bundle(
 
 #[cfg(not(target_os = "macos"))]
 fn install_macos_dmg(
-    _app: &CraftApp,
+    _app: &DecodeApp,
     _release: &Release,
     _download: &Path,
     _paths: &Paths,
@@ -600,19 +600,19 @@ fn install_macos_dmg(
     Err("O pacote DMG só pode ser instalado no macOS.".into())
 }
 
-pub fn is_expected_managed_record(app: &CraftApp, record: &InstalledRecord, paths: &Paths) -> bool {
+pub fn is_expected_managed_record(app: &DecodeApp, record: &InstalledRecord, paths: &Paths) -> bool {
     let expected_apps_root = paths.apps().join(app.id);
     if record.path.starts_with(&expected_apps_root) { return true; }
     #[cfg(target_os = "macos")]
     {
         if let Some(home) = dirs::home_dir() {
-            return record.path == home.join("Applications").join(format!("{}.app", app.name));
+            return record.path == home.join("Applications").join(format!("{}.app", app.upstream_name));
         }
     }
     false
 }
 
-pub fn remove_managed(app: &CraftApp, record: &InstalledRecord, paths: &Paths) -> Result<(), String> {
+pub fn remove_managed(app: &DecodeApp, record: &InstalledRecord, paths: &Paths) -> Result<(), String> {
     if !is_expected_managed_record(app, record, paths) {
         return Err("Por segurança, só é possível remover aplicativos registrados em uma pasta gerenciada por esta central.".into());
     }
@@ -625,7 +625,7 @@ pub fn remove_managed(app: &CraftApp, record: &InstalledRecord, paths: &Paths) -
     } else {
         #[cfg(target_os = "macos")]
         if let Some(home) = dirs::home_dir() {
-            let expected = home.join("Applications").join(format!("{}.app", app.name));
+            let expected = home.join("Applications").join(format!("{}.app", app.upstream_name));
             if record.path == expected && expected.is_dir() {
                 fs::remove_dir_all(expected).map_err(|e| format!("Não foi possível remover o aplicativo: {e}"))?;
             }
@@ -646,7 +646,7 @@ pub fn remove_managed(app: &CraftApp, record: &InstalledRecord, paths: &Paths) -
     Ok(())
 }
 
-pub fn detect_external(app: &CraftApp) -> Option<ExternalInstall> {
+pub fn detect_external(app: &DecodeApp) -> Option<ExternalInstall> {
     let platform = HostPlatform::current();
     match platform.os {
         OperatingSystem::Linux => {
@@ -662,7 +662,7 @@ pub fn detect_external(app: &CraftApp) -> Option<ExternalInstall> {
             for path in candidates {
                 if path.is_file() { return Some(ExternalInstall { target: path.to_string_lossy().to_string(), version: None }); }
             }
-            let flatpak_id = app.bundle_id();
+            let flatpak_id = app.upstream_bundle_id();
             if Command::new("flatpak").args(["info", "--user", &flatpak_id]).output().is_ok_and(|o| o.status.success())
                 || Command::new("flatpak").args(["info", "--system", &flatpak_id]).output().is_ok_and(|o| o.status.success())
             {
@@ -671,9 +671,12 @@ pub fn detect_external(app: &CraftApp) -> Option<ExternalInstall> {
         }
         OperatingSystem::Windows => {
             let mut roots = Vec::new();
-            if let Some(p) = std::env::var_os("ProgramFiles") { roots.push(PathBuf::from(p).join(app.name)); }
-            if let Some(p) = std::env::var_os("LOCALAPPDATA") { roots.push(PathBuf::from(p).join("Programs").join(app.name)); }
-            if let Some(p) = dirs::home_dir() { roots.push(p.join("Applications").join(app.name)); }
+            if let Some(p) = std::env::var_os("ProgramFiles") { roots.push(PathBuf::from(p).join(app.upstream_name));
+                roots.push(PathBuf::from(p).join(app.name)); }
+            if let Some(p) = std::env::var_os("LOCALAPPDATA") { roots.push(PathBuf::from(p).join("Programs").join(app.upstream_name));
+                roots.push(PathBuf::from(p).join("Programs").join(app.name)); }
+            if let Some(p) = dirs::home_dir() { roots.push(p.join("Applications").join(app.upstream_name));
+                roots.push(p.join("Applications").join(app.name)); }
             for root in roots {
                 if root.exists() {
                     if let Some(exe) = find_app_executable(&root, app) {
@@ -683,7 +686,7 @@ pub fn detect_external(app: &CraftApp) -> Option<ExternalInstall> {
             }
         }
         OperatingSystem::MacOs => {
-            let bundle_name = format!("{}.app", app.name);
+            let bundle_name = format!("{}.app", app.upstream_name);
             let mut roots = vec![PathBuf::from("/Applications").join(&bundle_name)];
             if let Some(home) = dirs::home_dir() { roots.push(home.join("Applications").join(bundle_name)); }
             for path in roots {
@@ -763,7 +766,7 @@ fn make_exec_string(path: &Path) -> String {
 }
 
 #[cfg(target_os = "linux")]
-fn write_desktop_entry(app: &CraftApp, executable: &Path) -> Result<(), String> {
+fn write_desktop_entry(app: &DecodeApp, executable: &Path) -> Result<(), String> {
     let data = dirs::data_local_dir().ok_or_else(|| "Pasta de dados do usuário indisponível.".to_string())?;
     let folder = data.join("applications");
     fs::create_dir_all(&folder).map_err(|e| format!("Não foi possível criar o menu de aplicativos: {e}"))?;
@@ -785,7 +788,7 @@ fn write_desktop_entry(app: &CraftApp, executable: &Path) -> Result<(), String> 
 }
 
 #[cfg(not(target_os = "linux"))]
-fn write_desktop_entry(_app: &CraftApp, _executable: &Path) -> Result<(), String> { Ok(()) }
+fn write_desktop_entry(_app: &DecodeApp, _executable: &Path) -> Result<(), String> { Ok(()) }
 
 fn unix_now() -> i64 {
     SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_secs().min(i64::MAX as u64) as i64)
