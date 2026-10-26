@@ -40,8 +40,8 @@ def ensure_clone(app: dict[str, Any], workspace: Path) -> Path:
             capture_output=True, text=True,
         )
         urls = [x.stdout.strip() for x in (remote, upstream) if x.returncode == 0]
-        expected = f"https://github.com/{app['upstream_slug']}.git"
-        expected_alt = f"https://github.com/{app['upstream_slug']}"
+        expected = f"https://github.com/storytold/{app['upstream_slug']}.git"
+        expected_alt = f"https://github.com/storytold/{app['upstream_slug']}"
         if not any(url.rstrip("/") in {expected.rstrip("/"), expected_alt} for url in urls):
             raise RuntimeError(f"{target} does not appear to be a checkout of {app['upstream_slug']}; refusing to modify it.")
         print(f"Using existing checkout: {target}", flush=True)
