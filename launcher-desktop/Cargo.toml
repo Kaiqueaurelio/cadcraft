@@ -26,3 +26,5 @@ flate2 = "1"
 zip = { version = "2", default-features = false, features = ["deflate"] }
 tempfile = "3"
 semver = "1"
+
+[workspace]
