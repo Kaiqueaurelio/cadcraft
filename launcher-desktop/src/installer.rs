@@ -671,10 +671,16 @@ pub fn detect_external(app: &DecodeApp) -> Option<ExternalInstall> {
         }
         OperatingSystem::Windows => {
             let mut roots = Vec::new();
-            if let Some(p) = std::env::var_os("ProgramFiles") { roots.push(PathBuf::from(p).join(app.upstream_name));
-                roots.push(PathBuf::from(p).join(app.name)); }
-            if let Some(p) = std::env::var_os("LOCALAPPDATA") { roots.push(PathBuf::from(p).join("Programs").join(app.upstream_name));
-                roots.push(PathBuf::from(p).join("Programs").join(app.name)); }
+            if let Some(p) = std::env::var_os("ProgramFiles") {
+                let base = PathBuf::from(p);
+                roots.push(base.join(app.upstream_name));
+                roots.push(base.join(app.name));
+            }
+            if let Some(p) = std::env::var_os("LOCALAPPDATA") {
+                let base = PathBuf::from(p);
+                roots.push(base.join("Programs").join(app.upstream_name));
+                roots.push(base.join("Programs").join(app.name));
+            }
             if let Some(p) = dirs::home_dir() { roots.push(p.join("Applications").join(app.upstream_name));
                 roots.push(p.join("Applications").join(app.name)); }
             for root in roots {
