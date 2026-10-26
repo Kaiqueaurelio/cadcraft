@@ -10,7 +10,7 @@ use std::sync::mpsc::{self, Receiver, Sender, TryRecvError};
 use std::thread;
 use std::time::Duration;
 
-use catalog::{APPS, CraftApp};
+use catalog::{APPS, DecodeApp};
 use eframe::egui;
 use installer::{ExternalInstall, InstalledRecord, InstallResult, Manifest, Paths};
 use model::{HostPlatform, Release};
@@ -172,15 +172,15 @@ impl Launcher {
         }
     }
 
-    fn managed(&self, app: &CraftApp) -> Option<&InstalledRecord> {
+    fn managed(&self, app: &DecodeApp) -> Option<&InstalledRecord> {
         self.manifest.apps.get(app.id).filter(|r| r.path.exists())
     }
 
-    fn external(&self, app: &CraftApp) -> Option<&ExternalInstall> {
+    fn external(&self, app: &DecodeApp) -> Option<&ExternalInstall> {
         if self.managed(app).is_some() { None } else { self.detected.get(app.id) }
     }
 
-    fn install(&mut self, app: &'static CraftApp) {
+    fn install(&mut self, app: &'static DecodeApp) {
         if self.tasks.contains_key(app.id) { return; }
         let Some(release) = self.releases.get(app.id).cloned() else {
             self.open_url(app.releases_url());
@@ -202,7 +202,7 @@ impl Launcher {
         });
     }
 
-    fn launch(&mut self, app: &CraftApp) {
+    fn launch(&mut self, app: &DecodeApp) {
         let target = self.managed(app).map(|r| r.path.to_string_lossy().to_string())
             .or_else(|| self.external(app).map(|e| e.target.clone()));
         if let Some(target) = target {
@@ -229,9 +229,9 @@ impl Launcher {
         self.confirm_remove = None;
     }
 
-    fn filtered(&self) -> Vec<&'static CraftApp> {
+    fn filtered(&self) -> Vec<&'static DecodeApp> {
         let query = self.search.trim().to_lowercase();
-        let mut list: Vec<&'static CraftApp> = APPS.iter().filter(|app| {
+        let mut list: Vec<&'static DecodeApp> = APPS.iter().filter(|app| {
             let category_ok = self.category == "Todos" || app.category == self.category;
             let haystack = format!("{} {} {} {} {}", app.name, app.tagline, app.category, app.repo, app.license).to_lowercase();
             category_ok && (query.is_empty() || haystack.contains(&query))
@@ -240,7 +240,7 @@ impl Launcher {
         list
     }
 
-    fn status(&self, app: &CraftApp) -> (String, egui::Color32) {
+    fn status(&self, app: &DecodeApp) -> (String, egui::Color32) {
         if let Some(record) = self.managed(app) {
             let text = self.releases.get(app.id).map(|release| {
                 if is_newer(&release.tag_name, &record.version) {
@@ -264,7 +264,7 @@ impl Launcher {
         ("Aguardando dados".into(), rgb([157, 174, 199]))
     }
 
-    fn card(&mut self, ui: &mut egui::Ui, app: &'static CraftApp, width: f32) {
+    fn card(&mut self, ui: &mut egui::Ui, app: &'static DecodeApp, width: f32) {
         let (status, status_color) = self.status(app);
         let managed = self.managed(app).is_some();
         let installed = managed || self.external(app).is_some();
