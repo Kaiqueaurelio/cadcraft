@@ -20,7 +20,8 @@
       "display_name": "Decode Photo",
       "category": "Imagem e fotografia",
       "icon": "decode-photo.svg",
-      "tagline": "Edição de imagens com camadas e máscaras"
+      "tagline": "Edição de imagens com camadas e máscaras",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "lightcraft",
@@ -29,7 +30,8 @@
       "display_name": "Decode Light",
       "category": "Imagem e fotografia",
       "icon": "decode-light.svg",
-      "tagline": "Revelação RAW e edição fotográfica"
+      "tagline": "Revelação RAW e edição fotográfica",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "filmcraft",
@@ -38,7 +40,8 @@
       "display_name": "Decode Film",
       "category": "Vídeo e motion",
       "icon": "decode-film.svg",
-      "tagline": "Edição de vídeo, cor e áudio"
+      "tagline": "Edição de vídeo, cor e áudio",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "designcraft",
@@ -47,7 +50,8 @@
       "display_name": "Decode Design",
       "category": "Design e ilustração",
       "icon": "decode-design.svg",
-      "tagline": "Diagramação e design editorial"
+      "tagline": "Diagramação e design editorial",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "vectorcraft",
@@ -56,7 +60,8 @@
       "display_name": "Decode Vector",
       "category": "Design e ilustração",
       "icon": "decode-vector.svg",
-      "tagline": "Ilustração vetorial"
+      "tagline": "Ilustração vetorial",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "pdfcraft",
@@ -65,7 +70,8 @@
       "display_name": "Decode PDF",
       "category": "Documentos e escritório",
       "icon": "decode-pdf.svg",
-      "tagline": "Leitura e organização de PDFs"
+      "tagline": "Leitura e organização de PDFs",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "effectcraft",
@@ -74,7 +80,8 @@
       "display_name": "Decode Effects",
       "category": "Vídeo e motion",
       "icon": "decode-effects.svg",
-      "tagline": "Motion graphics e efeitos visuais"
+      "tagline": "Motion graphics e efeitos visuais",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "wordcraft",
@@ -83,7 +90,8 @@
       "display_name": "Decode Writer",
       "category": "Documentos e escritório",
       "icon": "decode-writer.svg",
-      "tagline": "Documentos de texto"
+      "tagline": "Documentos de texto",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "deckcraft",
@@ -92,7 +100,8 @@
       "display_name": "Decode Slides",
       "category": "Documentos e escritório",
       "icon": "decode-slides.svg",
-      "tagline": "Apresentações e slides"
+      "tagline": "Apresentações e slides",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "gridcraft",
@@ -101,7 +110,8 @@
       "display_name": "Decode Sheets",
       "category": "Documentos e escritório",
       "icon": "decode-sheets.svg",
-      "tagline": "Planilhas e análise de dados"
+      "tagline": "Planilhas e análise de dados",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "cadcraft",
@@ -110,7 +120,8 @@
       "display_name": "Decode Draft",
       "category": "CAD e engenharia",
       "icon": "decode-draft.svg",
-      "tagline": "Desenho técnico CAD"
+      "tagline": "Desenho técnico CAD",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "soundcraft",
@@ -119,7 +130,8 @@
       "display_name": "Decode Audio",
       "category": "Áudio",
       "icon": "decode-audio.svg",
-      "tagline": "Gravação e edição de áudio"
+      "tagline": "Gravação e edição de áudio",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "upstream_slug": "figcraft",
@@ -128,7 +140,8 @@
       "display_name": "Decode UI",
       "category": "Design e ilustração",
       "icon": "decode-ui.svg",
-      "tagline": "Design de interfaces e protótipos"
+      "tagline": "Design de interfaces e protótipos",
+      "license": "MIT OR Apache-2.0"
     }
   ]
 }
