@@ -46,7 +46,7 @@ def ensure_clone(app: dict[str, Any], workspace: Path) -> Path:
             raise RuntimeError(f"{target} does not appear to be a checkout of {app['upstream_slug']}; refusing to modify it.")
         print(f"Using existing checkout: {target}", flush=True)
         return target
-    url = f"https://github.com/{app['upstream_slug']}.git"
+    url = f"https://github.com/storytold/{app['upstream_slug']}.git"
     run(["git", "clone", "--recurse-submodules", "--depth=1", url, str(target)])
     return target
 
