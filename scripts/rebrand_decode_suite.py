@@ -108,32 +108,134 @@ def write_icns(path: Path, svg_bytes: bytes) -> None:
     path.write_bytes(b"icns" + struct.pack(">I", len(body) + 8) + body)
 
 
+def _rgb_tuple_from_expression(expr: str) -> tuple[int, int, int] | None:
+    hex_match = re.search(r"(?:hex|rgb)\(\s*0x([0-9A-Fa-f]{6})\s*\)", expr)
+    if hex_match:
+        value = int(hex_match.group(1), 16)
+        return ((value >> 16) & 255, (value >> 8) & 255, value & 255)
+    rgb_match = re.search(r"Color32::from_rgb\(\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(0x[0-9A-Fa-f]+|\d+)", expr)
+    if rgb_match:
+        values = []
+        for item in rgb_match.groups():
+            values.append(int(item, 16) if item.lower().startswith("0x") else int(item))
+        return tuple(max(0, min(255, value)) for value in values)  # type: ignore[return-value]
+    rgba_match = re.search(r"Color32::from_rgba_(?:un)?premultiplied\(\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(0x[0-9A-Fa-f]+|\d+)", expr)
+    if rgba_match:
+        values = []
+        for item in rgba_match.groups():
+            values.append(int(item, 16) if item.lower().startswith("0x") else int(item))
+        return tuple(max(0, min(255, value)) for value in values)  # type: ignore[return-value]
+    return None
+
+
+def _replace_color_constructor(expr: str, color: tuple[int, int, int], field: str) -> str:
+    rgb = "0x%02X, 0x%02X, 0x%02X" % color
+    rgba_pattern = re.compile(r"Color32::from_rgba_(un)?premultiplied\(\s*([^)]*)\)")
+    rgba_match = rgba_pattern.search(expr)
+    if rgba_match:
+        unmultiplied = rgba_match.group(1) is not None
+        args = [part.strip() for part in rgba_match.group(2).split(",")]
+        if len(args) >= 4:
+            alpha = args[3]
+            if not unmultiplied:
+                try:
+                    alpha_value = int(alpha, 0)
+                    premultiplied = tuple(round(channel * alpha_value / 255) for channel in color)
+                    rgb_value = ", ".join(str(channel) for channel in premultiplied)
+                except ValueError:
+                    rgb_value = ", ".join(str(channel) for channel in color)
+            else:
+                rgb_value = rgb
+            replacement = ("Color32::from_rgba_unmultiplied(" if unmultiplied else "Color32::from_rgba_premultiplied(") + rgb_value + ", " + alpha + ")"
+            return expr[:rgba_match.start()] + replacement + expr[rgba_match.end():]
+
+    constructor = re.compile(r"Color32::from_rgb\([^)]*\)|\bhex\(0x[0-9A-Fa-f]{6}\)|\brgb\(0x[0-9A-Fa-f]{6}\)")
+    match = constructor.search(expr)
+    if not match:
+        return expr
+    original = match.group(0)
+    if original.startswith("Color32::from_rgb"):
+        replacement = "Color32::from_rgb(" + rgb + ")"
+    elif original.startswith("hex("):
+        replacement = "hex(0x%02X%02X%02X)" % color
+    else:
+        replacement = "rgb(0x%02X%02X%02X)" % color
+    return expr[:match.start()] + replacement + expr[match.end():]
+
+
 def replace_theme_colour_calls(line: str) -> str:
-    rgb_re = re.compile(r"Color32::from_rgb\([^)]*\)")
-    hex_re = re.compile(r"\bhex\(0x[0-9A-Fa-f]{6}\)")
-    matches_rgb = list(rgb_re.finditer(line))
-    matches_hex = list(hex_re.finditer(line))
-    if "pick(" in line and len(matches_rgb) >= 2:
-        for match, color in reversed(list(zip(matches_rgb[:2], [LIGHT_BLUE, DARK_BLUE]))):
-            value = "Color32::from_rgb(" + ", ".join("0x%02X" % x for x in color) + ")"
-            line = line[:match.start()] + value + line[match.end():]
+    """Replace a single theme-token line while preserving its Rust expression shape."""
+    match = re.search(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*?)(,\s*(?://.*)?\r?\n?$)", line)
+    if not match:
         return line
-    if "pick(" in line and len(matches_hex) >= 2:
-        for match, color in reversed(list(zip(matches_hex[:2], [LIGHT_BLUE, DARK_BLUE]))):
-            value = "hex(0x%02X%02X%02X)" % color
-            line = line[:match.start()] + value + line[match.end():]
+    field = match.group(1)
+    rhs = match.group(2)
+    lowered = field.lower()
+    if lowered not in {
+        "accent", "accent_hover", "accent_dark", "accent_strong", "icon_accent",
+        "selection", "selected_row", "row_selected", "focus", "highlight",
+        "accent_soft", "accent_border", "accent_text",
+    }:
         return line
-    if matches_rgb:
-        color = HOVER_BLUE if ("hover" in line.lower() or "focus" in line.lower()) else LIGHT_BLUE
-        match = matches_rgb[0]
-        value = "Color32::from_rgb(" + ", ".join("0x%02X" % x for x in color) + ")"
-        return line[:match.start()] + value + line[match.end():]
-    if matches_hex:
-        color = HOVER_BLUE if ("hover" in line.lower() or "focus" in line.lower()) else LIGHT_BLUE
-        match = matches_hex[0]
-        value = "hex(0x%02X%02X%02X)" % color
-        return line[:match.start()] + value + line[match.end():]
-    return line
+
+    if "pick(" in rhs:
+        colors: list[tuple[int, int, int]]
+        if lowered == "accent_soft":
+            colors = [INK_BLUE, (0xE3, 0xEC, 0xFD)]
+        elif lowered == "accent_text":
+            colors = [DARK_BLUE, LIGHT_BLUE]
+        elif lowered in {"accent_hover", "focus"}:
+            colors = [HOVER_BLUE, HOVER_BLUE]
+        else:
+            colors = [LIGHT_BLUE, HOVER_BLUE]
+        constructor = re.compile(r"Color32::from_rgb\([^)]*\)|\bhex\(0x[0-9A-Fa-f]{6}\)|\brgb\(0x[0-9A-Fa-f]{6}\)")
+        matches = list(constructor.finditer(rhs))
+        if matches:
+            for index in reversed(range(len(matches))):
+                match_item = matches[index]
+                color = colors[min(index, len(colors) - 1)]
+                piece = rhs[match_item.start():match_item.end()]
+                replacement = _replace_color_constructor(piece, color, lowered)
+                rhs = rhs[:match_item.start()] + replacement + rhs[match_item.end():]
+        # Preserve the selection alpha if the expression uses a semi-transparent constructor.
+        if "from_rgba_unmultiplied" in rhs or "from_rgba_premultiplied" in rhs:
+            color = HOVER_BLUE if lowered in {"accent_hover", "focus", "accent_border"} else LIGHT_BLUE
+            rhs = _replace_color_constructor(rhs, color, lowered)
+    else:
+        existing = _rgb_tuple_from_expression(rhs)
+        brightness = sum(existing) / 3 if existing else 128
+        if lowered in {"accent_hover", "focus", "accent_border"}:
+            color = HOVER_BLUE
+        elif lowered == "accent_soft":
+            if "from_rgba_unmultiplied" in rhs or "from_rgba_premultiplied" in rhs:
+                color = HOVER_BLUE
+            else:
+                color = (0xE3, 0xEC, 0xFD) if brightness >= 170 else INK_BLUE
+        elif lowered == "accent_text":
+            color = LIGHT_BLUE if brightness >= 135 else (0x25, 0x57, 0xC6)
+        else:
+            color = LIGHT_BLUE
+
+        if re.search(r"Color32::(?:from_rgb|from_rgba_(?:un)?premultiplied)\(", rhs) or re.search(r"\b(?:hex|rgb)\(0x[0-9A-Fa-f]{6}\)", rhs):
+            rhs = _replace_color_constructor(rhs, color, lowered)
+
+    return line[:match.start(2)] + rhs + line[match.end(2):]
+
+
+def _replace_brand_constant(line: str) -> str:
+    match = re.search(r"\b(APP_COLOR|APP_INK|BRAND|ACCENT|ACCENT_ON)\s*:\s*Color32\s*=", line)
+    if not match:
+        return line
+    name = match.group(1)
+    if name == "APP_INK":
+        color = INK_BLUE
+    elif name == "ACCENT_ON":
+        color = (0x07, 0x10, 0x1E)
+    elif name in {"APP_COLOR", "BRAND"}:
+        color = HOVER_BLUE
+    else:
+        color = LIGHT_BLUE
+    return _replace_color_constructor(line, color, name.lower())
 
 
 def rebrand_theme_file(path: Path) -> bool:
@@ -142,34 +244,38 @@ def rebrand_theme_file(path: Path) -> bool:
     original = path.read_text(encoding="utf-8", errors="replace")
     lines = original.splitlines(keepends=True)
     updated: list[str] = []
-    high_contrast = False
     changed = False
+    brace_depth = 0
+    high_contrast_depth: int | None = None
+    high_contrast_start = re.compile(r"\b(?:Brightness|ThemeKind|Theme)\s*::\s*HighContrast\s*=>|\bHighContrast\s*=>")
+    normal_start = re.compile(
+        r"\b(?:Brightness|ThemeKind|Theme)\s*::\s*(?:Dark|MediumDark|MediumLight|Light|Studio|StudioLight|Classic|Adwaita|AdwaitaDark|SolarizedDark|BreezeLight|BreezeDark)\s*=>"
+        r"|\b(?:Dark|MediumDark|MediumLight|Light|Studio|StudioLight|Classic|Adwaita|AdwaitaDark|SolarizedDark|BreezeLight|BreezeDark)\s*=>"
+    )
+
     for line in lines:
-        if "HighContrast" in line or "High Contrast" in line:
-            high_contrast = True
-        elif re.search(r"\b(?:Dark|Light|MediumDark|MediumLight|Darker|Brightness::\w+)\s*=>", line):
-            high_contrast = False
+        code = re.sub(r'"(?:\\.|[^"\\])*"', '""', line)
+        code = code.split("//", 1)[0]
+        current_depth = brace_depth
+        start_high = high_contrast_start.search(code) is not None
+        if start_high:
+            high_contrast_depth = current_depth + max(1, code.count("{") - code.count("}"))
+        elif high_contrast_depth is not None and normal_start.search(code):
+            high_contrast_depth = None
+        in_high_contrast = start_high or (high_contrast_depth is not None and current_depth >= high_contrast_depth)
         candidate = line
-        if re.search(r"\b(?:APP_COLOR|APP_INK|BRAND|ACCENT)\s*:\s*Color32::from_rgb", candidate):
-            match = re.search(r"Color32::from_rgb\([^)]*\)", candidate)
-            if match:
-                color = INK_BLUE if "APP_INK" in candidate else LIGHT_BLUE
-                value = "Color32::from_rgb(" + ", ".join("0x%02X" % x for x in color) + ")"
-                candidate = candidate[:match.start()] + value + candidate[match.end():]
-        elif not high_contrast and re.search(
-            r"\b(?:accent|accent_hover|accent_dark|accent_strong|focus|icon_accent|selection|selected_row|row_selected)\s*:",
-            candidate,
-        ):
-            candidate = replace_theme_colour_calls(candidate)
-        elif not high_contrast and re.search(r"\b(?:APP_COLOR|APP_INK|BRAND|ACCENT)\s*=", candidate) and "from_rgb" in candidate:
+        if not in_high_contrast:
+            candidate = _replace_brand_constant(candidate)
             candidate = replace_theme_colour_calls(candidate)
         if candidate != line:
             changed = True
         updated.append(candidate)
+        brace_depth += code.count("{") - code.count("}")
+        if high_contrast_depth is not None and brace_depth < high_contrast_depth:
+            high_contrast_depth = None
     if changed:
         path.write_text("".join(updated), encoding="utf-8")
     return changed
-
 
 def update_toml_key(text: str, section: str, key: str, value: str) -> str:
     lines = text.splitlines()
