@@ -94,7 +94,7 @@ jobs:
           {
             echo "## $DISPLAY_NAME"
             echo
-            echo "- Product ID: `$PRODUCT_ID`"
+            echo "- Product ID: $PRODUCT_ID"
             echo "- Cargo tests: **$TEST_OUTCOME**"
             echo "- Release build: **$BUILD_OUTCOME**"
             echo "- This checks the Linux source build only; it does not yet certify an installer or other operating systems."
