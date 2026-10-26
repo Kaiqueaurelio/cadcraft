@@ -47,7 +47,7 @@ def ensure_clone(app: dict[str, Any], workspace: Path) -> Path:
         print(f"Using existing checkout: {target}", flush=True)
         return target
     url = f"https://github.com/{app['upstream_slug']}.git"
-    run(["git", "clone", "--depth=1", url, str(target)])
+    run(["git", "clone", "--recurse-submodules", "--depth=1", url, str(target)])
     return target
 
 def build_product(app: dict[str, Any], repo: Path) -> dict[str, Any]:
