@@ -40,13 +40,6 @@ impl DecodeApp {
         format!("ai.storyteller.{}", self.id)
     }
 
-    pub fn icon_url(&self) -> String {
-        if self.is_decode_project {
-            "https://raw.githubusercontent.com/Kaiqueaurelio/decodecad/main/assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png".to_string()
-        } else {
-            format!("https://raw.githubusercontent.com/{}/main/assets/app-icon/hicolor/128x128/apps/ai.storyteller.{}.png", self.repo, self.id)
-        }
-    }
 }
 
 /// Decode-branded entries shown in the launcher. Upstream repository and asset identifiers remain
