@@ -911,7 +911,7 @@
 
   function loadCatalog() {
     if (errorState) errorState.hidden = true;
-    fetch("data/software.json")
+    fetch("data/software.json?v=" + Date.now())
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP error " + res.status);
         return res.json();
