@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="decode vector icon">
+  <defs>
+   <linearGradient id="bg" x1="80" y1="40" x2="940" y2="1000" gradientUnits="userSpaceOnUse"><stop stop-color="#1B3260"/><stop offset=".52" stop-color="#0D1B34"/><stop offset="1" stop-color="#07101E"/></linearGradient>
+   <linearGradient id="accent" x1="200" y1="180" x2="830" y2="850" gradientUnits="userSpaceOnUse"><stop stop-color="#7CA8FF"/><stop offset=".55" stop-color="#4C85F7"/><stop offset="1" stop-color="#55DDEB"/></linearGradient>
+   <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(530 0 0 530 700 270)" gradientUnits="userSpaceOnUse"><stop stop-color="#3987FF" stop-opacity=".36"/><stop offset="1" stop-color="#3987FF" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect x="22" y="22" width="980" height="980" rx="220" fill="url(#bg)"/>
+  <rect x="22" y="22" width="980" height="980" rx="220" fill="url(#glow)"/>
+  <rect x="35" y="35" width="954" height="954" rx="207" fill="none" stroke="url(#accent)" stroke-opacity=".42" stroke-width="8"/>
+  <path d="M160 790C330 930 650 950 830 790" fill="none" stroke="url(#accent)" stroke-opacity=".22" stroke-width="12" stroke-linecap="round"/>
+  <g transform="translate(0 0)"><g fill="none" stroke="#F4F8FF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"><path d="M278 706c35-175 88-352 234-356s186 93 232 7"/><path d="M278 706l126-24M278 706l-22-124M744 357l-1 130M744 357l-123 5"/></g><circle cx="278" cy="706" r="48" fill="#91F2FF"/><circle cx="512" cy="350" r="48" fill="#91F2FF"/><circle cx="744" cy="357" r="48" fill="#91F2FF"/></g>
+ </svg>
