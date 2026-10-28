@@ -217,19 +217,6 @@
       appClass: "app-decode-launcher",
       cmd: "cd launcher && cargo run --release -p decode-launcher"
     },
-    'decode-photo': appMetadata.photocraft,
-    'decode-vector': appMetadata.vectorcraft,
-    'decode-film': appMetadata.filmcraft,
-    'decode-light': appMetadata.lightcraft,
-    'decode-design': appMetadata.designcraft,
-    'decode-pdf': appMetadata.pdfcraft,
-    'decode-effect': appMetadata.effectcraft,
-    'decode-word': appMetadata.wordcraft,
-    'decode-deck': appMetadata.deckcraft,
-    'decode-grid': appMetadata.gridcraft,
-    'decode-cad': appMetadata.cadcraft,
-    'decode-sound': appMetadata.soundcraft,
-    'decode-fig': appMetadata.figcraft,
     'decode-clip': {
       number: '17',
       role: 'Geração e edição de clipes virais com IA',
@@ -244,6 +231,20 @@
     },
 
   };
+
+  appMetadata["decode-photo"] = appMetadata.photocraft;
+  appMetadata["decode-vector"] = appMetadata.vectorcraft;
+  appMetadata["decode-film"] = appMetadata.filmcraft;
+  appMetadata["decode-light"] = appMetadata.lightcraft;
+  appMetadata["decode-design"] = appMetadata.designcraft;
+  appMetadata["decode-pdf"] = appMetadata.pdfcraft;
+  appMetadata["decode-effect"] = appMetadata.effectcraft;
+  appMetadata["decode-word"] = appMetadata.wordcraft;
+  appMetadata["decode-deck"] = appMetadata.deckcraft;
+  appMetadata["decode-grid"] = appMetadata.gridcraft;
+  appMetadata["decode-cad"] = appMetadata.cadcraft;
+  appMetadata["decode-sound"] = appMetadata.soundcraft;
+  appMetadata["decode-fig"] = appMetadata.figcraft;
 
   var appColors = {
     photocraft: "#2f7bf5",
