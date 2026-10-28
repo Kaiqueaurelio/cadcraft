@@ -486,7 +486,7 @@ impl eframe::App for Launcher {
             ui.horizontal_wrapped(|ui| {
                 ui.label(egui::RichText::new("Central independente da Decode Analytics. Marcas e aplicativos pertencem aos seus projetos originais.").size(10.0).color(rgb([111, 130, 158])));
                 ui.hyperlink_to("Código-fonte", "https://github.com/Kaiqueaurelio/decodecad/tree/main/launcher-desktop");
-                ui.hyperlink_to("Launcher open source de referência", "https://github.com/storytold/craft-launcher");
+                ui.hyperlink_to("Launcher open source de referência", "https://github.com/Kaiqueaurelio/decode-open-source-hub");
             });
         });
         self.remove_confirmation(&ctx);

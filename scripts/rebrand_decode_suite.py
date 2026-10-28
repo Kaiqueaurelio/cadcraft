@@ -322,14 +322,14 @@ def add_downstream_metadata(app: dict[str, Any], repo: Path) -> int:
         text = update_toml_key(text, "package.metadata.bundle", "name", app["display_name"])
         text = update_toml_key(text, "package.metadata.bundle", "identifier", "com.decodeanalytics." + app["product_id"])
         text = update_toml_key(text, "package.metadata.decode", "display-name", app["display_name"])
-        text = update_toml_key(text, "package.metadata.decode", "upstream-repository", "storytold/" + app["upstream_slug"])
+        text = update_toml_key(text, "package.metadata.decode", "upstream-repository", "Kaiqueaurelio/" + app["upstream_slug"])
         cargo.write_text(text, encoding="utf-8")
         changed += 1
     root_cargo = repo / "Cargo.toml"
     if root_cargo.is_file():
         text = root_cargo.read_text(encoding="utf-8")
         text = update_toml_key(text, "workspace.metadata.decode", "display-name", app["display_name"])
-        text = update_toml_key(text, "workspace.metadata.decode", "upstream-repository", "storytold/" + app["upstream_slug"])
+        text = update_toml_key(text, "workspace.metadata.decode", "upstream-repository", "Kaiqueaurelio/" + app["upstream_slug"])
         root_cargo.write_text(text, encoding="utf-8")
         changed += 1
     return changed
@@ -444,7 +444,7 @@ def update_icons(app: dict[str, Any], repo: Path, icon_path: Path) -> int:
         raise RuntimeError("Invalid Decode SVG icon: " + str(icon_path)) from exc
     count = 0
     roots = [repo / "assets" / "app-icon", repo / "apps" / (app["upstream_slug"] + "-web") / "web"]
-    old_stem = "ai.storyteller." + app["upstream_slug"]
+    old_stem = "com.decode." + app["upstream_slug"]
     new_stem = "com.decodeanalytics." + app["product_id"]
     # Rename the resource files and attribution sidecars as a single downstream operation.
     for root in roots:
@@ -501,7 +501,7 @@ def update_icons(app: dict[str, Any], repo: Path, icon_path: Path) -> int:
 
 def rename_bundle_id_files(app: dict[str, Any], repo: Path) -> int:
     """Rename files whose names carry the upstream bundle ID after references are patched."""
-    old_stem = "ai.storyteller." + app["upstream_slug"]
+    old_stem = "com.decode." + app["upstream_slug"]
     new_stem = "com.decodeanalytics." + app["product_id"]
     renamed = 0
     # Process deepest paths first; never rename content in Git metadata, build outputs or vendor trees.
@@ -541,7 +541,7 @@ def add_brand_note(app: dict[str, Any], repo: Path) -> None:
     note = (
         "# Downstream branding — " + app["display_name"] + "\n\n"
         "This is a Decode Analytics downstream rebrand of the public project "
-        "[storytold/" + app["upstream_slug"] + "](https://github.com/storytold/" + app["upstream_slug"] + ").\n\n"
+        "[Kaiqueaurelio/" + app["upstream_slug"] + "](https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/" + app["upstream_slug"] + ").\n\n"
         "The Decode display name, icon, application metadata and accent colors are downstream changes. "
         "Original notices, third-party notices, file attributions and LICENSE-APACHE / LICENSE-MIT files "
         "remain intact. This build is not an official upstream release.\n\n"
@@ -594,9 +594,9 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         assert app["upstream_name"] + " patch:" in patch_marker_changed, (
             "Upstream patch provenance labels must not be rebranded inside Rust string literals."
         )
-        sample_id = 'const ID = "ai.storyteller.' + app["upstream_slug"] + '";'
+        sample_id = 'const ID = "com.decode.' + app["upstream_slug"] + '";'
         assert "com.decodeanalytics." + app["product_id"] in replace_bundle_id(sample_id, app["upstream_slug"], app["product_id"])
-        sample_cli_id = 'const ID = "ai.storyteller.' + app["upstream_slug"] + '-cli";'
+        sample_cli_id = 'const ID = "com.decode.' + app["upstream_slug"] + '-cli";'
         assert "com.decodeanalytics." + app["product_id"] + "-cli" in replace_bundle_id(
             sample_cli_id, app["upstream_slug"], app["product_id"]
         ), "Bundle-ID suffixes such as CLI must be rebranded."
@@ -604,11 +604,11 @@ def self_test(manifest_path: Path, icons_dir: Path) -> int:
         assert app["product_id"] + "-<version>" in replace_markdown_package_names(
             sample_release_name, app["upstream_slug"], app["product_id"]
         ), "Documented release filenames must use the Decode product ID."
-        sample_icon_path = "assets/app-icon/ai.storyteller." + app["upstream_slug"] + ".png"
+        sample_icon_path = "assets/app-icon/com.decode." + app["upstream_slug"] + ".png"
         assert "assets/app-icon/com.decodeanalytics." + app["product_id"] + ".png" in replace_bundle_id(sample_icon_path, app["upstream_slug"], app["product_id"])
     # Regression test: a Rust include_str! path and the resource filename must agree after rebinding.
     app = products[0]
-    old_filename = "ai.storyteller." + app["upstream_slug"] + ".desktop"
+    old_filename = "com.decode." + app["upstream_slug"] + ".desktop"
     new_filename = "com.decodeanalytics." + app["product_id"] + ".desktop"
     with tempfile.TemporaryDirectory() as temporary:
         fixture_root = Path(temporary)

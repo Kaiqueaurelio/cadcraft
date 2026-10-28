@@ -1,4 +1,4 @@
-//! Fonts from the optional craft-fonts build input (<https://github.com/storytold/craft-fonts>).
+//! Fonts from the optional craft-fonts build input (<https://github.com/Kaiqueaurelio/decode-open-source-hub>).
 //!
 //! Built with `CRAFT_FONTS_DIR=<craft-fonts checkout>`, `build.rs` embeds the fonts listed in its
 //! `fonts/manifest.txt` (web builds: only BIZ UDPGothic Regular and the Arabic faces).

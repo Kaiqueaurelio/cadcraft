@@ -15,7 +15,7 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     # craft-ui is still on egui 0.36, and two eguis in the graph don't build (#1990). Remove this
-    # once craft-ui moves to egui 0.37 (storytold/craft-libs#199).
+    # once craft-ui moves to egui 0.37 (Kaiqueaurelio/craft-libs#199).
     ignore:
       - dependency-name: "egui"
         versions: [">=0.37"]

@@ -7,7 +7,7 @@
 //! (`App::raw_input_hook`), so the app and egui's own widgets follow it as they follow macOS and
 //! Windows.
 //!
-//! Ported from PdfCraft (storytold/pdfcraft#881).
+//! Ported from PdfCraft (Kaiqueaurelio/decode-open-source-hub#881).
 
 use std::sync::mpsc::{Receiver, TryRecvError, channel};
 use std::time::Duration;

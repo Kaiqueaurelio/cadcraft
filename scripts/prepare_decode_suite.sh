@@ -23,8 +23,8 @@ echo "Clonando os 13 projetos públicos com seus submódulos..."
 while IFS=$'\t' read -r SLUG PRODUCT_ID; do
   [[ -n "$SLUG" ]] || continue
   TARGET="$DESTINATION/$PRODUCT_ID"
-  echo "  -> $PRODUCT_ID (storytold/$SLUG)"
-  git clone --recurse-submodules --depth 1 "https://github.com/storytold/$SLUG.git" "$TARGET"
+  echo "  -> $PRODUCT_ID (Kaiqueaurelio/$SLUG)"
+  git clone --recurse-submodules --depth 1 "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/$SLUG.git" "$TARGET"
 done < <(python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); [print(p["upstream_slug"]+"\t"+p["product_id"]) for p in d["products"]]' "$MANIFEST")
 
 echo "Aplicando nomes, IDs, ícones e tema Decode..."

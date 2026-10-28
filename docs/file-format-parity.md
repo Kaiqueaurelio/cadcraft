@@ -25,7 +25,7 @@ below, and ≈ 20–40 h for 3D exchange formats that wait for 3D modelling.
   supporting formats below exist in the target. None of them may be copied.
 - No AutoCAD-produced file is committed or used as a fixture. A real-file corpus needs owner
   action (see [gaps.md](gaps.md)): files made by people who license them to us, kept in a
-  separate `storytold/cadcraft-corpus` repo.
+  separate `Kaiqueaurelio/decodecad-corpus` repo.
 
 ## DWG, version by version
 

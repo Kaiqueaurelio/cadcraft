@@ -4,7 +4,7 @@ Aplicativo desktop nativo da Decode Analytics para explorar e gerenciar ferramen
 
 ## Engenharia reversa de referência
 
-A implementação foi planejada após análise do código-fonte público de https://github.com/storytold/craft-launcher e de suas camadas principais:
+A implementação foi planejada após análise do código-fonte público de https://github.com/Kaiqueaurelio/decode-open-source-hub e de suas camadas principais:
 
 - crates/core/src/catalog.rs: catálogo fixo dos treze programas, nomes, repositórios, ícones e identificadores.
 - crates/core/src/release.rs e crates/core/src/platform.rs: leitura de releases, validação de URL, identificação de formatos e escolha do artefato pela plataforma/arquitetura.
@@ -12,7 +12,7 @@ A implementação foi planejada após análise do código-fonte público de http
 - crates/native/src/install.rs, detect.rs, manifest.rs e paths.rs: instalação/atualização, detecção local, registros de propriedade e diretórios gerenciados.
 - crates/ui-egui e apps/artcraft-launcher: interface egui/eframe e aplicativo desktop.
 
-Este repositório contém uma implementação independente para a Decode Analytics; não copia nem pretende ser o produto oficial da ArtCraft/storytold. A suíte de referência é consultada por APIs e releases públicas. O Decode CAD aparece como projeto independente da Decode Analytics.
+Este repositório contém uma implementação independente para a Decode Analytics; não copia nem pretende ser o produto oficial da Decode Analytics. A suíte de referência é consultada por APIs e releases públicas. O Decode CAD aparece como projeto independente da Decode Analytics.
 
 ## Estado da implementação
 
@@ -55,9 +55,9 @@ Os registros ficam em Decode Open Source Hub/installed.json dentro da pasta loca
 
 ## Licenças e identidade
 
-A central é um projeto independente da Decode Analytics, licenciada MIT/Apache-2.0 conforme os arquivos de licença do repositório. Os aplicativos, nomes, ícones e marcas dos projetos Craft pertencem a seus respectivos titulares; confira seus repositórios para avisos e condições de redistribuição. O launcher não é afiliado oficialmente à ArtCraft/storytold.
+A central é um projeto independente da Decode Analytics, licenciada MIT/Apache-2.0 conforme os arquivos de licença do repositório. Os aplicativos, nomes, ícones e marcas dos projetos Craft pertencem a seus respectivos titulares; confira seus repositórios para avisos e condições de redistribuição. O launcher não é afiliado oficialmente à Decode Analytics.
 
-Repositórios de referência: https://github.com/storytold/craft-launcher e https://github.com/Kaiqueaurelio/decodecad.
+Repositórios de referência: https://github.com/Kaiqueaurelio/decode-open-source-hub e https://github.com/Kaiqueaurelio/decodecad.
 
 
 ## Downstream Decode Studio rebranding of the 13 apps

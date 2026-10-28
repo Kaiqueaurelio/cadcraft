@@ -2,7 +2,7 @@
 
 **About ▸ Contributors** credits everyone who contributed to CADCraft, and **About ▸ Models** credits
 the AI models named in `Co-Authored-By` trailers. This follows the shared craftrules standard
-[`standards/contributors.md`](https://github.com/storytold/craftrules/blob/main/standards/contributors.md);
+[`standards/contributors.md`](https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/standards/contributors.md);
 this page is the local copy of the decision.
 
 ## Decision
