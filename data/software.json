@@ -133,5 +133,389 @@
     "downloadWindowsExe": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/latest/download/decode-launcher.exe",
     "downloadLinux": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/latest/download/decode-launcher-linux-x86_64.tar.gz",
     "downloadMacOS": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/latest/download/decode-launcher-macos.tar.gz"
+  },
+  {
+    "slug": "decode-photo",
+    "name": "DecodePhoto",
+    "icon": "📷",
+    "category": "Imagem e fotografia",
+    "kind": "Aplicativo Decode",
+    "tagline": "Edição de imagens com camadas, máscaras, tipografia e aceleração GPU em Rust",
+    "description": "O DecodePhoto é o editor de imagens profissional da suíte Decode. Projetado em Rust para desempenho extremo, suporta edição não-destrutiva, curvas, máscaras, modos de mesclagem e filtros avançados.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-photo/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-photo",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodePhoto",
+      "decode",
+      "imagem",
+      "fotografia",
+      "camadas",
+      "rust",
+      "gpu"
+    ],
+    "stage": "Disponível",
+    "featured": true
+  },
+  {
+    "slug": "decode-vector",
+    "name": "DecodeVector",
+    "icon": "◇",
+    "category": "Design e publicação",
+    "kind": "Aplicativo Decode",
+    "tagline": "Ilustração vetorial, formas e artes escaláveis em Rust nativo",
+    "description": "Editor vetorial completo com curvas Bézier de alta precisão, gradientes complexos, suporte a SVG/PDF e renderização em tempo real acelerada por hardware.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-vector/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-vector",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeVector",
+      "decode",
+      "vetor",
+      "ilustracao",
+      "design",
+      "svg",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": true
+  },
+  {
+    "slug": "decode-film",
+    "name": "DecodeFilm",
+    "icon": "▷",
+    "category": "Vídeo e IA",
+    "kind": "Aplicativo Decode",
+    "tagline": "Montagem de vídeo, gradação de cor e pós-produção audiovisual",
+    "description": "Estúdio de edição de vídeo não-linear (NLE) multipista com timeline de alta taxa de quadros, correção de cores profissional e renderização veloz.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-film/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-film",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeFilm",
+      "decode",
+      "video",
+      "edicao",
+      "montagem",
+      "cor",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": true
+  },
+  {
+    "slug": "decode-light",
+    "name": "DecodeLight",
+    "icon": "◐",
+    "category": "Imagem e fotografia",
+    "kind": "Aplicativo Decode",
+    "tagline": "Revelação de arquivos RAW e tratamento fino de fotografias",
+    "description": "Fluxo completo de revelação digital para fotógrafos com suporte a perfis de cor, balanço de branco, eliminação de ruído e exportação em lote.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-light/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-light",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeLight",
+      "decode",
+      "raw",
+      "fotografia",
+      "revelacao",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-design",
+    "name": "DecodeDesign",
+    "icon": "▤",
+    "category": "Design e publicação",
+    "kind": "Aplicativo Decode",
+    "tagline": "Diagramação editorial, layouts de página e publicação digital",
+    "description": "Diagramador gráfico avançado para livros, revistas, catálogos e folhetos com suporte a grades tipográficas, páginas-mestre e pré-impressão.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-design/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-design",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeDesign",
+      "decode",
+      "design",
+      "editorial",
+      "diagramacao",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-pdf",
+    "name": "DecodePdf",
+    "icon": "▧",
+    "category": "Documentos e escritório",
+    "kind": "Aplicativo Decode",
+    "tagline": "Leitura, anotação, fusão e assinatura segura de PDFs",
+    "description": "Leitor e manipulador de arquivos PDF veloz, leve e local-first, com anotações, extração de texto, compressão e organização de páginas.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-pdf/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-pdf",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodePdf",
+      "decode",
+      "pdf",
+      "documentos",
+      "escritorio",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-effect",
+    "name": "DecodeEffect",
+    "icon": "✳",
+    "category": "Vídeo e IA",
+    "kind": "Aplicativo Decode",
+    "tagline": "Motion graphics, animação de camadas e efeitos visuais VFX",
+    "description": "Composição de gráficos em movimento com sistema de nós, keyframing, partículas e efeitos visuais acelerados por GPU.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-effect/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-effect",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeEffect",
+      "decode",
+      "vfx",
+      "motion",
+      "animacao",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-word",
+    "name": "DecodeWord",
+    "icon": "¶",
+    "category": "Documentos e escritório",
+    "kind": "Aplicativo Decode",
+    "tagline": "Processador de texto com foco, suporte a Markdown e tipografia avançada",
+    "description": "Ambiente de escrita refinado e veloz para redação de artigos, relatórios e documentação técnica sem distrações.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-word/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-word",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeWord",
+      "decode",
+      "texto",
+      "documentos",
+      "markdown",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-deck",
+    "name": "DecodeDeck",
+    "icon": "▥",
+    "category": "Documentos e escritório",
+    "kind": "Aplicativo Decode",
+    "tagline": "Criação de apresentações visuais e slides modernos com animações suaves",
+    "description": "Desenvolva apresentações visuais impactantes com temas escuros elegantes, exportação para PDF/HTML e modo apresentador.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-deck/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-deck",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeDeck",
+      "decode",
+      "slides",
+      "apresentacoes",
+      "deck",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-grid",
+    "name": "DecodeGrid",
+    "icon": "▦",
+    "category": "Documentos e escritório",
+    "kind": "Aplicativo Decode",
+    "tagline": "Planilhas eletrônicas de alta velocidade e análise de dados em Rust",
+    "description": "Planilhas que abrem instantaneamente conjuntos massivos de dados, com suporte a fórmulas, CSV/Parquet e gráficos interativos.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-grid/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-grid",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeGrid",
+      "decode",
+      "planilhas",
+      "dados",
+      "tabelas",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-cad",
+    "name": "DecodeCAD",
+    "icon": "⌗",
+    "category": "CAD e engenharia",
+    "kind": "Aplicativo Decode",
+    "tagline": "CAD 2D e 3D de alta performance para arquitetura e engenharia",
+    "description": "Ferramentas de desenho técnico, camadas, cotas, hachuras, blocos, leitura e gravação DXF/DWG, aceleração WGPU e controle por agentes.",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "license": "Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decodecad/blob/main/LICENSE-APACHE",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decodecad",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decodecad/releases/tag/v0.12.1",
+    "tags": [
+      "DecodeCAD",
+      "decode",
+      "cad",
+      "dwg",
+      "dxf",
+      "engenharia",
+      "arquitetura",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": true
+  },
+  {
+    "slug": "decode-sound",
+    "name": "DecodeSound",
+    "icon": "♫",
+    "category": "Áudio",
+    "kind": "Aplicativo Decode",
+    "tagline": "Estação de trabalho de áudio digital (DAW) para gravação e mixagem",
+    "description": "Gravação e mixagem de áudio multipista com suporte a plugins de efeitos, timeline de precisão sub-amostral e baixa latência.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-sound/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-sound",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeSound",
+      "decode",
+      "audio",
+      "musica",
+      "mixagem",
+      "daw",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
+  },
+  {
+    "slug": "decode-fig",
+    "name": "DecodeFig",
+    "icon": "⌘",
+    "category": "Design e publicação",
+    "kind": "Aplicativo Decode",
+    "tagline": "Design de interfaces (UI), prototipagem e sistemas de design em Rust",
+    "description": "Desenvolvimento de interfaces modernas, componentes reutilizáveis, layouts flexíveis com auto-layout e fluxo de protótipo rápido.",
+    "platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "licenseUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/blob/main/apps/decode-fig/LICENSE-MIT",
+    "websiteUrl": "https://decode-open-source-hub.vercel.app",
+    "sourceUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/tree/main/apps/decode-fig",
+    "downloadUrl": "https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/tag/v0.9.0",
+    "tags": [
+      "DecodeFig",
+      "decode",
+      "figma",
+      "ui",
+      "interface",
+      "prototipo",
+      "rust"
+    ],
+    "stage": "Disponível",
+    "featured": false
   }
 ]

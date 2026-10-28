@@ -216,7 +216,33 @@
       upstream: "Decode Launcher",
       appClass: "app-decode-launcher",
       cmd: "cd launcher && cargo run --release -p decode-launcher"
-    }
+    },
+    'decode-photo': appMetadata.photocraft,
+    'decode-vector': appMetadata.vectorcraft,
+    'decode-film': appMetadata.filmcraft,
+    'decode-light': appMetadata.lightcraft,
+    'decode-design': appMetadata.designcraft,
+    'decode-pdf': appMetadata.pdfcraft,
+    'decode-effect': appMetadata.effectcraft,
+    'decode-word': appMetadata.wordcraft,
+    'decode-deck': appMetadata.deckcraft,
+    'decode-grid': appMetadata.gridcraft,
+    'decode-cad': appMetadata.cadcraft,
+    'decode-sound': appMetadata.soundcraft,
+    'decode-fig': appMetadata.figcraft,
+    'decode-clip': {
+      number: '17',
+      role: 'Geração e edição de clipes virais com IA',
+      cleanName: 'Clip',
+      version: 'v1.0.0',
+      accent: '#06b6d4',
+      iconBg: '#083344',
+      icon: 'decode-clip.png',
+      upstream: 'DecodeClip',
+      appClass: 'app-decode-clip',
+      cmd: 'cd apps/decode-clip && ./start.sh'
+    },
+
   };
 
   var appColors = {

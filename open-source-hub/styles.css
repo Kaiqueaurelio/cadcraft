@@ -506,10 +506,19 @@ body.launcher-body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.card-icon-box .card-app-icon-img,
 .card-app-icon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  position: static !important;
+  margin-top: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: none !important;
+  transform: none !important;
 }
 
 .card-title {
@@ -1884,7 +1893,7 @@ button, select {
   }
 }
 
-.card-app-icon-img {
+.card-preview-wrap + .card-body-content .card-app-icon-img {
   position: relative;
   margin-top: -36px;
   width: 72px;
@@ -1894,7 +1903,7 @@ button, select {
   transition: transform 0.3s ease-out;
 }
 
-.software-card:hover .card-app-icon-img {
+.software-card:hover .card-preview-wrap + .card-body-content .card-app-icon-img {
   transform: translateY(-4px);
 }
 
