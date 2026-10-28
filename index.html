@@ -14,6 +14,68 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
+
+  <style id="icon-framing-fix">
+    .card-main-content {
+      display: flex !important;
+      align-items: center !important;
+      gap: 14px !important;
+      margin-bottom: 14px !important;
+    }
+    .card-icon-box {
+      width: 52px !important;
+      height: 52px !important;
+      min-width: 52px !important;
+      min-height: 52px !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      flex-shrink: 0 !important;
+      overflow: hidden !important;
+      padding: 6px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+      box-sizing: border-box !important;
+    }
+    .card-icon-box img,
+    .card-icon-box .card-app-icon-img,
+    img.card-app-icon-img {
+      position: static !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      object-fit: contain !important;
+      display: block !important;
+      filter: none !important;
+      transform: none !important;
+    }
+    .software-grid {
+      display: grid !important;
+      gap: 18px !important;
+      grid-template-columns: 1fr !important;
+      padding: 20px 0 !important;
+    }
+    @media (min-width: 680px) {
+      .software-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (min-width: 1040px) {
+      .software-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+    }
+    @media (min-width: 1400px) {
+      .software-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+    }
+  </style>
+
 </head>
 <body class="launcher-body">
   <a class="skip-link" href="#software-grid">Pular para os aplicativos</a>
