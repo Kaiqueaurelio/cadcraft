@@ -16,6 +16,21 @@
 
 **Tecnologia:** [Rust](https://www.rust-lang.org/) · **Licença:** [MIT](LICENSE-MIT) / [Apache 2.0](LICENSE-APACHE) · **Desenvolvido por:** [Decode Analytics](https://www.instagram.com/decode.analytics/) · [Sobre a Decode Analytics](#desenvolvido-pela-decode-analytics)
 
+## 🚀 Decode Launcher (Hub Oficial da Suíte Decode)
+
+Para baixar e gerenciar o **Decode CAD** e todos os aplicativos da família Decode em um só lugar com atualizações automáticas:
+
+| Sistema Operacional | Formato | Link de Download Direto |
+| :--- | :--- | :--- |
+| **🪟 Windows (Instalador)** | `.exe` | [**Baixar decode-launcher.exe**](https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/download/v0.9.0/decode-launcher.exe) |
+| **🪟 Windows (Portátil)** | `.zip` | [**Baixar decode-launcher-windows-x64.zip**](https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/download/v0.9.0/decode-launcher-windows-x64.zip) |
+| **🐧 Linux (x86_64)** | `.tar.gz` | [**Baixar decode-launcher-linux-x86_64.tar.gz**](https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/download/v0.9.0/decode-launcher-linux-x86_64.tar.gz) |
+| **🍎 macOS (Intel / Apple Silicon)** | `.tar.gz` | [**Baixar decode-launcher-macos.tar.gz**](https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/download/v0.9.0/decode-launcher-macos.tar.gz) |
+
+🌐 **Catálogo Web Online:** [decode-open-source-hub.vercel.app](https://decode-open-source-hub.vercel.app/)
+
+---
+
 ## Downloads
 
 A versão **Decode CAD 0.12.1** está disponível para computadores **Windows x64** e **Linux x86_64**.
