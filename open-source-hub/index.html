@@ -1,15 +1,210 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=https://decode-open-source-hub.vercel.app">
-  <title>Decode Open Source Hub — Redirecionando...</title>
-  <script>
-    window.location.replace("https://decode-open-source-hub.vercel.app" + window.location.hash);
-  </script>
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="description" content="Decode App Suite — Catálogo e Launcher oficial de código aberto da Decode Analytics. Edição de imagens, vetores, vídeos, CAD, PDFs, diagramação, 3D e IA, construídos em Rust nativo com aceleração GPU.">
+  <meta property="og:title" content="Decode Launcher — Open Source App Suite">
+  <meta property="og:description" content="Treze aplicativos nativos em Rust mais IDE com IA para criadores e engenheiros. Código aberto, acelerado por GPU, sem Electron.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://decode-open-source-hub.vercel.app">
+  <title>Decode Open Source Hub — Suíte Criativa &amp; Catálogo</title>
+  
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
-<body style="background:#0c0d10;color:#eef4ff;font-family:sans-serif;display:grid;place-items:center;height:100vh;margin:0">
-  <p>Redirecionando para a central oficial Decode Open Source Hub...</p>
+<body class="launcher-body">
+  <a class="skip-link" href="#software-grid">Pular para os aplicativos</a>
+
+  <!-- Window Header Titlebar (Decode Launcher) -->
+  <header class="launcher-window-header" id="site-nav">
+    <div class="launcher-header-left">
+      <span class="launcher-brand-title">DECODE</span>
+      <span class="launcher-header-divider" aria-hidden="true"></span>
+      <span class="launcher-suite-tag">DECODE APP SUITE</span>
+    </div>
+
+    <div class="launcher-header-right">
+      <button class="window-tool-btn" id="open-settings-modal" type="button" title="Sobre e Configurações" aria-label="Sobre e Configurações">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      </button>
+      <div class="window-controls" aria-hidden="true">
+        <span class="win-btn win-min" title="Minimizar">─</span>
+        <span class="win-btn win-max" title="Maximizar">▢</span>
+        <span class="win-btn win-close" title="Fechar">✕</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls Toolbar -->
+  <div class="launcher-control-bar">
+    <div class="control-left">
+      <button id="reload-catalog" class="btn-refresh" type="button" title="Recarregar catálogo" aria-label="Recarregar catálogo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/></svg>
+      </button>
+      <button id="theme-toggle" class="btn-refresh" type="button" title="Alternar tema" aria-label="Alternar tema" style="display:none;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+      </button>
+    </div>
+
+    <div class="control-right">
+      <div class="sort-group">
+        <label class="control-label" for="sort-filter">ORDENAR</label>
+        <select id="sort-filter" class="control-select">
+          <option value="name">Nome (A–Z)</option>
+          <option value="name-desc">Nome (Z–A)</option>
+          <option value="featured">Destaques</option>
+          <option value="category">Categoria</option>
+        </select>
+      </div>
+
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search-input" class="search-input" type="search" placeholder="Buscar aplicativos" autocomplete="off">
+        <kbd class="search-kbd" id="search-kbd">Ctrl K</kbd>
+      </div>
+
+      <div class="view-toggle" role="group" aria-label="Modo de visualização">
+        <button id="view-grid" class="view-button active" type="button" aria-pressed="true" title="Visualização em Grade">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </button>
+        <button id="view-table" class="view-button" type="button" aria-pressed="false" title="Visualização em Tabela">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Tabs Filter Bar -->
+  <div class="status-tabs-bar">
+    <div id="status-tabs" class="status-tabs" role="group" aria-label="Filtrar por estágio"></div>
+  </div>
+
+  <!-- Auxiliary Hidden Controls for DOM / Test compatibility -->
+  <div style="display:none;" aria-hidden="true">
+    <input id="filter-search-input" type="search">
+    <select id="platform-filter"><option value="">Todas</option></select>
+    <div id="category-chips"></div>
+    <div id="result-count"></div>
+    <div id="active-filters"></div>
+    <button id="clear-filters" type="button"></button>
+    <div id="load-more-wrap"><button id="load-more" type="button"></button></div>
+    <div id="error-state"></div>
+    <form id="search-form"></form>
+  </div>
+
+  <!-- Hero Callout: Decode Launcher (Desktop) -->
+  <section class="launcher-hero-callout" id="downloads">
+    <div class="hero-callout-inner">
+      <div class="hero-callout-content">
+        <div class="hero-badge">🚀 ATUALIZAÇÃO AUTOMÁTICA CONTÍNUA</div>
+        <h2>Decode Launcher Desktop <span>v0.8.2</span></h2>
+        <p>Instale qualquer aplicativo da suíte Decode com 1 clique. O Launcher sincroniza diretamente com nosso repositório no GitHub e atualiza todos os programas automaticamente sempre que um novo commit ou release for lançado.</p>
+      </div>
+      <div class="hero-callout-actions">
+        <a href="https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/latest" class="btn-launcher-download primary" target="_blank" rel="noopener noreferrer" aria-label="Abrir a versão mais recente do Decode Launcher e escolher o instalador do seu sistema">
+          <span>↓ Baixar para Windows / Linux</span>
+        </a>
+        <a href="https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/latest" class="btn-launcher-download secondary" target="_blank" rel="noopener noreferrer">
+          <span>🪟 Windows (.exe / .zip)</span>
+        </a>
+        <a href="https://github.com/Kaiqueaurelio/decode-open-source-hub/releases/latest" class="btn-launcher-download secondary" target="_blank" rel="noopener noreferrer">
+          <span>🐧 Linux (.tar.gz)</span>
+        </a>
+        <a href="docs/GUIA_DE_DOWNLOAD_E_INSTALACAO.md" class="btn-launcher-download secondary" target="_blank">
+          <span>📖 Guia de Instalação</span>
+        </a>
+        <a href="https://github.com/Kaiqueaurelio/decode-open-source-hub" class="btn-launcher-download github" target="_blank" rel="noopener noreferrer">
+          <span>GitHub ↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Grid Section -->
+  <main class="launcher-main-container" id="lineup">
+    <div class="software-grid" id="software-grid" aria-live="polite">
+      <div class="loading-state" style="padding: 40px; text-align: center; grid-column: 1 / -1;">
+        <span class="loader"></span>
+        <p style="margin-top: 16px; color: #8a8f9d; font-family: var(--font-mono);">Carregando a Suíte Decode…</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- App Detail Modal Dialog -->
+  <div class="app-modal-backdrop" id="app-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="app-modal-dialog">
+      <button class="modal-close-btn" id="modal-close" type="button" aria-label="Fechar janela">✕</button>
+
+      <div class="modal-body-content" style="padding: 24px;">
+        <div class="modal-head-row" style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+          <img class="modal-app-icon" id="modal-icon-img" src="assets/app-icons/decode-craft.png" alt="" style="width:52px; height:52px; border-radius:12px;">
+          <div class="modal-head-text">
+            <h2 id="modal-title" style="margin:0; font-size:1.35rem; font-weight:800; color:#fff;">DecodeCraft</h2>
+            <p class="hud-label text-muted" id="modal-role" style="margin:4px 0 0; color:#8a8f9d; font-size:13px;">01 · Estúdio criativo · Suíte Decode</p>
+          </div>
+        </div>
+
+        <p class="modal-description" id="modal-desc" style="color:#a0a5b2; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
+          Estúdio de IA generativa para criação visual e experiências 3D.
+        </p>
+
+        <div style="background:#14151b; border:1px solid #242630; border-radius:4px; padding:12px; margin-bottom:18px;">
+          <p style="margin:0 0 6px; font-family:var(--font-mono); font-size:11px; color:#767a86; text-transform:uppercase;">Compilação rápida via Cargo / Rust:</p>
+          <code id="modal-cmd" style="font-family:var(--font-mono); font-size:12.5px; color:#38bdf8; word-break:break-all;">cd apps/decode-craft && cargo run --release</code>
+        </div>
+
+        <div class="modal-actions-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="modal-btn-primary" id="modal-download-link" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; height:40px; background:#2563eb; color:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; text-decoration:none; font-weight:700; font-size:12px; letter-spacing:0.05em;">
+            ↓ Baixar Binário
+          </a>
+          <a class="modal-btn-secondary" id="modal-github-link" href="#" target="_blank" rel="noopener noreferrer" style="height:40px; padding:0 16px; background:#1e2029; color:#fff; border:1px solid #2d303d; border-radius:4px; display:flex; align-items:center; justify-content:center; text-decoration:none; font-weight:700; font-size:12px;">
+            Código no GitHub ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings / About Modal -->
+  <div class="app-modal-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" style="display:none;">
+    <div class="app-modal-dialog" style="max-width:480px; padding:24px;">
+      <button class="modal-close-btn" id="settings-close" type="button" aria-label="Fechar janela">✕</button>
+      <h2 id="settings-title" style="margin:0 0 8px; color:#fff; font-size:1.35rem;">Decode Open Source Hub</h2>
+      <p style="color:#8a8f9d; font-size:13px; margin:0 0 16px;">Ecossistema completo de software livre para criadores e engenheiros.</p>
+      
+      <div style="background:#14151b; border:1px solid #242630; border-radius:6px; padding:16px; margin-bottom:16px; font-size:13px; line-height:1.6; color:#a0a5b2;">
+        <p style="margin:0 0 6px;"><strong>Mantenedora:</strong> Decode Analytics</p>
+        <p style="margin:0 0 6px;"><strong>Sede:</strong> Presidente Prudente — SP, Brasil</p>
+        <p style="margin:0 0 6px;"><strong>Instagram:</strong> <a href="https://www.instagram.com/decode.analytics/" target="_blank" style="color:#38bdf8;">@decode.analytics</a></p>
+        <p style="margin:0;"><strong>E-mail:</strong> decoanalytics@outlook.com.br</p>
+      </div>
+
+      <div style="text-align:right;">
+        <button id="settings-done-btn" type="button" style="background:#2563eb; color:#fff; border:none; border-radius:4px; padding:8px 18px; font-weight:700; cursor:pointer;">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Status Bar (Decode Launcher) -->
+  <footer class="launcher-footer-bar">
+    <div class="footer-status">
+      <span class="status-dot"></span>
+      <span class="status-text">VERIFICADO AGORA MESMO · VIA GITHUB</span>
+    </div>
+
+    <div class="footer-socials">
+      <a href="https://kaiqueaurelio.github.io/decode-open-source-hub/" title="Website Oficial" target="_blank" rel="noopener noreferrer">🌐</a>
+      <a href="https://github.com/Kaiqueaurelio/decode-open-source-hub" title="GitHub Monorepo" target="_blank" rel="noopener noreferrer">🐙</a>
+      <a href="https://github.com/Kaiqueaurelio/decode-open-source-hub/discussions" title="Discussões e Comunidade" target="_blank" rel="noopener noreferrer">💬</a>
+      <a href="https://x.com/decoanalytics" title="X / Twitter" target="_blank" rel="noopener noreferrer">𝕏</a>
+      <a href="https://www.instagram.com/decode.analytics/" title="Instagram Oficial: @decode.analytics" target="_blank" rel="noopener noreferrer">📸</a>
+      <a href="https://www.linkedin.com/company/decodeanalytics" title="LinkedIn Oficial" target="_blank" rel="noopener noreferrer">💼</a>
+    </div>
+  </footer>
 </body>
 </html>
