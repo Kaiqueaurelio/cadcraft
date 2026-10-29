@@ -67,7 +67,17 @@ impl Launcher {
             sort_az: false, refreshing: false, refresh_left: 0, notice: None,
             confirm_remove: None,
         };
-        app.refresh();
+        // Prefer the saved release cache on startup. Automatically querying GitHub
+        // every launch wastes the unauthenticated API quota and can make the launcher
+        // appear broken during rate limiting. The user can still refresh explicitly.
+        if app.releases.is_empty() {
+            app.refresh();
+        } else {
+            app.notice = Some((
+                "Versões salvas carregadas. Clique em “Atualizar versões” para consultar novidades no GitHub.".into(),
+                false,
+            ));
+        }
         app
     }
 
