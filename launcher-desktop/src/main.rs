@@ -76,22 +76,38 @@ impl Launcher {
         self.refreshing = true;
         self.refresh_left = APPS.len();
         self.errors.clear();
+
+        // Several catalog entries share the same upstream repository. Fetching the
+        // same /releases/latest endpoint once per app quickly exhausts GitHub's
+        // unauthenticated API quota. Fetch once per unique repository and fan out
+        // the result to all matching catalog entries.
+        let mut by_repo: BTreeMap<&'static str, Vec<&'static DecodeApp>> = BTreeMap::new();
         for app in APPS {
-            let app = *app;
+            by_repo.entry(app.repo).or_default().push(app);
+        }
+
+        for apps in by_repo.into_values() {
+            let Some(first) = apps.first().copied() else { continue };
             let tx = self.tx.clone();
             thread::spawn(move || {
-                let result = installer::fetch_latest(&app);
-                let _ = tx.send(Event::Release { id: app.id.to_string(), result });
-                let detect_tx = tx.clone();
-                thread::spawn(move || {
-                    let result = if app.is_decode_project {
-                        installer::detect_external(&app)
-                    } else {
-                        None
-                    };
-                    let _ = detect_tx.send(Event::Detected { id: app.id.to_string(), result });
-                });
+                let result = installer::fetch_latest(first);
+                for app in &apps {
+                    let _ = tx.send(Event::Release {
+                        id: app.id.to_string(),
+                        result: result.clone(),
+                    });
 
+                    let detect_tx = tx.clone();
+                    let app = *app;
+                    thread::spawn(move || {
+                        let result = if app.is_decode_project {
+                            installer::detect_external(&app)
+                        } else {
+                            None
+                        };
+                        let _ = detect_tx.send(Event::Detected { id: app.id.to_string(), result });
+                    });
+                }
             });
         }
     }
