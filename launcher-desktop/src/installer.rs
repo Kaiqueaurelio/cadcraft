@@ -499,10 +499,11 @@ fn find_app_executable(root: &Path, app: &DecodeApp) -> Option<PathBuf> {
     while let Some((dir, depth)) = pending.pop() {
         if depth > 5 || visited > 10_000 { continue; }
         visited += 1;
-        let entries = fs::read_dir(&dir).ok()?;
+        // An inaccessible nested directory must not abort the entire search.
+        let Ok(entries) = fs::read_dir(&dir) else { continue };
         for entry in entries.flatten() {
             let path = entry.path();
-            let file_type = entry.file_type().ok()?;
+            let Ok(file_type) = entry.file_type() else { continue };
             if file_type.is_symlink() { continue; }
             if file_type.is_dir() {
                 pending.push((path, depth + 1));
@@ -696,20 +697,87 @@ pub fn detect_external(app: &DecodeApp) -> Option<ExternalInstall> {
         }
         OperatingSystem::Windows => {
             let mut roots = Vec::new();
-            if let Some(p) = std::env::var_os("ProgramFiles") {
-                let base = PathBuf::from(p);
-                roots.push(base.join(app.upstream_name));
-                roots.push(base.join(app.name));
+            // Standard Windows installation locations, including 32-bit applications.
+            for key in ["ProgramFiles", "ProgramFiles(x86)", "ProgramW6432", "LOCALAPPDATA", "APPDATA"] {
+                if let Some(value) = std::env::var_os(key) {
+                    let base = PathBuf::from(value);
+                    roots.push(base.join(app.upstream_name));
+                    roots.push(base.join(app.name));
+                    roots.push(base.join("Programs").join(app.upstream_name));
+                    roots.push(base.join("Programs").join(app.name));
+                    roots.push(base.join("Decode").join(app.upstream_name));
+                    roots.push(base.join("Decode").join(app.name));
+                }
             }
-            if let Some(p) = std::env::var_os("LOCALAPPDATA") {
-                let base = PathBuf::from(p);
-                roots.push(base.join("Programs").join(app.upstream_name));
-                roots.push(base.join("Programs").join(app.name));
+            if let Some(home) = dirs::home_dir() {
+                roots.push(home.join("Applications").join(app.upstream_name));
+                roots.push(home.join("Applications").join(app.name));
+                roots.push(home.join("AppData").join("Local").join(app.upstream_name));
+                roots.push(home.join("AppData").join("Local").join(app.name));
             }
-            if let Some(p) = dirs::home_dir() { roots.push(p.join("Applications").join(app.upstream_name));
-                roots.push(p.join("Applications").join(app.name)); }
+
+            // Windows installers can choose a custom folder. Read the uninstall registry
+            // entries so we can find that folder instead of assuming one hard-coded path.
+            #[cfg(target_os = "windows")]
+            for hive in [
+                r"HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+                r"HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+                r"HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+            ] {
+                if let Ok(output) = Command::new("reg").args(["query", hive, "/s"]).output() {
+                    if output.status.success() {
+                        let text = String::from_utf8_lossy(&output.stdout);
+                        let mut key = String::new();
+                        let mut display_name = String::new();
+                        let mut install_location = String::new();
+                        let mut display_icon = String::new();
+                        let flush = |key: &str, display_name: &str, install_location: &str, display_icon: &str, roots: &mut Vec<PathBuf>| {
+                            let expected = [app.name, app.upstream_name, app.id, app.asset_stem];
+                            let matches = expected.iter().any(|name| !name.is_empty()
+                                && display_name.to_ascii_lowercase().contains(&name.to_ascii_lowercase()));
+                            if matches {
+                                if !install_location.trim().is_empty() {
+                                    roots.push(PathBuf::from(install_location.trim().trim_matches('"')));
+                                }
+                                if !display_icon.trim().is_empty() {
+                                    let icon = display_icon.trim().trim_matches('"');
+                                    let path = icon.split(',').next().unwrap_or(icon).trim_matches('"');
+                                    if !path.is_empty() { roots.push(PathBuf::from(path)); }
+                                }
+                                if !key.is_empty() { roots.push(PathBuf::from(key)); }
+                            }
+                        };
+                        for line in text.lines() {
+                            let line = line.trim();
+                            if line.starts_with("HKEY_") {
+                                flush(&key, &display_name, &install_location, &display_icon, &mut roots);
+                                key = line.to_string();
+                                display_name.clear();
+                                install_location.clear();
+                                display_icon.clear();
+                            } else if let Some((name, value)) = line.split_once("REG_SZ") {
+                                let name = name.trim();
+                                let value = value.trim();
+                                match name {
+                                    "DisplayName" => display_name = value.to_string(),
+                                    "InstallLocation" => install_location = value.to_string(),
+                                    "DisplayIcon" => display_icon = value.to_string(),
+                                    _ => {}
+                                }
+                            }
+                        }
+                        flush(&key, &display_name, &install_location, &display_icon, &mut roots);
+                    }
+                }
+            }
+
             for root in roots {
-                if root.exists() {
+                if root.is_file() {
+                    let name = root.file_name().unwrap_or_default().to_string_lossy().to_ascii_lowercase();
+                    if name.ends_with(".exe") {
+                        return Some(ExternalInstall { target: root.to_string_lossy().to_string(), version: None });
+                    }
+                } else if root.is_dir() {
                     if let Some(exe) = find_app_executable(&root, app) {
                         return Some(ExternalInstall { target: exe.to_string_lossy().to_string(), version: None });
                     }
