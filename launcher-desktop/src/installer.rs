@@ -185,13 +185,32 @@ pub fn install_or_update(
 
     match (platform.os, kind) {
         (OperatingSystem::Windows, PackageKind::Msi) => {
-            let status = Command::new("msiexec").arg("/i").arg(&downloaded).spawn()
-                .map_err(|e| format!("Não foi possível abrir o instalador MSI do Windows: {e}"))?;
-            let _ = status;
-            Ok(InstallResult {
-                record: None,
-                message: "O assistente oficial do Windows foi aberto. Conclua a instalação e use “Atualizar status” para detectar o aplicativo.".into(),
-            })
+            report("Abrindo o instalador oficial do Windows. Conclua todas as etapas da janela do instalador.".into());
+            // Wait for msiexec to finish. Returning immediately from spawn() made the
+            // launcher report completion while the user was still in the MSI wizard.
+            let status = Command::new("msiexec")
+                .arg("/i")
+                .arg(&downloaded)
+                .status()
+                .map_err(|e| format!("Não foi possível iniciar o instalador MSI do Windows: {e}"))?;
+            match status.code() {
+                Some(0) => Ok(InstallResult {
+                    record: None,
+                    message: "O instalador do Windows terminou com sucesso. Atualize o status para confirmar que o aplicativo está disponível.".into(),
+                }),
+                Some(3010) => Ok(InstallResult {
+                    record: None,
+                    message: "O Windows instalou o aplicativo, mas precisa ser reiniciado para concluir a instalação (código 3010).".into(),
+                }),
+                Some(1641) => Ok(InstallResult {
+                    record: None,
+                    message: "O Windows concluiu a instalação e iniciou a reinicialização (código 1641).".into(),
+                }),
+                Some(code) => Err(format!(
+                    "O instalador do Windows encerrou sem concluir a instalação (código {code}). Feche outras janelas do instalador e tente novamente."
+                )),
+                None => Err("O processo do instalador do Windows foi encerrado sem retornar um código de conclusão.".into()),
+            }
         }
         (OperatingSystem::Windows, PackageKind::PortableZip) => {
             install_portable_tree(app, release, kind, &downloaded, paths, previous, report)
