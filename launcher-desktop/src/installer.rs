@@ -676,17 +676,64 @@ pub fn detect_external(app: &DecodeApp) -> Option<ExternalInstall> {
     let platform = HostPlatform::current();
     match platform.os {
         OperatingSystem::Linux => {
-            let mut candidates = Vec::new();
+            let mut roots = vec![
+                PathBuf::from("/opt"),
+                PathBuf::from("/usr/local/bin"),
+                PathBuf::from("/usr/bin"),
+                PathBuf::from("/app/bin"),
+            ];
             if let Some(home) = dirs::home_dir() {
-                candidates.extend([
-                    home.join("Applications").join(format!("{}.AppImage", app.id)),
-                    home.join("Applications").join(format!("{}.AppImage", app.name)),
-                    home.join(".local/bin").join(app.id),
+                roots.extend([
+                    home.join("Applications"),
+                    home.join(".local/bin"),
+                    home.join(".local/share"),
+                    home.join(".local/opt"),
+                    home.join(".var/app"),
+                    home.join("opt"),
                 ]);
             }
-            candidates.extend([PathBuf::from("/usr/local/bin").join(app.id), PathBuf::from("/usr/bin").join(app.id)]);
-            for path in candidates {
-                if path.is_file() { return Some(ExternalInstall { target: path.to_string_lossy().to_string(), version: None }); }
+
+            // Find versioned AppImages and executables in common Linux application
+            // directories, instead of requiring one exact filename.
+            let expected = [app.id, app.asset_stem, app.name, app.upstream_name];
+            for root in roots {
+                if !root.exists() { continue; }
+                if root.is_file() {
+                    let name = root.file_name().unwrap_or_default().to_string_lossy().to_ascii_lowercase();
+                    if expected.iter().any(|candidate| name.contains(&candidate.to_ascii_lowercase()))
+                        && (name.ends_with(".appimage") || !name.contains('.'))
+                    {
+                        return Some(ExternalInstall { target: root.to_string_lossy().to_string(), version: None });
+                    }
+                    continue;
+                }
+                let mut pending = vec![(root, 0usize)];
+                let mut visited = 0usize;
+                while let Some((dir, depth)) = pending.pop() {
+                    if depth > 4 || visited >= 3000 { continue; }
+                    visited += 1;
+                    let Ok(entries) = fs::read_dir(&dir) else { continue };
+                    for entry in entries.flatten() {
+                        let path = entry.path();
+                        let Ok(file_type) = entry.file_type() else { continue };
+                        if file_type.is_symlink() { continue; }
+                        if file_type.is_dir() {
+                            pending.push((path, depth + 1));
+                            continue;
+                        }
+                        if !file_type.is_file() { continue; }
+                        let name = entry.file_name().to_string_lossy().to_ascii_lowercase();
+                        let matches = expected.iter().any(|candidate| {
+                            let candidate = candidate.to_ascii_lowercase();
+                            !candidate.is_empty() && name.contains(&candidate)
+                        });
+                        if matches && (name.ends_with(".appimage") || !name.contains('.')) {
+                            #[cfg(unix)]
+                            if make_executable(&path).is_err() { continue; }
+                            return Some(ExternalInstall { target: path.to_string_lossy().to_string(), version: None });
+                        }
+                    }
+                }
             }
             let flatpak_id = app.upstream_bundle_id();
             if Command::new("flatpak").args(["info", "--user", &flatpak_id]).output().is_ok_and(|o| o.status.success())
@@ -785,11 +832,28 @@ pub fn detect_external(app: &DecodeApp) -> Option<ExternalInstall> {
             }
         }
         OperatingSystem::MacOs => {
-            let bundle_name = format!("{}.app", app.upstream_name);
-            let mut roots = vec![PathBuf::from("/Applications").join(&bundle_name)];
-            if let Some(home) = dirs::home_dir() { roots.push(home.join("Applications").join(bundle_name)); }
+            let mut roots = Vec::new();
+            let names = [app.upstream_name, app.name, app.id, app.asset_stem];
+            for base in [PathBuf::from("/Applications"), PathBuf::from("/System/Applications")] {
+                for name in names {
+                    roots.push(base.join(format!("{name}.app")));
+                }
+            }
+            if let Some(home) = dirs::home_dir() {
+                for base in [
+                    home.join("Applications"),
+                    home.join("Library/Application Support"),
+                    home.join(".local/share"),
+                ] {
+                    for name in names {
+                        roots.push(base.join(format!("{name}.app")));
+                    }
+                }
+            }
             for path in roots {
-                if path.is_dir() { return Some(ExternalInstall { target: path.to_string_lossy().to_string(), version: None }); }
+                if path.is_dir() {
+                    return Some(ExternalInstall { target: path.to_string_lossy().to_string(), version: None });
+                }
             }
         }
         OperatingSystem::Unsupported => {}
